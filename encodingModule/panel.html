@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <title>Document</title>
+</head>
+<body class="bg-light">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg bg-danger navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">The Furr Project</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+
+                    <li class="nav-item">
+                        <a id="patient-record-link" class="nav-link active" aria-current="page" href="#">Patient Records</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
+                    </li>
+                    <script>
+                        $(document).ready(function(){
+                            var patientRecords = $('#patient-record-link');
+                            var medicalRecords = $('#medical-records-link');
+                            patientRecords.on('click', function(e){
+                                patientRecords.addClass('active');
+                                medicalRecords.removeClass('active');
+                            })
+                            medicalRecords.on('click', function(e){
+                                patientRecords.removeClass('active');
+                                medicalRecords.addClass('active');
+                            })
+                        });
+                    </script>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- medical records -->
+    <div id="medical-records">
+        <div class="container">
+            <form>
+                <div class="row d-flex justify-content-between mt-3">
+                    <div class="col-md-3">
+                        <input id="patient-name" class="form-control" type="text" placeholder="Registered Patient Name">
+                        <div id="patient-name-error">
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <input id="client-code" class="form-control" type="text" placeholder="Client Code">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="created-date" class="form-control" type="date" placeholder="Date">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="contact-number" class="form-control" type="text" placeholder="Contact Number">
+                    </div>
+                </div>   
+
+                
+                <input id="medical-history" class="form-control mt-3" type="text" placeholder="Medical History">
+                <input id="wellness-behavior" class="form-control mt-3" type="text" placeholder="Wellness/Behavior">
+
+                <label for="signalment" class="mt-3"><b>Signalment</b></label>
+                <div class="row d-flex justify-content-between mt-3" name="signalment">
+                    <div class="col-md-3">
+                        <input id="birth_date" class="form-control" type="date">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="species" class="form-control" type="text" placeholder="Species">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="breed" class="form-control" type="text" placeholder="Breed">
+                    </div>
+                    
+                    
+                    <div class="col-md-3 d-flex justify-content-evenly" name="radio-sex">
+                        <b>Sex:</b>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sex" id="male" value="Male">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            Male
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="sex" id="female" value="Female">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            Female
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <label for="vital-signs" class="mt-3"><b>Vital Signs</b></label>
+                <div class="row d-flex justify-content-between mt-3" name="vital-signs">
+                    <div class="col-md-3">
+                        <input id="weight" class="form-control" type="text" placeholder="Weight">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="temp" class="form-control" type="text" placeholder="Temp">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="hr" class="form-control" type="text" placeholder="HR">
+                    </div>
+                    <div class="col-md-3">
+                        <input id="rr" class="form-control" type="text" placeholder="RR">
+                    </div>
+                
+                </div>
+
+                <textarea id="physical-exam" class="form-control mt-3" placeholder="Physical Exam"></textarea>
+                <textarea id="cc-hx" class="form-control mt-3" placeholder="CC/HX"></textarea>
+                <textarea id="dx-tools" class="form-control mt-3" placeholder="Dx Tools"></textarea>
+                <textarea id="tdx-dx-case" class="form-control mt-3" placeholder="TDX/DX/CASE:"></textarea>
+                <textarea id="treatment" class="form-control mt-3" placeholder="Treatment"></textarea>
+
+                <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
+                    <b>In-Patient:</b>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="in-patient" id="male">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="in-patient" id="male">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        No
+                        </label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="Other">
+                    </div>
+                </div>
+                <div class="d-md-flex justify-content-between mt-3" name="radio-surgery">
+                    <b>Surgery:</b>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="surgery" id="surgery-yes" value="Yes">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="surgery" id="surgery-no" value="No">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        No
+                        </label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="Other">
+                    </div>
+                </div>
+                <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
+                    <b>Out-Patient</b>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="out-patient" id="male">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="out-patient" id="male">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                        No
+                        </label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" placeholder="Other">
+                    </div>
+                </div>
+                <textarea class="form-control mt-3" placeholder="Take Home Meds"></textarea>
+                <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
+            </form>
+
+            <script>
+                $(document).ready(function(){
+                    var insertMedicalRecord = $('#insert-medical-record');
+                    var patientName = $('#patient-name');
+                    var clientCode = $('#client-code');
+                    var createdDate = $('#created-date');
+                    var contactNumber = $('#contact-number');
+                    var medicalHistory = $('#medical-history');
+                    var wellnessBehavior = $('#wellness-behavior');
+                    var birthDate = $('#birth_date');
+                    var species = $('#species');
+                    var breed = $('#breed');
+                    var weight = $('#weight');
+                    var temp = $('#temp');
+                    var hr = $('#hr');
+                    var rr = $('#rr');
+                    insertMedicalRecord.on('click',function(e){
+                        e.preventDefault()
+                        if(patientName.val() == ""){
+                            patientName.addClass('is-invalid')
+                            $('<div class="invalid-feedback">Please enter the patient\'s name.</div>').insertAfter(patientName);
+                        }
+                        if(clientCode.val() == ""){
+                            clientCode.addClass('is-invalid')
+                            $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
+                        }
+                        if(createdDate.val() == ""){
+                            createdDate.addClass('is-invalid')
+                            $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
+                        }
+
+                        if(patientName.val() != "" && clientCode.val() != "" && createdDate.val() != ""){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/medicalRecordInsertion.php',
+                                data: {
+                                    patient_name: patientName.val(),
+                                    client_code: clientCode.val(),
+                                    created_date: createdDate.val(),
+                                    contact_number: contactNumber.val(),
+                                    medical_history: medicalHistory.val(),
+                                    wellness_behavior: wellnessBehavior.val(),
+                                    birth_date: birthDate.val(),
+                                    species: species.val(),
+                                    breed: breed.val(),
+                                    sex: $("input[name='sex']:checked").val(),
+                                    weight: weight.val(),
+                                    temp: temp.val(),
+                                    hr: hr.val(),
+                                    rr: rr.val(),
+                                }
+                            })
+                        }
+                        
+                        console.log(sexValue);
+                    })
+                    
+                    
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

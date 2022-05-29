@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <title>Document</title>
+</head>
+<body class="bg-light">
+
+    <div class="col-md-3 mx-auto mt-5">
+        <div class="card p-5">
+            <div class="card-body text-center">
+                <h1><b>LOG IN</b></h1>
+            </div>
+            <form>
+                <input id="username" type="text" placeholder="Username" class="form-control mb-2" required>
+                <input id="password" type="password" placeholder="Password" class="form-control mb-2" required>
+                <button id="log-in">Log In</button>
+            </form>
+
+            <script>
+                $(document).ready(function(){
+                    var username = $('#username');
+                    var password = $('#password');
+                    var login = $('#log-in');
+
+                    login.on('click', function(e){
+                        e.preventDefault();
+
+                        if(username.val() != "" && password.val() != ""){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/adminlogin.php',
+                                data: {
+                                    username: username.val(),
+                                    password: password.val()
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        window.location.replace('panel.html');
+                                    }else{
+                                        alert('invalid username and password');
+                                    }
+                                }
+                            })
+                        }
+                    })
+                })
+            </script>
+            
+        </div>
+    </div>
+</body>
+</html>
