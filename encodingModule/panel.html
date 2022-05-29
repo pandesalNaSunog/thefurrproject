@@ -36,12 +36,112 @@
                             patientRecords.on('click', function(e){
                                 patientRecords.addClass('active');
                                 medicalRecords.removeClass('active');
+                                $('#medical-records').remove();
                             })
                             medicalRecords.on('click', function(e){
                                 patientRecords.removeClass('active');
                                 medicalRecords.addClass('active');
                             })
                         });
+                    </script>
+                    <script>
+                        $(document).ready(function(){
+                            var insertMedicalRecord = $('#insert-medical-record');
+                            var patientName = $('#patient-name');
+                            var clientCode = $('#client-code');
+                            var createdDate = $('#created-date');
+                            var contactNumber = $('#contact-number');
+                            var medicalHistory = $('#medical-history');
+                            var wellnessBehavior = $('#wellness-behavior');
+                            var birthDate = $('#birth_date');
+                            var species = $('#species');
+                            var breed = $('#breed');
+                            var weight = $('#weight');
+                            var temp = $('#temp');
+                            var hr = $('#hr');
+                            var rr = $('#rr');
+                            var physicalExam = $('#physical-exam');
+                            var cchx = $('#cc-hx');
+                            var dxTools = $('#dx-tools');
+                            var tdxDxCase = $('#tdx-dx-case');
+                            var treatment = $('#treatment');
+                            var surgeryOther = $('#surgery-other');
+                            var surgeryOtherValue = "";
+                            var inPatientOtherValue = "";
+                            var inPatientOther = $('#in-patient-other');
+                            var outPatientOther = $('#out-patient-other');
+                            var outPatientOtherValue = ""
+                            var takeHomeMeds = $('#take-home-meds');
+                            insertMedicalRecord.on('click',function(e){
+                                e.preventDefault()
+                                if(patientName.val() == ""){
+                                    patientName.addClass('is-invalid')
+                                    $('<div class="invalid-feedback">Please enter the patient\'s name.</div>').insertAfter(patientName);
+                                }
+                                if(clientCode.val() == ""){
+                                    clientCode.addClass('is-invalid')
+                                    $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
+                                }
+                                if(createdDate.val() == ""){
+                                    createdDate.addClass('is-invalid')
+                                    $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
+                                }
+        
+                                if(surgeryOther.val() == ""){
+                                    surgeryOtherValue = $("input[name='surgery']:checked").val();
+                                }else{
+                                    surgeryOtherValue = surgeryOther.val();
+                                }
+        
+                                if(inPatientOther.val() == ""){
+                                    inPatientOtherValue = $("input[name='in-patient']:checked").val();
+                                }else{
+                                    inPatientOtherValue = inPatientOther.val();
+                                }
+        
+                                if(outPatientOther.val() == ""){
+                                    outPatientOtherValue = $("input[name='out-patient']:checked").val();
+                                }else{
+                                    outPatientOtherValue = outPatientOther.val();
+                                }
+        
+                                if(patientName.val() != "" && clientCode.val() != "" && createdDate.val() != ""){
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: 'php/medicalRecordInsertion.php',
+                                        data: {
+                                            patient_name: patientName.val(),
+                                            client_code: clientCode.val(),
+                                            created_date: createdDate.val(),
+                                            contact_number: contactNumber.val(),
+                                            medical_history: medicalHistory.val(),
+                                            wellness_behavior: wellnessBehavior.val(),
+                                            birth_date: birthDate.val(),
+                                            species: species.val(),
+                                            breed: breed.val(),
+                                            sex: $("input[name='sex']:checked").val(),
+                                            weight: weight.val(),
+                                            temp: temp.val(),
+                                            hr: hr.val(),
+                                            rr: rr.val(),
+                                            physical_exam: physicalExam.val(),
+                                            cc_hx: cchx.val(),
+                                            tdx_dx_case: tdxDxCase.val(),
+                                            dx_tools: dxTools.val(),
+                                            treatment: treatment.val(),
+                                            in_patient: inPatientOtherValue,
+                                            surgery: surgeryOtherValue,
+                                            out_patient: outPatientOtherValue,
+                                            take_home_meds: takeHomeMeds.val()
+                                        },
+        
+                                        success: function(response){
+                                            console.log(response);
+                                        }
+                                    })
+                                }
+                            })
+                        })
                     </script>
                 </ul>
             </div>
@@ -130,19 +230,19 @@
                 <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
                     <b>In-Patient:</b>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="in-patient" id="male">
+                        <input class="form-check-input" type="radio" name="in-patient" value="Yes">
                         <label class="form-check-label" for="flexRadioDefault1">
                         Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="in-patient" id="male">
+                        <input class="form-check-input" type="radio" name="in-patient" value="No">
                         <label class="form-check-label" for="flexRadioDefault1">
                         No
                         </label>
                     </div>
                     <div class="col-md-7">
-                        <input type="text" class="form-control" placeholder="Other">
+                        <input id="in-patient-other" type="text" class="form-control" placeholder="Other">
                     </div>
                 </div>
                 <div class="d-md-flex justify-content-between mt-3" name="radio-surgery">
@@ -160,91 +260,55 @@
                         </label>
                     </div>
                     <div class="col-md-7">
-                        <input type="text" class="form-control" placeholder="Other">
+                        <input id="surgery-other" type="text" class="form-control" placeholder="Other">
                     </div>
                 </div>
                 <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
                     <b>Out-Patient</b>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="out-patient" id="male">
+                        <input class="form-check-input" type="radio" name="out-patient" value="Yes">
                         <label class="form-check-label" for="flexRadioDefault1">
                         Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="out-patient" id="male">
+                        <input class="form-check-input" type="radio" name="out-patient" value="No">
                         <label class="form-check-label" for="flexRadioDefault1">
                         No
                         </label>
                     </div>
                     <div class="col-md-7">
-                        <input type="text" class="form-control" placeholder="Other">
+                        <input id="out-patient-other" type="text" class="form-control" placeholder="Other">
                     </div>
                 </div>
-                <textarea class="form-control mt-3" placeholder="Take Home Meds"></textarea>
+                <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
                 <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
             </form>
+        </div>
+    </div>
 
-            <script>
-                $(document).ready(function(){
-                    var insertMedicalRecord = $('#insert-medical-record');
-                    var patientName = $('#patient-name');
-                    var clientCode = $('#client-code');
-                    var createdDate = $('#created-date');
-                    var contactNumber = $('#contact-number');
-                    var medicalHistory = $('#medical-history');
-                    var wellnessBehavior = $('#wellness-behavior');
-                    var birthDate = $('#birth_date');
-                    var species = $('#species');
-                    var breed = $('#breed');
-                    var weight = $('#weight');
-                    var temp = $('#temp');
-                    var hr = $('#hr');
-                    var rr = $('#rr');
-                    insertMedicalRecord.on('click',function(e){
-                        e.preventDefault()
-                        if(patientName.val() == ""){
-                            patientName.addClass('is-invalid')
-                            $('<div class="invalid-feedback">Please enter the patient\'s name.</div>').insertAfter(patientName);
-                        }
-                        if(clientCode.val() == ""){
-                            clientCode.addClass('is-invalid')
-                            $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
-                        }
-                        if(createdDate.val() == ""){
-                            createdDate.addClass('is-invalid')
-                            $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
-                        }
 
-                        if(patientName.val() != "" && clientCode.val() != "" && createdDate.val() != ""){
-                            $.ajax({
-                                type: 'POST',
-                                url: 'php/medicalRecordInsertion.php',
-                                data: {
-                                    patient_name: patientName.val(),
-                                    client_code: clientCode.val(),
-                                    created_date: createdDate.val(),
-                                    contact_number: contactNumber.val(),
-                                    medical_history: medicalHistory.val(),
-                                    wellness_behavior: wellnessBehavior.val(),
-                                    birth_date: birthDate.val(),
-                                    species: species.val(),
-                                    breed: breed.val(),
-                                    sex: $("input[name='sex']:checked").val(),
-                                    weight: weight.val(),
-                                    temp: temp.val(),
-                                    hr: hr.val(),
-                                    rr: rr.val(),
-                                }
-                            })
-                        }
+    <div id="list">
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr> 
+                        <td>Mark</td>
+                        <td>Otto</td>
                         
-                        console.log(sexValue);
-                    })
-                    
-                    
-                })
-            </script>
+                    </tr>
+                    <tr>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
