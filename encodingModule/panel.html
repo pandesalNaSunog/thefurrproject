@@ -23,11 +23,11 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
 
                     <li class="nav-item">
-                        <a id="patient-record-link" class="nav-link active" aria-current="page" href="#">Patient Records</a>
+                        <a id="patient-record-link" class="nav-link" aria-current="page" href="#">Patient Records</a>
                     </li>
                     
                     <li class="nav-item">
-                        <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
+                        <a id="medical-records-link" class="nav-link active" aria-current="page" href="#">Medical Records</a>
                     </li>
                     <script>
                         $(document).ready(function(){
@@ -36,11 +36,14 @@
                             patientRecords.on('click', function(e){
                                 patientRecords.addClass('active');
                                 medicalRecords.removeClass('active');
-                                $('#medical-records').remove();
+                                $('#medical-records').hide();
+                                $('#list').hide();
                             })
                             medicalRecords.on('click', function(e){
                                 patientRecords.removeClass('active');
                                 medicalRecords.addClass('active');
+                                $('#medical-records').show();
+                                $('#list').show();
                             })
                         });
                     </script>
@@ -286,29 +289,59 @@
             </form>
         </div>
     </div>
-
-
     <div id="list">
         <div class="container">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Client Code</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr> 
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        
-                    </tr>
-                    <tr>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                    </tr>
+                <tbody id="table-body">
+                    
                 </tbody>
             </table>
+
+            <script>
+                $(document).ready(function(){
+                    var tableBody = $('#table-body');
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getMedicalRecord.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index,value){
+                                tableBody.append(`<tr>
+                                                    <div class="card m-1 p-2">
+                                                        <div class="card-body">
+                                                            <td>${value.patient_name}</td>
+                                                            <td>${value.client_code}</td>
+                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
+                                                        </div>
+                                                    </div>
+                                                </tr>`)
+                            });
+                            var view = $('.view-record');
+                            view.on('click', function(e){
+                                var thisView = $(this);
+                                e.preventDefault();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/getSpecificRecord.php',
+                                    data: {
+                                        record_id: thisView.val()
+                                    },
+                                    success: function(response){
+                                        console.log(response);
+                                    }
+                                })
+                            });
+                        }
+                    });
+                });
+            </script>
         </div>
     </div>
 </body>

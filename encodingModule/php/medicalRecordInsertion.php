@@ -51,7 +51,7 @@
                     $data[] = $row;
                 }
             }while(count($data) > 0);
-            $query = "INSERT INTO users (`name`,`email`,`client_code`,`password`) VALUES('$clientCode','$email','$clientCode','$password')";
+            $query = "INSERT INTO users (`name`,`email`,`client_code`,`password`) VALUES('$patientName','$email','$clientCode','$password')";
             $con->query($query) or die($con->error);
         }else{
             $type = "returnee";
