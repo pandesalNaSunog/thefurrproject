@@ -16,9 +16,9 @@
     background-color: blue  ;
 }
 
-/* body{
-    background-color: #feb4b4;
-} */
+#bg{
+    background-color: hsl(0, 2%, 88%);
+}
 
 .form-control{
     border-width: 2px;
@@ -40,5 +40,7 @@
     #insert-medical-record{
         width: 30%
     }
-    
+    #searchbar{
+        width: 30%
+    }
 }

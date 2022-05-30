@@ -10,7 +10,7 @@
     <script src="../js/bootstrap.min.js"></script>
     <title>Document</title>
 </head>
-<body class="bg-light">
+<body id="bg">
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg bg-danger navbar-dark">
@@ -151,6 +151,127 @@
         </div>
     </nav>
 
+    <div id="list" class="mt-5">
+        <div class="container">
+            <div class="input-group mb-3" id="searchbar">
+                <button class="btn btn-outline-danger" type="button" id="search-medical-records">Search</button>
+                <input id="search-medical-records-text" type="text" class="form-control" placeholder="Search Medical Records" aria-label="Example text with button addon" aria-describedby="button-addon1">
+            </div>
+
+            <script>
+                $(document).ready(function(){
+                    var searchMedicalRecords = $('#search-medical-records');
+                    var searchMedicalRecordsText = $('#search-medical-records-text');
+
+                    searchMedicalRecords.on('click', function(e){
+                        e.preventDefault();
+
+                        if(searchMedicalRecordsText.val() == ""){
+                            searchMedicalRecordsText.addClass('is-invalid');
+                            $('<div class="invalid-feedback">Please fill out this field</div>').insertAfter(searchMedicalRecordsText);
+                        }else{
+                            searchMedicalRecordsText.removeClass('is-invalid');
+                            $('#table-body').children().remove();
+
+                            $.ajax({
+                                type: 'GET',
+                                url: 'php/getSearchedMedicalRecords.php',
+                                data: {
+                                    keyword: searchMedicalRecordsText.val()
+                                },
+                                success: function(response){
+                                    var data = JSON.parse(response);
+
+                                    $(data).each(function(index,value){                                    
+                                        $('#table-body').append(`<tr>
+                                                                    <div class="card m-1 p-2">
+                                                                        <div class="card-body">
+                                                                            <td>${value.patient_name}</td>
+                                                                            <td>${value.client_code}</td>
+                                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
+                                                                        </div>
+                                                                    </div>
+                                                                </tr>`);
+                                    })
+                                    var view = $('.view-record');
+                                    view.on('click', function(e){
+                                        var thisView = $(this);
+                                        e.preventDefault();
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: 'php/getSpecificRecord.php',
+                                            data: {
+                                                record_id: thisView.val()
+                                            },
+                                            success: function(response){
+                                                console.log(response);
+                                            }
+                                        })
+                                    });
+                                }
+                            })
+                        }
+                    })
+                })
+            </script>
+
+
+            <div class="card">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Patient Name</th>
+                            <th scope="col">Client Code</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                $(document).ready(function(){
+                    var tableBody = $('#table-body');
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getMedicalRecord.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index,value){
+                                tableBody.append(`<tr>
+                                                    <div class="card m-1 p-2">
+                                                        <div class="card-body">
+                                                            <td>${value.patient_name}</td>
+                                                            <td>${value.client_code}</td>
+                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
+                                                        </div>
+                                                    </div>
+                                                </tr>`)
+                            });
+                            var view = $('.view-record');
+                            view.on('click', function(e){
+                                var thisView = $(this);
+                                e.preventDefault();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/getSpecificRecord.php',
+                                    data: {
+                                        record_id: thisView.val()
+                                    },
+                                    success: function(response){
+                                        console.log(response);
+                                    }
+                                })
+                            });
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+
     <!-- medical records -->
     <div id="medical-records">
         <div class="container">
@@ -289,60 +410,6 @@
             </form>
         </div>
     </div>
-    <div id="list">
-        <div class="container">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Patient Name</th>
-                        <th scope="col">Client Code</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    
-                </tbody>
-            </table>
-
-            <script>
-                $(document).ready(function(){
-                    var tableBody = $('#table-body');
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/getMedicalRecord.php',
-                        success: function(response){
-                            var data = JSON.parse(response);
-                            $(data).each(function(index,value){
-                                tableBody.append(`<tr>
-                                                    <div class="card m-1 p-2">
-                                                        <div class="card-body">
-                                                            <td>${value.patient_name}</td>
-                                                            <td>${value.client_code}</td>
-                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
-                                                        </div>
-                                                    </div>
-                                                </tr>`)
-                            });
-                            var view = $('.view-record');
-                            view.on('click', function(e){
-                                var thisView = $(this);
-                                e.preventDefault();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: 'php/getSpecificRecord.php',
-                                    data: {
-                                        record_id: thisView.val()
-                                    },
-                                    success: function(response){
-                                        console.log(response);
-                                    }
-                                })
-                            });
-                        }
-                    });
-                });
-            </script>
-        </div>
-    </div>
+    
 </body>
 </html>
