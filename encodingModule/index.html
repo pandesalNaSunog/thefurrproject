@@ -29,6 +29,16 @@
                     var password = $('#password');
                     var login = $('#log-in');
 
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/sessionCheck.php',
+                        success: function(response){
+                            if(response == 'panel.html'){
+                                window.location.replace(response);
+                            }
+                        }
+                    })
+
                     login.on('click', function(e){
                         e.preventDefault();
 

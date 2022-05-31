@@ -35,7 +35,10 @@
     padding-bottom: 10px;
     width: 100%;
 }
-
+#table-card{
+    border-width: 2px;
+    border-color: hsl(0, 0%, 72%);
+}
 @media(min-width: 768px){
     #insert-medical-record{
         width: 30%
@@ -43,4 +46,12 @@
     #searchbar{
         width: 30%
     }
+}
+
+#record-modal{
+    background-color: hsl(0, 0%, 72%);
+}
+
+#logo{
+    height: 50px;
 }

@@ -13,9 +13,10 @@
 <body id="bg">
 
     <!-- Navigation -->
+    
     <nav class="navbar navbar-expand-lg bg-danger navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">The Furr Project</a>
+            <a class="navbar-brand" href="#"><img id="logo" class="img-fluid" src="../images/thefurrproject.PNG" alt="..."></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -44,6 +45,16 @@
                                 medicalRecords.addClass('active');
                                 $('#medical-records').show();
                                 $('#list').show();
+                            })
+
+                            $.ajax({
+                                type: 'GET',
+                                url: 'php/panelSessionCheck.php',
+                                success: function(response){
+                                    if(response == 'index.html'){
+                                        window.location.replace(response);
+                                    }
+                                }
                             })
                         });
                     </script>
@@ -139,7 +150,8 @@
                                         },
         
                                         success: function(response){
-                                            console.log(response);
+                                            $('#successfully-added-toast').toast({delay:5000});
+                                            $('#successfully-added-toast').toast('show');
                                         }
                                     })
                                 }
@@ -153,6 +165,8 @@
 
     <div id="list" class="mt-5">
         <div class="container">
+            <h1 class="mt-5">List of Patients' Medical Records</h1>
+            <hr>
             <div class="input-group mb-3" id="searchbar">
                 <button class="btn btn-outline-danger" type="button" id="search-medical-records">Search</button>
                 <input id="search-medical-records-text" type="text" class="form-control" placeholder="Search Medical Records" aria-label="Example text with button addon" aria-describedby="button-addon1">
@@ -162,13 +176,15 @@
                 $(document).ready(function(){
                     var searchMedicalRecords = $('#search-medical-records');
                     var searchMedicalRecordsText = $('#search-medical-records-text');
-
+                    var tableBody = $('#table-body');
                     searchMedicalRecords.on('click', function(e){
                         e.preventDefault();
 
                         if(searchMedicalRecordsText.val() == ""){
-                            searchMedicalRecordsText.addClass('is-invalid');
-                            $('<div class="invalid-feedback">Please fill out this field</div>').insertAfter(searchMedicalRecordsText);
+                            if(!(searchMedicalRecordsText.hasClass('is-invalid'))){
+                                searchMedicalRecordsText.addClass('is-invalid');
+                                $('<div class="invalid-feedback">Please fill out this field</div>').insertAfter(searchMedicalRecordsText);
+                            }
                         }else{
                             searchMedicalRecordsText.removeClass('is-invalid');
                             $('#table-body').children().remove();
@@ -181,18 +197,17 @@
                                 },
                                 success: function(response){
                                     var data = JSON.parse(response);
-
-                                    $(data).each(function(index,value){                                    
-                                        $('#table-body').append(`<tr>
-                                                                    <div class="card m-1 p-2">
-                                                                        <div class="card-body">
-                                                                            <td>${value.patient_name}</td>
-                                                                            <td>${value.client_code}</td>
-                                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
-                                                                        </div>
-                                                                    </div>
-                                                                </tr>`);
-                                    })
+                                    $(data).each(function(index,value){
+                                        tableBody.append(`<tr>
+                                                            <div class="card m-1 p-2">
+                                                                <div class="card-body">
+                                                                    <td>${value.patient_name}</td>
+                                                                    <td>${value.client_code}</td>
+                                                                    <td><button class="btn btn-primary view-record" value="${value.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
+                                                                </div>
+                                                            </div>
+                                                        </tr>`)
+                                    });
                                     var view = $('.view-record');
                                     view.on('click', function(e){
                                         var thisView = $(this);
@@ -205,18 +220,101 @@
                                             },
                                             success: function(response){
                                                 console.log(response);
+                                                var data = JSON.parse(response);
+                                                var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
+                                                var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
+                                                var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
+                                                var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
+                                                var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
+                                                var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
+                                                var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
+                                                var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
+                                                var species = $('#record-modal').children().children().children().children().children().children().children('#species');
+                                                var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
+                                                var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
+                                                var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
+                                                var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
+                                                var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
+                                                var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
+                                                var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
+                                                var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
+                                                var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
+                                                var treatment = $('#record-modal').children().children().children().children().children('#treatment');
+                                                var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
+                                                var surgeryOtherValue = "";
+                                                var inPatientOtherValue = "";
+                                                var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
+                                                var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
+                                                var outPatientOtherValue = ""
+                                                var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
+                                                var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
+                                                var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
+                                                var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
+                                                var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
+                                                var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
+                                                var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
+                                                var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
+                                                patientName.val(data.patient_name);
+                                                clientCode.val(data.client_code);
+                                                createdDate.val(data.date);
+                                                contactNumber.val(data.contact_no);
+                                                medicalHistory.val(data.medical_history);
+                                                wellnessBehavior.val(data.wellness_behavior);
+                                                birthDate.val(data.date_of_birth);
+                                                species.val(data.species);
+                                                breed.val(data.breed);
+                                                weight.val(data.weight);
+                                                temp.val(data.temp);
+                                                hr.val(data.hr);
+                                                rr.val(data.rr);
+                                                physicalExam.val(data.physical_exam);
+                                                cchx.val(data.cc_hx);
+                                                dxTools.val(data.dx_tools);
+                                                tdxDxCase.val(data.tdx_dx_case);
+                                                treatment.val(data.treatment);
+                                                takeHomeMeds.val(data.take_home_meds_rx);
+
+                                                if(data.in_patient == 'Yes'){
+                                                    inPatientYes.prop("checked", true);
+                                                }else if(data.in_patient == 'No'){
+                                                    inPatientNo.prop("checked", true);
+                                                }else{
+                                                    inPatientOther.val(data.in_patient)
+                                                }
+
+                                                if(data.surgery == 'Yes'){
+                                                    surgeryYes.prop("checked", true);
+                                                }else if(data.surgery == 'No'){
+                                                    surgeryNo.prop("checked", true);
+                                                }else{
+                                                    surgeryOther.val(data.surgery)
+                                                }
+
+                                                if(data.out_patient == 'Yes'){
+                                                    outPatientYes.prop("checked", true);
+                                                }else if(data.out_patient == 'No'){
+                                                    outPatientNo.prop("checked", true);
+                                                }else{
+                                                    outPatientOther.val(data.out_patient)
+                                                }
+
+                                                if(data.sex == 'Male'){
+                                                    male.prop("checked", true);
+                                                }else{
+                                                    female.prop("checked", true);
+                                                }
                                             }
                                         })
                                     });
                                 }
-                            })
+                            });
                         }
                     })
                 })
             </script>
 
 
-            <div class="card">
+            <div class="card" id="table-card">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -245,7 +343,7 @@
                                                         <div class="card-body">
                                                             <td>${value.patient_name}</td>
                                                             <td>${value.client_code}</td>
-                                                            <td><button class="btn btn-primary view-record" value="${value.id}">View</button></td>
+                                                            <td><button class="btn btn-primary view-record" value="${value.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
                                                         </div>
                                                     </div>
                                                 </tr>`)
@@ -262,6 +360,89 @@
                                     },
                                     success: function(response){
                                         console.log(response);
+                                        var data = JSON.parse(response);
+                                        var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
+                                        var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
+                                        var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
+                                        var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
+                                        var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
+                                        var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
+                                        var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
+                                        var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
+                                        var species = $('#record-modal').children().children().children().children().children().children().children('#species');
+                                        var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
+                                        var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
+                                        var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
+                                        var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
+                                        var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
+                                        var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
+                                        var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
+                                        var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
+                                        var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
+                                        var treatment = $('#record-modal').children().children().children().children().children('#treatment');
+                                        var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
+                                        var surgeryOtherValue = "";
+                                        var inPatientOtherValue = "";
+                                        var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
+                                        var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
+                                        var outPatientOtherValue = ""
+                                        var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
+                                        var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
+                                        var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
+                                        var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
+                                        var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
+                                        var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
+                                        var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
+                                        var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
+                                        patientName.val(data.patient_name);
+                                        clientCode.val(data.client_code);
+                                        createdDate.val(data.date);
+                                        contactNumber.val(data.contact_no);
+                                        medicalHistory.val(data.medical_history);
+                                        wellnessBehavior.val(data.wellness_behavior);
+                                        birthDate.val(data.date_of_birth);
+                                        species.val(data.species);
+                                        breed.val(data.breed);
+                                        weight.val(data.weight);
+                                        temp.val(data.temp);
+                                        hr.val(data.hr);
+                                        rr.val(data.rr);
+                                        physicalExam.val(data.physical_exam);
+                                        cchx.val(data.cc_hx);
+                                        dxTools.val(data.dx_tools);
+                                        tdxDxCase.val(data.tdx_dx_case);
+                                        treatment.val(data.treatment);
+                                        takeHomeMeds.val(data.take_home_meds_rx);
+
+                                        if(data.in_patient == 'Yes'){
+                                            inPatientYes.prop("checked", true);
+                                        }else if(data.in_patient == 'No'){
+                                            inPatientNo.prop("checked", true);
+                                        }else{
+                                            inPatientOther.val(data.in_patient)
+                                        }
+
+                                        if(data.surgery == 'Yes'){
+                                            surgeryYes.prop("checked", true);
+                                        }else if(data.surgery == 'No'){
+                                            surgeryNo.prop("checked", true);
+                                        }else{
+                                            surgeryOther.val(data.surgery)
+                                        }
+
+                                        if(data.out_patient == 'Yes'){
+                                            outPatientYes.prop("checked", true);
+                                        }else if(data.out_patient == 'No'){
+                                            outPatientNo.prop("checked", true);
+                                        }else{
+                                            outPatientOther.val(data.out_patient)
+                                        }
+
+                                        if(data.sex == 'Male'){
+                                            male.prop("checked", true);
+                                        }else{
+                                            female.prop("checked", true);
+                                        }
                                     }
                                 })
                             });
@@ -273,8 +454,12 @@
     </div>
 
     <!-- medical records -->
+
+    
     <div id="medical-records">
         <div class="container">
+            <h1 class="mt-5">Patient's Medical Record (Initial Check Up)</h1>
+            <hr>
             <form>
                 <div class="row d-flex justify-content-between mt-3">
                     <div class="col-md-3">
@@ -408,6 +593,169 @@
                 <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
                 <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
             </form>
+        </div>
+    </div>
+    
+
+    <!-- Patient Medical Record Modal -->
+    <div class="container">
+
+    
+    <div class="modal fade" id="record-modal">
+        <div class="modal-dialog modal-fullscreen">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row d-flex justify-content-between mt-3">
+                            <div class="col-md-3">
+                                <input id="patient-name" class="form-control" type="text" placeholder="Registered Patient Name">
+                                <div id="patient-name-error">
+        
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <input id="client-code" class="form-control" type="text" placeholder="Client Code">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="created-date" class="form-control" type="date" placeholder="Date">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="contact-number" class="form-control" type="text" placeholder="Contact Number">
+                            </div>
+                        </div>   
+        
+                        
+                        <input id="medical-history" class="form-control mt-3" type="text" placeholder="Medical History">
+                        <input id="wellness-behavior" class="form-control mt-3" type="text" placeholder="Wellness/Behavior">
+        
+                        <label for="signalment" class="mt-3"><b>Signalment</b></label>
+                        <div class="row d-flex justify-content-between mt-3" name="signalment">
+                            <div class="col-md-3">
+                                <input id="birth_date" class="form-control" type="date">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="species" class="form-control" type="text" placeholder="Species">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="breed" class="form-control" type="text" placeholder="Breed">
+                            </div>
+                            
+                            
+                            <div class="col-md-3 d-flex justify-content-evenly" name="radio-sex">
+                                <b>Sex:</b>
+                                <div class="form-check">
+                                    <input id="male" class="form-check-input" type="radio" name="sex" id="male" value="Male">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                    Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input id="female" class="form-check-input" type="radio" name="sex" id="female" value="Female">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                    Female
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <label for="vital-signs" class="mt-3"><b>Vital Signs</b></label>
+                        <div class="row d-flex justify-content-between mt-3" name="vital-signs">
+                            <div class="col-md-3">
+                                <input id="weight" class="form-control" type="text" placeholder="Weight">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="temp" class="form-control" type="text" placeholder="Temp">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="hr" class="form-control" type="text" placeholder="HR">
+                            </div>
+                            <div class="col-md-3">
+                                <input id="rr" class="form-control" type="text" placeholder="RR">
+                            </div>
+                        
+                        </div>
+        
+                        <textarea id="physical-exam" class="form-control mt-3" placeholder="Physical Exam"></textarea>
+                        <textarea id="cc-hx" class="form-control mt-3" placeholder="CC/HX"></textarea>
+                        <textarea id="dx-tools" class="form-control mt-3" placeholder="Dx Tools"></textarea>
+                        <textarea id="tdx-dx-case" class="form-control mt-3" placeholder="TDX/DX/CASE:"></textarea>
+                        <textarea id="treatment" class="form-control mt-3" placeholder="Treatment"></textarea>
+        
+                        <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
+                            <b>In-Patient:</b>
+                            <div class="form-check">
+                                <input id="in-patient-yes" class="form-check-input" type="radio" name="in-patient" value="Yes">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input id="in-patient-no" class="form-check-input" type="radio" name="in-patient" value="No">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                No
+                                </label>
+                            </div>
+                            <div class="col-md-7">
+                                <input id="in-patient-other" type="text" class="form-control" placeholder="Other">
+                            </div>
+                        </div>
+                        <div class="d-md-flex justify-content-between mt-3" name="radio-surgery">
+                            <b>Surgery:</b>
+                            <div class="form-check">
+                                <input id="surgery-yes" class="form-check-input" type="radio" name="surgery" id="surgery-yes" value="Yes">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input id="surgery-no" class="form-check-input" type="radio" name="surgery" id="surgery-no" value="No">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                No
+                                </label>
+                            </div>
+                            <div class="col-md-7">
+                                <input id="surgery-other" type="text" class="form-control" placeholder="Other">
+                            </div>
+                        </div>
+                        <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
+                            <b>Out-Patient</b>
+                            <div class="form-check">
+                                <input id="out-patient-yes" class="form-check-input" type="radio" name="out-patient" value="Yes">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input id="out-patient-no" class="form-check-input" type="radio" name="out-patient" value="No">
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                No
+                                </label>
+                            </div>
+                            <div class="col-md-7">
+                                <input id="out-patient-other" type="text" class="form-control" placeholder="Other">
+                            </div>
+                        </div>
+                        <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
+                        <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
+                    </form>
+
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast align-items-center bg-success text-light position-fixed bottom-0 end-0 border-0" id="successfully-added-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Record has been added successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
     

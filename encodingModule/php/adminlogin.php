@@ -1,4 +1,8 @@
 <?php
+
+    if(!isset($_SESSION)){
+        session_start();
+    }
     include('connection.php');
     $con = connect();
 
@@ -17,6 +21,7 @@
         if(count($data) > 0){
             if(password_verify($password,$data[0]['password'])){
                 $response = "ok";
+                $_SESSION['username'] = $username;
             }else{
                 $response = "invalid";
             }
