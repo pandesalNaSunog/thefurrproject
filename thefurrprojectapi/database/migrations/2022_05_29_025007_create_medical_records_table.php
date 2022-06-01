@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->integer('client_id');
+            $table->string('patient_name');
             $table->string('medical_history')->nullable();
             $table->string('wellness_behavior')->nullable();
             $table->string('date_of_birth')->nullable();

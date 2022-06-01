@@ -55,3 +55,9 @@
 #logo{
     height: 50px;
 }
+
+#bg::before{
+    content: '';
+    height: 120px;
+    display: block;
+}

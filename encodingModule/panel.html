@@ -14,7 +14,7 @@
 
     <!-- Navigation -->
     
-    <nav class="navbar navbar-expand-lg bg-danger navbar-dark">
+    <nav class="navbar navbar-expand-lg bg-danger navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#"><img id="logo" class="img-fluid" src="../images/thefurrproject.PNG" alt="..."></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,7 @@
                                 medicalRecords.addClass('active');
                                 $('#medical-records').show();
                                 $('#list').show();
+                                $('#owner-records').hide();
                             })
 
                             $.ajax({
@@ -62,11 +63,10 @@
                     </script>
                     <script>
                         $(document).ready(function(){
-                            var insertMedicalRecord = $('#insert-medical-record');
                             var patientName = $('#patient-name');
+                            var insertMedicalRecord = $('#insert-medical-record');
                             var clientCode = $('#client-code');
                             var createdDate = $('#created-date');
-                            var contactNumber = $('#contact-number');
                             var medicalHistory = $('#medical-history');
                             var wellnessBehavior = $('#wellness-behavior');
                             var birthDate = $('#birth_date');
@@ -90,34 +90,22 @@
                             var takeHomeMeds = $('#take-home-meds');
 
 
-                            patientName.on("input", function(){
-                                if(patientName.hasClass('is-invalid')){
-                                    patientName.removeClass('is-invalid');
-                                    patientName.addClass('is-valid');
-                                }  
-                            })
-                            insertMedicalRecord.on('click',function(e){s
+                            
+                            insertMedicalRecord.on('click',function(e){
                                 e.preventDefault()
-                                if(patientName.val() == ""){
-                                    $(window).scrollTop(patientName.offset().top);
-                                    if(!patientName.hasClass('is-invalid')){
-                                        patientName.removeClass('is-valid');
-                                        patientName.addClass('is-invalid');
-                                    }
-                                }
                                     
                                 if(clientCode.val() == ""){
                                     if(!clientCode.hasClass('is-invalid')){
                                         clientCode.addClass('is-invalid')
                                         $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
-                                        $(window).scrollTop(patientName.offset().top);
+                                        $(window).scrollTop(clientCode.offset().top);
                                     }  
                                 }
                                 if(createdDate.val() == ""){
                                     if(!createdDate.hasClass('is-invalid')){
                                         createdDate.addClass('is-invalid')
                                         $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
-                                        $(window).scrollTop(patientName.offset().top);
+                                        $(window).scrollTop(clientCode.offset().top);
                                     }
                                     
                                 }
@@ -140,7 +128,7 @@
                                     outPatientOtherValue = outPatientOther.val();
                                 }
         
-                                if(patientName.val() != "" && clientCode.val() != "" && createdDate.val() != ""){
+                                if(clientCode.val() != "" && createdDate.val() != ""){
                                     $.ajax({
                                         type: 'POST',
                                         url: 'php/medicalRecordInsertion.php',
@@ -148,7 +136,6 @@
                                             patient_name: patientName.val(),
                                             client_code: clientCode.val(),
                                             created_date: createdDate.val(),
-                                            contact_number: contactNumber.val(),
                                             medical_history: medicalHistory.val(),
                                             wellness_behavior: wellnessBehavior.val(),
                                             birth_date: birthDate.val(),
@@ -171,8 +158,14 @@
                                         },
         
                                         success: function(response){
-                                            $('#successfully-added-toast').toast({delay:5000});
-                                            $('#successfully-added-toast').toast('show');
+                                            if(response != 'create client record first'){
+                                                $('#successfully-added-toast').toast({delay:5000});
+                                                $('#successfully-added-toast').toast('show');
+                                                console.log(response);
+                                            }else{
+                                                $('#medical-record-added-fail-toast').toast({delay:5000});
+                                                $('#medical-record-added-fail-toast').toast("show");
+                                            }
                                         }
                                     })
                                 }
@@ -357,6 +350,7 @@
                         type: 'GET',
                         url: 'php/getMedicalRecord.php',
                         success: function(response){
+                            console.log(response);
                             var data = JSON.parse(response);
                             $(data).each(function(index,value){
                                 tableBody.append(`<tr>
@@ -482,21 +476,16 @@
             <h1 class="mt-5">Patient's Medical Record (Initial Check Up)</h1>
             <hr>
             <form>
-                <div class="row d-flex justify-content-between mt-3">
-                    <div class="col-md-3">
-                        <input id="patient-name" class="form-control" type="text" placeholder="Registered Patient Name">
-                        <div class="valid-feedback">Looks Good</div>
-                        <div class="invalid-feedback">Please enter the patient's name</div>
+                <div class="row d-md-flex mt-3">
+                    <div class="col-md-4">
+                        <input id="patient-name" class="form-control" type="text" placeholder="Patient Name">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <input id="client-code" class="form-control" type="text" placeholder="Client Code">
                     </div>
-                    <div class="col-md-3 d-md-flex">
+                    <div class="col-md-4 d-md-flex">
                         <p>Date:</p>
-                        <input id="created-date" class="form-control ms-3" type="date" placeholder="Date">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="contact-number" class="form-control" type="text" placeholder="Contact Number">
+                        <input id="created-date" class="form-control ms-md-3" type="date" placeholder="Date">
                     </div>
                 </div>   
 
@@ -625,12 +614,21 @@
             <div class="d-md-flex justify-content-between mt-5">
                 <div class="col-md-3">
                     <input id="client-client-name" type="text" class="form-control" placeholder="Client Name">
+                    <div id="client-name-invalid" class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
                 </div>
                 <div class="col-md-3">
                     <input id="client-client-code" type="text" class="form-control" placeholder="Client Code">
+                    <div id="client-code-invalid" class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
                 </div>
                 <div class="col-md-3">
                     <input id="client-client-contact" type="text" class="form-control" placeholder="Contact Number">
+                    <div id="client-number-invalid" class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
                 </div>    
             </div>
             <button id="insert-client-record" class="btn btn-danger mt-3">Confirm</button>
@@ -657,9 +655,25 @@
                                 contact_no: clientContact.val()
                             },
                             success: function(response){
-                                console.log(response);
+                                if(response == 'ok'){
+                                    $('#client-record-successfully-added-toast').toast({delay:5000});
+                                    $('#client-record-successfully-added-toast').toast('show');
+                                }else{
+                                    $('#client-record-error-toast').toast({delay:5000});
+                                    $('#client-record-error-toast').toast('show');
+                                }
                             }
                         })
+                    }else{
+                        if(clientName.val() == ""){
+                            clientName.addClass('is-invalid');
+                        }
+                        if(clientCode.val() == ""){
+                            clientCode.addClass('is-invalid');
+                        }
+                        if(clientContact.val() == ""){
+                            clientContact.addClass('is-invalid');
+                        }
                     }
                 })
             })
@@ -674,7 +688,6 @@
     
     <div class="modal fade" id="record-modal">
         <div class="modal-dialog modal-fullscreen">
-            
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -820,11 +833,40 @@
             </div>
         </div>
     </div>
-
+    <!-- record success toast -->
     <div class="toast align-items-center bg-success text-light position-fixed bottom-0 end-0 border-0" id="successfully-added-toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
                 Record has been added successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    <!-- client record success toast -->
+    <div class="toast align-items-center bg-success text-light position-fixed bottom-0 end-0 border-0" id="client-record-successfully-added-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Record has been added successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- client record success toast -->
+    <div class="toast align-items-center bg-danger text-light position-fixed bottom-0 end-0 border-0" id="client-record-error-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Client Already Exists.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- record fail toast -->
+    <div class="toast align-items-center bg-danger text-light position-fixed bottom-0 end-0 border-0" id="medical-record-added-fail-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Client not available. Please check the client code.
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>

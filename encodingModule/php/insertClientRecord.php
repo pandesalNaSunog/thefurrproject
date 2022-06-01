@@ -9,11 +9,25 @@
         $email = uniqid()."@gmail.com";
         $password = passwordGenerator();
 
-        $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`)
-                    VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
-        $con->query($query) or die($con->error);
+        //check if client code already exists
+
+        $query = "SELECT * FROM users WHERE client_code = '$clientCode'";
+        $user = $con->query($query) or die($con->error);
+        $data = array();
+
+        while($row = $user->fetch_assoc()){
+            $data[] = $row;
+        }
+        if(count($data) == 0){
+            $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`)
+                        VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
+            $con->query($query) or die($con->error);
+            echo 'ok';
+        }else{
+            echo 'exists';
+        }
     }
     function passwordGenerator(){
         $counter = 1;
