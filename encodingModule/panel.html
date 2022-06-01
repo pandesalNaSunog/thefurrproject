@@ -32,6 +32,7 @@
                     </li>
                     <script>
                         $(document).ready(function(){
+                            $('#owner-records').hide();
                             var patientRecords = $('#patient-record-link');
                             var medicalRecords = $('#medical-records-link');
                             patientRecords.on('click', function(e){
@@ -39,6 +40,7 @@
                                 medicalRecords.removeClass('active');
                                 $('#medical-records').hide();
                                 $('#list').hide();
+                                $('#owner-records').show()
                             })
                             medicalRecords.on('click', function(e){
                                 patientRecords.removeClass('active');
@@ -86,19 +88,38 @@
                             var outPatientOther = $('#out-patient-other');
                             var outPatientOtherValue = ""
                             var takeHomeMeds = $('#take-home-meds');
-                            insertMedicalRecord.on('click',function(e){
+
+
+                            patientName.on("input", function(){
+                                if(patientName.hasClass('is-invalid')){
+                                    patientName.removeClass('is-invalid');
+                                    patientName.addClass('is-valid');
+                                }  
+                            })
+                            insertMedicalRecord.on('click',function(e){s
                                 e.preventDefault()
                                 if(patientName.val() == ""){
-                                    patientName.addClass('is-invalid')
-                                    $('<div class="invalid-feedback">Please enter the patient\'s name.</div>').insertAfter(patientName);
+                                    $(window).scrollTop(patientName.offset().top);
+                                    if(!patientName.hasClass('is-invalid')){
+                                        patientName.removeClass('is-valid');
+                                        patientName.addClass('is-invalid');
+                                    }
                                 }
+                                    
                                 if(clientCode.val() == ""){
-                                    clientCode.addClass('is-invalid')
-                                    $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
+                                    if(!clientCode.hasClass('is-invalid')){
+                                        clientCode.addClass('is-invalid')
+                                        $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
+                                        $(window).scrollTop(patientName.offset().top);
+                                    }  
                                 }
                                 if(createdDate.val() == ""){
-                                    createdDate.addClass('is-invalid')
-                                    $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
+                                    if(!createdDate.hasClass('is-invalid')){
+                                        createdDate.addClass('is-invalid')
+                                        $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
+                                        $(window).scrollTop(patientName.offset().top);
+                                    }
+                                    
                                 }
         
                                 if(surgeryOther.val() == ""){
@@ -464,15 +485,15 @@
                 <div class="row d-flex justify-content-between mt-3">
                     <div class="col-md-3">
                         <input id="patient-name" class="form-control" type="text" placeholder="Registered Patient Name">
-                        <div id="patient-name-error">
-
-                        </div>
+                        <div class="valid-feedback">Looks Good</div>
+                        <div class="invalid-feedback">Please enter the patient's name</div>
                     </div>
                     <div class="col-md-3">
                         <input id="client-code" class="form-control" type="text" placeholder="Client Code">
                     </div>
-                    <div class="col-md-3">
-                        <input id="created-date" class="form-control" type="date" placeholder="Date">
+                    <div class="col-md-3 d-md-flex">
+                        <p>Date:</p>
+                        <input id="created-date" class="form-control ms-3" type="date" placeholder="Date">
                     </div>
                     <div class="col-md-3">
                         <input id="contact-number" class="form-control" type="text" placeholder="Contact Number">
@@ -485,7 +506,8 @@
 
                 <label for="signalment" class="mt-3"><b>Signalment</b></label>
                 <div class="row d-flex justify-content-between mt-3" name="signalment">
-                    <div class="col-md-3">
+                    <div class="col-md-3 d-md-flex">
+                        <p>Birth Date:</p>
                         <input id="birth_date" class="form-control" type="date">
                     </div>
                     <div class="col-md-3">
@@ -594,6 +616,55 @@
                 <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
             </form>
         </div>
+    </div>
+
+    <!-- Owner Records -->
+
+    <div id="owner-records">
+        <div class="container">
+            <div class="d-md-flex justify-content-between mt-5">
+                <div class="col-md-3">
+                    <input id="client-client-name" type="text" class="form-control" placeholder="Client Name">
+                </div>
+                <div class="col-md-3">
+                    <input id="client-client-code" type="text" class="form-control" placeholder="Client Code">
+                </div>
+                <div class="col-md-3">
+                    <input id="client-client-contact" type="text" class="form-control" placeholder="Contact Number">
+                </div>    
+            </div>
+            <button id="insert-client-record" class="btn btn-danger mt-3">Confirm</button>
+        </div>
+
+        <!-- client record script -->
+        <script>
+            $(document).ready(function(){
+                var clientName = $('#client-client-name');
+                var clientCode = $('#client-client-code');
+                var clientContact = $('#client-client-contact');
+                var insertClientRecord = $('#insert-client-record');
+
+
+                insertClientRecord.on('click', function(e){
+                    e.preventDefault();
+                    if(clientCode.val() != "" && clientName.val() != "" && clientContact.val() != ""){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/insertClientRecord.php',
+                            data: {
+                                client_name: clientName.val(),
+                                client_code: clientCode.val(),
+                                contact_no: clientContact.val()
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    }
+                })
+            })
+        </script>
+
     </div>
     
 

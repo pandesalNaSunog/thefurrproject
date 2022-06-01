@@ -15,11 +15,8 @@ return new class extends Migration
     {
         Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
             $table->date('date');
-            $table->string('patient_name');
-            $table->string('contact_no')->nullable();
-            $table->string('client_code');
+            $table->integer('client_id');
             $table->string('medical_history')->nullable();
             $table->string('wellness_behavior')->nullable();
             $table->string('date_of_birth')->nullable();

@@ -12,9 +12,6 @@ class MedicalRecord extends Model
     protected $fillable = [
         'type',
         'date',
-        'patient_name',
-        'contact_no',
-        'client_code',
         'medical_history',
         'wellness_behavior',
         'date_of_birth',
