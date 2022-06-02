@@ -9,7 +9,6 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
 
-
         $query = "SELECT * FROM users WHERE email = '$email'";
         $user = $con->query($query) or die($con->error);
         $data = array();

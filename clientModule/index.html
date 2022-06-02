@@ -17,7 +17,7 @@
             var email = $('#email');
             var password = $('#password');
             var login = $('#login');
-            var signUp = $('signup');
+            var signUp = $('#signup');
             var invalidEmail = $('#invalid-email');
             var invalidPassword = $('#invalid-password');
 
@@ -73,9 +73,14 @@
     <div class="container">
 
         <!-- Header -->
-        <div class="d-lg-flex justify-content-evenly text-center" id="header">
-            <img src="../images/thefurrproject.PNG" class="img-fluid col-lg-5 align-self-start">
-            <div class="col-lg-4">
+        <div class="d-lg-flex justify-content-evenly" id="header">
+
+            <div class="col-lg-5">
+                <img src="../images/thefurrproject.PNG" class="img-fluid align-self-start text-start">
+                <p class="lead mt-5">Sign Up to book an appointment, track your bills and view progress updates!</p>
+            </div>
+            
+            <div class="col-lg-4 text-center">
                 <div class="card shadow mt-3 mt-lg-0" id="login-card">
                     <div class="card-body">
                         <input id="email" type="text" class="form-control" placeholder="Email">
@@ -88,7 +93,7 @@
                         </div>
                         <button id="login" class="mt-3 fw-bold fs-4 solid-blue-btn">Log In</button>
                         <p class="mt-3">Don't have an account?</p>
-                        <button id="signup" class="fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign Up</button>
+                        <button id="signup" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign Up</button>
                     </div>
                 </div>
                 <p class="lead mt-3" id="copyright">The Furr Project &copy; 2022</p>
@@ -101,18 +106,20 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
+                        
                         <div class="modal-title">
                             <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <input id="name" class="form-control" type="text" placeholder="Name">
-                        <input id="email" class="form-control mt-3" type="text" placeholder="Email">
-                        <input id="contact" class="form-control mt-3" type="text" placeholder="Contact Number">
-                        <input id="password" class="form-control mt-3" type="password" placeholder="Password">
-                        <input id="retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
-                        <button class="solid-blue-btn mt-3">Confirm</button>
+                    <div class="modal-body text-center">
+                        <p class="fw-bold">Sign Up</p>
+                        <input id="signup-name" class="form-control" type="text" placeholder="Name">
+                        <input id="signup-email" class="form-control mt-3" type="text" placeholder="Email">
+                        <input id="signup-contact" class="form-control mt-3" type="text" placeholder="Contact Number">
+                        <input id="signup-password" class="form-control mt-3" type="password" placeholder="Password">
+                        <input id="signup-retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
+                        <button class="solid-blue-btn mt-3" id="confirm-signup">Confirm</button>
                     </div>
                 </div>
             </div>
@@ -121,11 +128,31 @@
         <!-- Sign Up Script -->
         <script>
             $(document).ready(function(){
-                var name = $('#name');
-                var email = $('#email');
-                var contact = $('#contact');
-                var password = $('#password');
-                var retypePassword = $('#retype-password');
+                var name = $('#signup-name');
+                var email = $('#signup-email');
+                var contact = $('#signup-contact');
+                var password = $('#signup-password');
+                var retypePassword = $('#signup-retype-password');
+                var signUp = $('#confirm-signup');
+
+                signUp.on('click', function(e){
+                    e.preventDefault();
+                    if(name.val() != "" && email.val() != "" && contact.val() != "" && password.val() != "" && retypePassword.val() != ""){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/signup.php',
+                            data: {
+                                name: name.val(),
+                                email: email.val(),
+                                contact: contact.val(),
+                                password: password.val(),
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    }
+                })
             })
         </script>
 

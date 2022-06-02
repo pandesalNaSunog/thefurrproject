@@ -1,5 +1,5 @@
 #header{
-    margin-top: 10%;
+    margin-top: 20%;
 }
 
 .solid-blue-btn{
@@ -36,4 +36,10 @@ h1{
     border-width: 2px;
     border-color: darkblue;
     color: darkblue;
+    transition-duration: 0.4s;
+}
+
+#signup:hover{
+    background-color: darkblue;
+    color: white;
 }
