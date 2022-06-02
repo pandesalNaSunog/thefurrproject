@@ -1,0 +1,39 @@
+#header{
+    margin-top: 10%;
+}
+
+.solid-blue-btn{
+    border: none;
+    border-radius: 50px;
+    background-color: darkblue;
+    color: white;
+    font-style: bold;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transition-duration: 0.4s;
+}
+
+.solid-blue-btn:hover{
+    background-color: blue;
+}
+
+h1{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+#copyright{
+    color: rgb(177, 177, 177);
+    font-size: small;
+}
+#login-card{
+    border-radius: 10px;
+}
+
+#signup{
+    width: 40%;
+    border-radius: 50px;
+    background-color: white;
+    border-width: 2px;
+    border-color: darkblue;
+    color: darkblue;
+}

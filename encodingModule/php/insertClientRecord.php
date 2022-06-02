@@ -24,7 +24,8 @@
             $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`)
                         VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
             $con->query($query) or die($con->error);
-            echo 'ok';
+            //sendSMS($contactNo, $email, $password);
+            echo $password;
         }else{
             echo 'exists';
         }
@@ -40,5 +41,25 @@
         }while($counter < 9);
 
         return $generatedPassword;
+    }
+    function sendSMS($contactNo, $email, $password){
+        $ch = curl_init();
+        $parameters = array(
+            'apikey' => '34a51284e39cc4d5f1d6bace2cbbf124',
+            'number' => '09666802734',
+            'message' => "This is to inform you that you have given an account for The Furr Project Veterinary Clinic.\n\nYour email: ".$email."\nYour password: ".$password."\n\nBy the way, Mr. Jem Irall Flores says 'I love you'."
+        );
+        curl_setopt( $ch, CURLOPT_URL,'https://api.semaphore.co/api/v4/messages' );
+        curl_setopt( $ch, CURLOPT_POST, 1 );
+
+        //Send the parameters set above with the request
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $parameters ) );
+
+        // Receive response from server
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+        $output = curl_exec( $ch );
+        curl_close ($ch);
+
+        echo $output;
     }
 ?>

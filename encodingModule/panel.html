@@ -655,13 +655,14 @@
                                 contact_no: clientContact.val()
                             },
                             success: function(response){
-                                if(response == 'ok'){
-                                    $('#client-record-successfully-added-toast').toast({delay:5000});
-                                    $('#client-record-successfully-added-toast').toast('show');
-                                }else{
-                                    $('#client-record-error-toast').toast({delay:5000});
-                                    $('#client-record-error-toast').toast('show');
-                                }
+                                console.log(response);
+                                // if(response == 'ok'){
+                                //     $('#client-record-successfully-added-toast').toast({delay:5000});
+                                //     $('#client-record-successfully-added-toast').toast('show');
+                                // }else{
+                                //     $('#client-record-error-toast').toast({delay:5000});
+                                //     $('#client-record-error-toast').toast('show');
+                                // }
                             }
                         })
                     }else{

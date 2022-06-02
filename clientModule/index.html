@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.js"></script>
+    <title>Document</title>
+
+
+
+    <script>
+        $(document).ready(function(){
+            var email = $('#email');
+            var password = $('#password');
+            var login = $('#login');
+            var signUp = $('signup');
+            var invalidEmail = $('#invalid-email');
+            var invalidPassword = $('#invalid-password');
+
+            //hide validation notifications
+            invalidEmail.hide();
+            invalidPassword.hide();
+
+
+            $.ajax({
+                type: 'GET',
+                url: 'php/sessionCheck.php',
+                success: function(response){
+                    if(response == 'clientDashboard.html'){
+                        window.location.replace(response);
+                    }
+                }
+            })
+            login.on('click',function(e){
+                
+                if(email.val() != "" && password.val() != ""){
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/login.php',
+                        data: {
+                            email: email.val(),
+                            password: password.val()
+                        },
+                        success: function(response){
+                            if(response == 'ok'){
+                                window.location.replace('clientDashboard.html');
+                            }else if(response == 'invalid email'){
+                                email.addClass('is-invalid');
+                                invalidEmail.show();
+                                password.removeClass('is-invalid')
+                                invalidPassword.hide();
+                            }else if(response == 'invalid password'){
+                                password.addClass('is-invalid');
+                                email.removeClass('is-invalid');
+                                invalidPassword.show();
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+
+
+
+
+</head>
+<body class="bg-light">
+    <div class="container">
+
+        <!-- Header -->
+        <div class="d-lg-flex justify-content-evenly text-center" id="header">
+            <img src="../images/thefurrproject.PNG" class="img-fluid col-lg-5 align-self-start">
+            <div class="col-lg-4">
+                <div class="card shadow mt-3 mt-lg-0" id="login-card">
+                    <div class="card-body">
+                        <input id="email" type="text" class="form-control" placeholder="Email">
+                        <div id="invalid-email" class="invalid-feedback">
+                            Invalid Email
+                        </div>
+                        <input id="password" type="password" class="form-control mt-3" placeholder="Password">
+                        <div id="invalid-password" class="invalid-feedback">
+                            Invalid Password
+                        </div>
+                        <button id="login" class="mt-3 fw-bold fs-4 solid-blue-btn">Log In</button>
+                        <p class="mt-3">Don't have an account?</p>
+                        <button id="signup" class="fw-bold fs-5" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign Up</button>
+                    </div>
+                </div>
+                <p class="lead mt-3" id="copyright">The Furr Project &copy; 2022</p>
+            </div>
+        </div>
+
+
+        <!-- Sign Up Modal -->
+        <div class="modal fade" id="sign-up-modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="name" class="form-control" type="text" placeholder="Name">
+                        <input id="email" class="form-control mt-3" type="text" placeholder="Email">
+                        <input id="contact" class="form-control mt-3" type="text" placeholder="Contact Number">
+                        <input id="password" class="form-control mt-3" type="password" placeholder="Password">
+                        <input id="retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
+                        <button class="solid-blue-btn mt-3">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign Up Script -->
+        <script>
+            $(document).ready(function(){
+                var name = $('#name');
+                var email = $('#email');
+                var contact = $('#contact');
+                var password = $('#password');
+                var retypePassword = $('#retype-password');
+            })
+        </script>
+
+    </div>
+</body>
+</html>
