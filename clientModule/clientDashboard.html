@@ -119,7 +119,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body fw-bold" id="doctors-list">
-
+                    <p style="color: red">You have already booked this schedule.</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="text" class="form-control" placeholder="Concern" id="concern">
+                    <div class="invalid-feedback">
+                        Please enter your concern.
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,6 +138,25 @@
             var checkSchedules = $('#check-schedules');
             var appointmentTimeList = $('#appointment-time-list');
             var doctorsList = $('#doctors-list');
+            var concern = $('#concern');
+            var clientId = 0;
+            concern.removeClass('is-invalid');
+
+
+
+            //get client id from php session
+            $.ajax({
+                type: 'GET',
+                url: 'php/getId.php',
+                success: function(response){
+                    if(response == 'index.html'){
+                        window.location.replace(response);
+                    }else{
+                        clientId = response;
+                    } 
+                }
+            })
+
             checkSchedules.on('click', function(e){
                 if(appointmentDate.val() != ""){
                     $.ajax({
@@ -176,10 +201,43 @@
                                         date: date
                                     },
                                     success: function(response){
-                                        var data = JSON.parse(response);
-                                        $(data).each(function(index,value){
-                                            doctorsList.append(`<button class="btn btn-outline-primary mt-3 fw-bold" style="width: 100%; border-radius: 50px">${value.name}</button>`)
-                                        })
+                                        console.log(response);
+                                        if(response != 'already booked by client'){
+                                            var data = JSON.parse(response);
+                                            concern.show();
+                                            $(data).each(function(index,value){
+                                                doctorsList.append(`<button value="${value.id}" class="btn btn-outline-primary mt-3 fw-bold doctor" style="width: 100%; border-radius: 50px">${value.name}</button>`)
+                                            });
+
+                                            var doctor = $('.doctor');
+
+                                            doctor.on('click', function(e){
+                                                var thisDoctor = $(this);
+                                                e.preventDefault();
+                                                if(concern.val() == ""){
+                                                    concern.addClass('is-invalid');
+                                                }else{
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: 'php/bookAppointment.php',
+                                                        data: {
+                                                            client_id: clientId,
+                                                            doctor_id: thisDoctor.val(),
+                                                            date: date,
+                                                            time: time,
+                                                            concern: concern.val()
+                                                        },
+                                                        success: function(response){
+                                                            console.log(response);
+                                                        }
+                                                    })
+                                                }
+                                                
+                                            })
+                                        }else{
+                                            concern.hide();
+                                            doctorsList.append(`<p class="fw-bold text-center" style="color: red;">You have already booked this schedule</p>`);
+                                        }
                                     }
                                 })
                             })

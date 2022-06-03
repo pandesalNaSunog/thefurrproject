@@ -16,6 +16,7 @@
             $data[] = $row;
         }
         if(count($data) > 0){
+            $_SESSION['client_id'] = $data[0]['id'];
             echo 'clientDashboard.html';
         }else{
             echo 'no';
