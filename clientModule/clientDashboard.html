@@ -34,10 +34,47 @@
                             Appointments
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                Account
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" class="dropdown-item" id="logout">
+                                        Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+
+    <!-- Logout Script -->
+
+    <script>
+        $(document).ready(function(){
+            var logout = $('#logout');
+
+            logout.on('click', function(e){
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/logout.php',
+                    success: function(response){
+                        if(response == 'index.html'){
+                            window.location.replace(response);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
     
     <!-- appointment section -->
     <section id="appointment-section">
@@ -103,7 +140,7 @@
                 <div class="modal-body fw-bold">
                     Choose Date:
                     <input id="appointment-date" type="date" class="form-control mt-3">
-                    <button id="check-schedules" class="btn btn-primary mt-3" style="width: 100%; border-radius: 50px">Check Schedules</button>
+                    <button data-bs-dismiss="modal" id="check-schedules" class="btn btn-primary mt-3" style="width: 100%; border-radius: 50px">Check Schedules</button>
                 </div>
             </div>
         </div>
@@ -149,11 +186,12 @@
                 type: 'GET',
                 url: 'php/getId.php',
                 success: function(response){
-                    if(response == 'index.html'){
-                        window.location.replace(response);
-                    }else{
-                        clientId = response;
-                    } 
+                    console.log(response);
+                    // if(response == 'index.html'){
+                    //     window.location.replace(response);
+                    // }else{
+                    //     clientId = response;
+                    // } 
                 }
             })
 
