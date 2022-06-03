@@ -60,6 +60,15 @@
                             }
                         }
                     })
+                }else if(email.val() == ""){
+                    email.addClass('is-invalid');
+                    invalidEmail.show();
+                    password.removeClass('is-invalid')
+                    invalidPassword.hide();
+                }else if(password.val() == ""){
+                    password.addClass('is-invalid');
+                    email.removeClass('is-invalid');
+                    invalidPassword.show();
                 }
             })
         })

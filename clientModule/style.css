@@ -13,7 +13,9 @@
     padding-bottom: 10px;
     transition-duration: 0.4s;
 }
-
+.bg{
+    background-color: darkblue;
+}
 .solid-blue-btn:hover{
     background-color: blue;
 }

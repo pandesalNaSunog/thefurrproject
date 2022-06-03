@@ -4,11 +4,190 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.js">
+        
+    </script>
     <title>Document</title>
 </head>
-<body>
-    <div class="container">
-        <h1>Client Dashboard</h1>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg">
+        <div class="container">
+            <div class="navbar-brand">
+                Client Dashboard
+            </div>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto fw-bold">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            Appointments
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- appointment section -->
+    <section id="appointment-section">
+        <div class="container">
+            <div class="card my-3 mt-5" style="border-width: 2px; border-radius: 10px">
+                <div class="card-header">
+                    <h2 class="fw-bold">List of Appointments</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Concern</th>
+                                <th scope="col">Attending Vet</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointment-list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <button data-bs-toggle="modal" data-bs-target="#appointment-modal" class="btn btn-primary fw-bold" style="border-radius: 50px; padding-left: 20px; padding-right: 20px">Book an Appointment</button> 
+        </div>
+    </section>
+
+    <!-- appointment time schedules -->
+    <section id="appointment-time-schedules">
+        <div class="container">
+            <div class="card my-3 mt-5" style="border-width: 2px; border-radius: 10px">
+                <div class="card-header">
+                    <h2 class="fw-bold">Appointment Schedules</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Time</th>
+                                <th scope="col">Availability</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointment-time-list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Appointment Booking Modal -->
+
+    <div class="modal fade" id="appointment-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fw-bold">
+                    Choose Date:
+                    <input id="appointment-date" type="date" class="form-control mt-3">
+                    <button id="check-schedules" class="btn btn-primary mt-3" style="width: 100%; border-radius: 50px">Check Schedules</button>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Choose Doctors Modal -->
+    <div class="modal fade" id="choose-doctors-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body fw-bold" id="doctors-list">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Booking Script -->
+    <script>
+        $(document).ready(function(e){
+            var appointmentDate = $('#appointment-date');
+            var checkSchedules = $('#check-schedules');
+            var appointmentTimeList = $('#appointment-time-list');
+            var doctorsList = $('#doctors-list');
+            checkSchedules.on('click', function(e){
+                if(appointmentDate.val() != ""){
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getAppointmentTimeSchedules.php',
+                        data: {
+                            date: appointmentDate.val()
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            appointmentTimeList.children().remove();
+                            $(data).each(function(index,value){
+                                if(value.availability != 'Fully Booked!'){
+                                    appointmentTimeList.append(`<tr>
+                                                                <td>${value.time}</td>
+                                                                <td>
+                                                                    <button data-bs-toggle="modal" data-bs-target="#choose-doctors-modal" style="border-radius: 50px; padding-left: 30px; padding-right: 30px;" class="btn btn-primary mx-auto book" value="${value.date}/${value.time}">Book</button>
+                                                                </td>
+                                                            </tr>`);
+                                }
+                                else{
+                                    appointmentTimeList.append(`<tr>
+                                                                <td>${value.time}</td>
+                                                                <td>
+                                                                    <p class="fw-bold" style="color: red">Fully Booked!</p>
+                                                                </td>
+                                                            </tr>`);
+                                }
+                            })
+
+                            var book = $('.book');
+                            book.on('click', function(e){
+                                var value = $(this).val();
+                                var date = value.split('/')[0];
+                                var time = value.split('/')[1];
+                                doctorsList.children().remove();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/getAvailableDoctors.php',
+                                    data: {
+                                        time: time,
+                                        date: date
+                                    },
+                                    success: function(response){
+                                        var data = JSON.parse(response);
+                                        $(data).each(function(index,value){
+                                            doctorsList.append(`<button class="btn btn-outline-primary mt-3 fw-bold" style="width: 100%; border-radius: 50px">${value.name}</button>`)
+                                        })
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }
+            })
+        })
+    </script>
 </body>
 </html>
