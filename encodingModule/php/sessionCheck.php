@@ -18,7 +18,6 @@
             while($row = $admin->fetch_assoc()){
                 $data[] = $row;
             }
-
             if(count($data) > 0){
                 echo 'panel.html';
             }else{
@@ -28,8 +27,5 @@
             $username = "";
             echo 'nothing';
         }
-        
-        
-
     }
 ?>

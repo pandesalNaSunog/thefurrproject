@@ -293,9 +293,9 @@
                                                         success: function(response){
                                                             var data = JSON.parse(response);
                                                                 appointmentList.append(`<tr>
-                                                                                            <td>${clientName}</td>
+                                                                                            <td>${data.client_name}</td>
                                                                                             <td>${concern.val()}</td>
-                                                                                            <td>${data.name}</td>
+                                                                                            <td>${data.appointment.name}</td>
                                                                                             <td>${date}</td>
                                                                                             <td>${time}</td>
                                                                                         </tr>`);

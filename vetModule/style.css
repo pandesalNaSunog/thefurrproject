@@ -1,0 +1,17 @@
+#log-in{
+    transition-duration: 0.4s;
+    border-radius: 50px;
+    color: white;
+    background-color: darkblue;
+    border: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 20px;
+}
+
+#log-in:hover{
+    background-color: blue  ;
+}
