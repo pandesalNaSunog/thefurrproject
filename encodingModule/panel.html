@@ -24,17 +24,34 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
 
                     <li class="nav-item">
-                        <a id="patient-record-link" class="nav-link" aria-current="page" href="#">Patient Records</a>
+                        <a id="patient-record-link" class="nav-link" aria-current="page" href="#">Client Records</a>
                     </li>
                     
                     <li class="nav-item">
-                        <a id="medical-records-link" class="nav-link active" aria-current="page" href="#">Medical Records</a>
+                        <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a id="logout" class="nav-link" aria-current="page" href="#">Logout</a>
                     </li>
                     <script>
                         $(document).ready(function(){
                             $('#owner-records').hide();
                             var patientRecords = $('#patient-record-link');
                             var medicalRecords = $('#medical-records-link');
+                            var logout = $('#logout');
+
+                            logout.on('click', function(){
+                                $.ajax({
+                                    type: 'GET',
+                                    url: 'php/adminLogout.php',
+                                    success: function(response){
+                                        if(response == 'index.html'){
+                                            window.location.replace(response);
+                                        }
+                                    }
+                                })
+                            })
                             patientRecords.on('click', function(e){
                                 patientRecords.addClass('active');
                                 medicalRecords.removeClass('active');
@@ -88,9 +105,15 @@
                             var outPatientOther = $('#out-patient-other');
                             var outPatientOtherValue = ""
                             var takeHomeMeds = $('#take-home-meds');
-
-
-                            
+                            var male = $('#male');
+                            var yesInPatient = $('#yes-in-patient');
+                            var surgeryYes = $('#surgery-yes');
+                            var outPatientYes = $('#yes-out-patient');
+                            var tableBody = $('#table-body');
+                            male.prop("checked", true);
+                            surgeryYes.prop("checked", true);
+                            outPatientYes.prop("checked", true);
+                            yesInPatient.prop("checked", true);
                             insertMedicalRecord.on('click',function(e){
                                 e.preventDefault()
                                     
@@ -159,9 +182,119 @@
         
                                         success: function(response){
                                             if(response != 'create client record first'){
+                                                console.log(response);
+                                                var data = JSON.parse(response);
                                                 $('#successfully-added-toast').toast({delay:5000});
                                                 $('#successfully-added-toast').toast('show');
-                                                console.log(response);
+
+                                                tableBody.append(`<tr>
+                                                            <div class="card m-1 p-2">
+                                                                <div class="card-body">
+                                                                    <td>${patientName.val()}</td>
+                                                                    <td>${clientCode.val()}</td>
+                                                                    <td><button class="btn btn-primary view-record" value="${data.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
+                                                                </div>
+                                                            </div>
+                                                        </tr>`);
+
+                                                        var view = $('.view-record');
+                                                        view.on('click', function(e){
+                                                            var thisView = $(this);
+                                                            e.preventDefault();
+                                                            $.ajax({
+                                                                type: 'POST',
+                                                                url: 'php/getSpecificRecord.php',
+                                                                data: {
+                                                                    record_id: thisView.val()
+                                                                },
+                                                                success: function(response){
+                                                                    console.log(response);
+                                                                    var data = JSON.parse(response);
+                                                                    var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
+                                                                    var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
+                                                                    var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
+                                                                    var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
+                                                                    var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
+                                                                    var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
+                                                                    var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
+                                                                    var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
+                                                                    var species = $('#record-modal').children().children().children().children().children().children().children('#species');
+                                                                    var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
+                                                                    var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
+                                                                    var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
+                                                                    var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
+                                                                    var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
+                                                                    var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
+                                                                    var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
+                                                                    var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
+                                                                    var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
+                                                                    var treatment = $('#record-modal').children().children().children().children().children('#treatment');
+                                                                    var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
+                                                                    var surgeryOtherValue = "";
+                                                                    var inPatientOtherValue = "";
+                                                                    var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
+                                                                    var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
+                                                                    var outPatientOtherValue = ""
+                                                                    var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
+                                                                    var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
+                                                                    var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
+                                                                    var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
+                                                                    var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
+                                                                    var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
+                                                                    var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
+                                                                    var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
+                                                                    patientName.val(data.patient_name);
+                                                                    clientCode.val(data.client_code);
+                                                                    createdDate.val(data.date);
+                                                                    contactNumber.val(data.contact_no);
+                                                                    medicalHistory.val(data.medical_history);
+                                                                    wellnessBehavior.val(data.wellness_behavior);
+                                                                    birthDate.val(data.date_of_birth);
+                                                                    species.val(data.species);
+                                                                    breed.val(data.breed);
+                                                                    weight.val(data.weight);
+                                                                    temp.val(data.temp);
+                                                                    hr.val(data.hr);
+                                                                    rr.val(data.rr);
+                                                                    physicalExam.val(data.physical_exam);
+                                                                    cchx.val(data.cc_hx);
+                                                                    dxTools.val(data.dx_tools);
+                                                                    tdxDxCase.val(data.tdx_dx_case);
+                                                                    treatment.val(data.treatment);
+                                                                    takeHomeMeds.val(data.take_home_meds_rx);
+
+                                                                    if(data.in_patient == 'Yes'){
+                                                                        inPatientYes.prop("checked", true);
+                                                                    }else if(data.in_patient == 'No'){
+                                                                        inPatientNo.prop("checked", true);
+                                                                    }else{
+                                                                        inPatientOther.val(data.in_patient)
+                                                                    }
+
+                                                                    if(data.surgery == 'Yes'){
+                                                                        surgeryYes.prop("checked", true);
+                                                                    }else if(data.surgery == 'No'){
+                                                                        surgeryNo.prop("checked", true);
+                                                                    }else{
+                                                                        surgeryOther.val(data.surgery)
+                                                                    }
+
+                                                                    if(data.out_patient == 'Yes'){
+                                                                        outPatientYes.prop("checked", true);
+                                                                    }else if(data.out_patient == 'No'){
+                                                                        outPatientNo.prop("checked", true);
+                                                                    }else{
+                                                                        outPatientOther.val(data.out_patient)
+                                                                    }
+
+                                                                    if(data.sex == 'Male'){
+                                                                        male.prop("checked", true);
+                                                                    }else{
+                                                                        female.prop("checked", true);
+                                                                    }
+                                                                }
+                                                            })
+                                                        });
                                             }else{
                                                 $('#medical-record-added-fail-toast').toast({delay:5000});
                                                 $('#medical-record-added-fail-toast').toast("show");
@@ -346,6 +479,24 @@
             <script>
                 $(document).ready(function(){
                     var tableBody = $('#table-body');
+                    var clientRecordTable = $('#client-record-table');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getClientRecords.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index,value){
+                                clientRecordTable.append(`<tr>
+                                                            <td>${value.name}</td>
+                                                            <td>${value.client_code}</td>
+                                                            <td>${value.contact_no}</td>
+                                                          </tr>`)
+                            })
+                        }
+                    })
+
                     $.ajax({
                         type: 'GET',
                         url: 'php/getMedicalRecord.php',
@@ -550,7 +701,7 @@
                 <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
                     <b>In-Patient:</b>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="in-patient" value="Yes">
+                        <input class="form-check-input" type="radio" name="in-patient" id="yes-in-patient" value="Yes">
                         <label class="form-check-label" for="flexRadioDefault1">
                         Yes
                         </label>
@@ -586,7 +737,7 @@
                 <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
                     <b>Out-Patient</b>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="out-patient" value="Yes">
+                        <input class="form-check-input" type="radio" name="out-patient" id="yes-out-patient" value="Yes">
                         <label class="form-check-label" for="flexRadioDefault1">
                         Yes
                         </label>
@@ -602,7 +753,7 @@
                     </div>
                 </div>
                 <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
-                <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
+                <button id="insert-medical-record" class="my-3 col-md-3 btn btn-danger" style="border-radius: 50px">Confirm</button>
             </form>
         </div>
     </div>
@@ -611,27 +762,51 @@
 
     <div id="owner-records">
         <div class="container">
-            <div class="d-md-flex justify-content-between mt-5">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Client Records</h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Client Code</th>
+                                <th scope="col">Contact Number</th>
+                            </tr>
+                        </thead>
+    
+                        <tbody id="client-record-table">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!--  -->
+
+            <h1 class="mt-5">Insert New Client Record</h1>
+            <hr>
+            <div class="d-md-flex justify-content-between mt-1">
                 <div class="col-md-3">
-                    <input id="client-client-name" type="text" class="form-control" placeholder="Client Name">
+                    <input id="client-client-name" type="text" class="form-control mt-3 mt-lg-0" placeholder="Client Name">
                     <div id="client-name-invalid" class="invalid-feedback">
                         Please fill out this field.
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <input id="client-client-code" type="text" class="form-control" placeholder="Client Code">
+                    <input id="client-client-code" type="text" class="form-control mt-3 mt-lg-0" placeholder="Client Code">
                     <div id="client-code-invalid" class="invalid-feedback">
                         Please fill out this field.
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <input id="client-client-contact" type="text" class="form-control" placeholder="Contact Number">
+                    <input id="client-client-contact" type="text" class="form-control mt-3 mt-lg-0" placeholder="Contact Number">
                     <div id="client-number-invalid" class="invalid-feedback">
                         Please fill out this field.
                     </div>
                 </div>    
             </div>
-            <button id="insert-client-record" class="btn btn-danger mt-3">Confirm</button>
+            <button id="insert-client-record" style="border-radius: 50px" class="btn btn-danger mt-3">Confirm</button>
         </div>
 
         <!-- client record script -->
@@ -641,7 +816,7 @@
                 var clientCode = $('#client-client-code');
                 var clientContact = $('#client-client-contact');
                 var insertClientRecord = $('#insert-client-record');
-
+                var clientRecordTable = $('#client-record-table');
 
                 insertClientRecord.on('click', function(e){
                     e.preventDefault();
@@ -655,14 +830,19 @@
                                 contact_no: clientContact.val()
                             },
                             success: function(response){
-                                console.log(response);
-                                // if(response == 'ok'){
-                                //     $('#client-record-successfully-added-toast').toast({delay:5000});
-                                //     $('#client-record-successfully-added-toast').toast('show');
-                                // }else{
-                                //     $('#client-record-error-toast').toast({delay:5000});
-                                //     $('#client-record-error-toast').toast('show');
-                                // }
+                                if(response == 'ok'){
+                                    $('#client-record-successfully-added-toast').toast({delay:5000});
+                                    $('#client-record-successfully-added-toast').toast('show');
+
+                                    clientRecordTable.append(`<tr>
+                                                                <td>${clientName.val()}</td>
+                                                                <td>${clientCode.val()}</td>
+                                                                <td>${clientContact.val()}</td>
+                                                            </tr>`)
+                                }else{
+                                    $('#client-record-error-toast').toast({delay:5000});
+                                    $('#client-record-error-toast').toast('show');
+                                }
                             }
                         })
                     }else{
@@ -825,7 +1005,7 @@
                             </div>
                         </div>
                         <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
-                        <button id="insert-medical-record" class="my-3 col-md-3">Confirm</button>
+                        <button id="insert-medical-record" class="my-3 col-md-3 btn btn-danger" style="border-radius: 50px">Confirm</button>
                     </form>
 
 

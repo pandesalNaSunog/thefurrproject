@@ -8,10 +8,7 @@
         $contactNo = $_POST['contact_no'];
         $email = uniqid()."@gmail.com";
         $password = passwordGenerator();
-
-
         //check if client code already exists
-
         $query = "SELECT * FROM users WHERE client_code = '$clientCode'";
         $user = $con->query($query) or die($con->error);
         $data = array();
@@ -25,7 +22,7 @@
                         VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
             $con->query($query) or die($con->error);
             //sendSMS($contactNo, $email, $password);
-            echo $password;
+            echo 'ok';
         }else{
             echo 'exists';
         }

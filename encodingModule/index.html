@@ -12,56 +12,80 @@
 </head>
 <body class="bg-light">
 
-    <div class="col-md-3 mx-auto mt-5">
-        <div class="card p-5">
+    <div class="col-md-4 col-lg-2 mx-auto mt-5 text-center" id="contents">
+        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+        <p class="lead">Encoding Module</p>
+        <div class="card mt-5 mx-3">
             <div class="card-body text-center">
-                <h1><b>LOG IN</b></h1>
-            </div>
-            <form>
-                <input id="username" type="text" placeholder="Username" class="form-control mb-2" required>
-                <input id="password" type="password" placeholder="Password" class="form-control mb-2" required>
-                <button id="log-in">Log In</button>
-            </form>
+                <form>
+                    <input id="username" type="text" placeholder="Username" class="form-control mt-3" required>
+                    <div class="invalid-feedback">
+                        Please fill out this field
+                    </div>
+                    <input id="password" type="password" placeholder="Password" class="form-control mt-3" required>
+                    <div class="invalid-feedback">
+                        Please fill out this field
+                    </div>
+                    <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
+                </form>
+    
+                <script>
+                    $(document).ready(function(){
+                        var username = $('#username');
+                        var password = $('#password');
+                        var login = $('#log-in');
+                        var contents = $('#contents');
+                        contents.hide();
+                        username.on('keydown', function(){
+                            username.removeClass('is-invalid');
+                        })
 
-            <script>
-                $(document).ready(function(){
-                    var username = $('#username');
-                    var password = $('#password');
-                    var login = $('#log-in');
-
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/sessionCheck.php',
-                        success: function(response){
-                            if(response == 'panel.html'){
-                                window.location.replace(response);
-                            }
-                        }
-                    })
-
-                    login.on('click', function(e){
-                        e.preventDefault();
-
-                        if(username.val() != "" && password.val() != ""){
-                            $.ajax({
-                                type: 'POST',
-                                url: 'php/adminlogin.php',
-                                data: {
-                                    username: username.val(),
-                                    password: password.val()
-                                },
-                                success: function(response){
-                                    if(response == 'ok'){
-                                        window.location.replace('panel.html');
-                                    }else{
-                                        alert('invalid username and password');
-                                    }
+                        password.on('keydown', function(){
+                            password.removeClass('is-invalid');
+                        })
+    
+                        $.ajax({
+                            type: 'GET',
+                            url: 'php/sessionCheck.php',
+                            success: function(response){
+                                if(response == 'panel.html'){
+                                    window.location.replace(response);
+                                }else{
+                                    contents.show();
                                 }
-                            })
-                        }
+                            }
+                        })
+    
+                        login.on('click', function(e){
+                            e.preventDefault();
+    
+                            if(username.val() != "" && password.val() != ""){
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/adminlogin.php',
+                                    data: {
+                                        username: username.val(),
+                                        password: password.val()
+                                    },
+                                    success: function(response){
+                                        if(response == 'ok'){
+                                            window.location.replace('panel.html');
+                                        }
+                                    }
+                                })
+                            }else{
+                                if(username.val() == ""){
+                                    username.addClass('is-invalid');
+                                }
+                                if(password.val() == ""){
+                                    password.addClass('is-invalid');
+                                }
+                            }
+                        })
                     })
-                })
-            </script>
+                </script>
+            </div>
+            
             
         </div>
     </div>

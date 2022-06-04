@@ -12,6 +12,10 @@
         $query = "INSERT INTO appointments(`client_id`,`doctor_id`,`date`,`time`,`concern`)VALUES('$clientId','$doctorId','$date','$time','$concern')";
         $con->query($query) or die($con->error);
 
-        echo 'ok';
+        $query = "SELECT * FROM doctors WHERE id = '$doctorId'";
+        $appointment = $con->query($query) or die($con->error);
+        $row = $appointment->fetch_assoc();
+
+        echo json_encode($row);
     }
 ?>

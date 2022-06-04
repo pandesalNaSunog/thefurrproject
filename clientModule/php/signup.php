@@ -2,6 +2,9 @@
     include('connection.php');
     $con = connect();
 
+    if(!isset($_SESSION)){
+        session_start();
+    }
     if(isset($_POST)){
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -25,7 +28,12 @@
             $clientCode = createClientCode($name, $con);
             $query = "INSERT INTO users(`email`,`password`,`contact_no`,`name`,`client_code`)VALUES('$email','$encryptedPassword','$contact','$name','$clientCode')";
             $con->query($query) or die($con->error);
-            echo 'ok';
+            $query = "SELECT * FROM users WHERE id = LAST_INSERT_ID()";
+            $user = $con->query($query) or die($con->error);
+            $row = $user->fetch_assoc();
+            $_SESSION['client_id'] = $row['id'];
+            $_SESSION['client_email'] = $row['email'];
+            echo 'clientDashboard.html';
         }
     }
 

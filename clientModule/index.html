@@ -124,10 +124,25 @@
                     <div class="modal-body text-center">
                         <p class="fw-bold">Sign Up</p>
                         <input id="signup-name" class="form-control" type="text" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
                         <input id="signup-email" class="form-control mt-3" type="text" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
                         <input id="signup-contact" class="form-control mt-3" type="text" placeholder="Contact Number">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
                         <input id="signup-password" class="form-control mt-3" type="password" placeholder="Password">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
                         <input id="signup-retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
                         <button class="solid-blue-btn mt-3" id="confirm-signup">Confirm</button>
                     </div>
                 </div>
@@ -144,6 +159,22 @@
                 var retypePassword = $('#signup-retype-password');
                 var signUp = $('#confirm-signup');
 
+                name.on('keydown', function(){
+                    name.removeClass('is-invalid');
+                });
+                email.on('keydown', function(){
+                    email.removeClass('is-invalid');
+                });
+                contact.on('keydown', function(){
+                    contact.removeClass('is-invalid');
+                });
+                password.on('keydown', function(){
+                    password.removeClass('is-invalid');
+                });
+                retypePassword.on('keydown', function(){
+                    retypePassword.removeClass('is-invalid');
+                });
+
                 signUp.on('click', function(e){
                     e.preventDefault();
                     if(name.val() != "" && email.val() != "" && contact.val() != "" && password.val() != "" && retypePassword.val() != ""){
@@ -157,9 +188,26 @@
                                 password: password.val(),
                             },
                             success: function(response){
-                                console.log(response);
+                                window.location.replace(response);
                             }
                         })
+                    }else{
+                        if(name.val() == ""){
+                            name.addClass('is-invalid');
+                        }
+                        if(email.val() == ""){
+                            email.addClass('is-invalid');
+                        }
+                        if(password.val() == ""){
+                            password.addClass('is-invalid');
+                        }
+                        if(contact.val() == ""){
+                            contact.addClass('is-invalid');
+                        }
+                        if(retypePassword.val() == ""){
+                            retypePassword.addClass('is-invalid');
+                        }
+
                     }
                 })
             })

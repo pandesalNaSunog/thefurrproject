@@ -84,23 +84,29 @@
                     <h2 class="fw-bold">List of Appointments</h2>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Client Name</th>
-                                <th scope="col">Concern</th>
-                                <th scope="col">Attending Vet</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointment-list">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Client Name</th>
+                                    <th scope="col">Concern</th>
+                                    <th scope="col">Attending Vet</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointment-list">
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
             </div>
 
             <button data-bs-toggle="modal" data-bs-target="#appointment-modal" class="btn btn-primary fw-bold" style="border-radius: 50px; padding-left: 20px; padding-right: 20px">Book an Appointment</button> 
         </div>
     </section>
+
 
     <!-- appointment time schedules -->
     <section id="appointment-time-schedules">
@@ -110,16 +116,19 @@
                     <h2 class="fw-bold">Appointment Schedules</h2>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped text-center">
-                        <thead>
-                            <tr>
-                                <th scope="col">Time</th>
-                                <th scope="col">Availability</th>
-                            </tr>
-                        </thead>
-                        <tbody id="appointment-time-list">
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Time</th>
+                                    <th scope="col">Availability</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointment-time-list">
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -178,20 +187,36 @@
             var concern = $('#concern');
             var clientId = 0;
             concern.removeClass('is-invalid');
-
-
-
+            var appointmentList = $('#appointment-list');
+            var clientName = ""
+            $.ajax({
+                type: 'GET',
+                url: 'php/getMyAppointments.php',
+                success: function(response){
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    $(data).each(function(index,value){
+                        appointmentList.append(`<tr>
+                                                    <td>${value.name}</td>
+                                                    <td>${value.concern}</td>
+                                                    <td>${value.vet}</td>
+                                                    <td>${value.date}</td>
+                                                    <td>${value.time}</td>
+                                                </tr>`)
+                                                clientName = value.name;
+                    })
+                }
+            })
             //get client id from php session
             $.ajax({
                 type: 'GET',
                 url: 'php/getId.php',
                 success: function(response){
-                    console.log(response);
-                    // if(response == 'index.html'){
-                    //     window.location.replace(response);
-                    // }else{
-                    //     clientId = response;
-                    // } 
+                    if(response == 'index.html'){
+                        window.location.replace(response);
+                    }else{
+                        clientId = response;
+                    } 
                 }
             })
 
@@ -266,7 +291,15 @@
                                                             concern: concern.val()
                                                         },
                                                         success: function(response){
-                                                            console.log(response);
+                                                            var data = JSON.parse(response);
+                                                                appointmentList.append(`<tr>
+                                                                                            <td>${clientName}</td>
+                                                                                            <td>${concern.val()}</td>
+                                                                                            <td>${data.name}</td>
+                                                                                            <td>${date}</td>
+                                                                                            <td>${time}</td>
+                                                                                        </tr>`);
+                                                            
                                                         }
                                                     })
                                                 }

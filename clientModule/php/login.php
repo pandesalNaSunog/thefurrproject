@@ -24,6 +24,12 @@
                 echo 'invalid password';
             }else{
                 $_SESSION['client_email'] = $email;
+                $queryEmail = $_SESSION['client_email'];
+                $query = "SELECT * FROM users WHERE email = '$queryEmail'";
+                $user = $con->query($query) or die($con->error);
+                $row = $user->fetch_assoc();
+    
+                $_SESSION['client_id'] = $row['id'];
                 echo 'ok';
             }
         }
