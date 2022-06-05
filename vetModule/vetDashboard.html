@@ -4,16 +4,200 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="../js/jquery.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    
     <title>Document</title>
 </head>
 <body>
-    <div class="container">
-        Hello
-    </div>
+    
+
+    <script>
+        $(document).ready(function(){
+        var appointments = $('#appointments');
+        var logout = $('#logout');
+        var serviceProcessing = $('#service-processing');
+        getApointments();
+        logout.on('click', function(){
+            logoutFun();
+        });
+
+
+
+
+
+
+        function getApointments(){
+            $.ajax({
+                type: 'GET',
+                url: '../vetModule/php/getAppointments.php',
+                success: function(response){
+                    var data = JSON.parse(response);
+                    $(data).each(function(index,value){
+                        appointments.append(`
+                                            <tr>
+                                                <td>${value.client_name}</td>
+                                                <td>${value.appointment.concern}</td>
+                                                <td>${value.appointment.date}</td>
+                                                <td>${value.appointment.time}</td>
+                                                <td>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button value="${value.appointment.id}" class="btn btn-primary cater" data-bs-toggle="modal" data-bs-target="#cater-appointment-modal" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">View</button>
+                                                        <button class="btn btn-primary ms-2" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Refer</button>
+                                                    </div>
+                                                </td>
+                                            </tr>`)
+                    })
+                    var caterAppointment = $('.cater');
+                    viewAndCaterAppointment(caterAppointment);
+                }
+            })
+        }
+
+
+
+        function logoutFun(){
+            $.ajax({
+                type: 'GET',
+                url: '../vetModule/php/vetLogout.php',
+                success: function(response){
+                    if(response == 'index.html'){
+                        window.location.replace(response);
+                    }
+                }
+            })
+        }
+
+        function viewAndCaterAppointment(caterAppointment){
+            caterAppointment.on('click', function(e){
+                var thisCaterAppointment = $(this);
+                getClientNameAndCode(thisCaterAppointment);
+            })
+        }
+
+        function getClientNameAndCode(thisCaterAppointment){
+            $.ajax({
+                type: 'POST',
+                url: '../vetModule/php/getClientDetails.php',
+                data: {
+                    appointment_id: thisCaterAppointment.val(),
+                },
+                success: function(response){
+                    var data = JSON.parse(response);
+                    serviceProcessing.children('p').remove();
+                    serviceProcessing.prepend(`<p class="lh-sm fw-bold fs-3"><span class="fs-5 lead">Name: </span>${data.name}<br><span id="client-code-modal" class="fw-normal fs-5">${data.client_code}</span></p>`);
+                }
+            })
+        }
+    })
+    </script>
+
+
+
+
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg text-light bg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                Doctor's Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Appointments</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout" class="nav-link" href="#">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End of Navigation -->
+
+    <!-- List of Appointments Section -->
+    <section id="list-of-appointments">
+        <div class="container">
+            <div class="table-responsive">
+                <div class="card mt-5">
+                    <div class="card-body">
+                        <table class="table table-striped text-center">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Concern</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Time</th>
+                                <th scope="col">Action</th>
+                                
+                            </thead>
+                            <tbody id="appointments">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of List of Appointments -->
+
+
+
+    <!-- View Appointment Modal -->
+    <section class="cater-appointment">
+        <div class="modal fade" id="cater-appointment-modal">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="container">
+                        <div class="modal-header">
+                            <div class="modal-title">
+                                <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="service-processing">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="fw-bold">Generate Invoice</h3>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <th scope="col">Service</th>
+                                            <th scope="col">Amount</th>
+                                        </thead>
+                                    </table>
+                                </div>
+                                
+                                
+                            </div> 
+                        </div>
+                        <div class="dropdown">
+                            <button class="my-5 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                Add Services
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" class="dropdown-item">Service</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of Appointment Modal -->
+
     
 </body>
 </html>
