@@ -27,7 +27,7 @@
 
 
         $query = "INSERT INTO invoices(`client_id`,`doctor_id`,`service_breakdown`,`total_price`) VALUES('$clientId','$doctorId','$breakdown','$total')";
-    
+        $con->query($query) or die($con->error);
         $query = "DELETE FROM appointments WHERE id = '$appointmentId'";
         $con->query($query) or die($con->error);
         echo 'ok';

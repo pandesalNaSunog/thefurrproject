@@ -904,12 +904,13 @@
                 </div>
             </div>
 
-
-            <div class="d-lg-flex justify-content-between mt-5">
+            <h1 class="fw-bold mt-5">Insert New Service</h1>
+            <hr>
+            <div class="d-lg-flex justify-content-between mt-2">
                 <div class="col-lg-5">
                     <input id="service-input" type="text" class="form-control" placeholder="Service">
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-5 mt-2 mt-lg-0">
                     <input id="service-price-input" type="text" class="form-control" placeholder="Price">
                 </div>
             </div>
@@ -927,6 +928,8 @@
                 var addService = $('#add-service');
                 var serviceInput = $('#service-input');
                 var servicePriceInput = $('#service-price-input');
+
+                getAllServices();
                 addService.on('click', function(e){
                     e.preventDefault();
                     
@@ -943,6 +946,24 @@
                         })
                      
                 })
+
+
+                function getAllServices(){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getAllServices.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index, value){
+                                serviceList.append(`<tr>
+                                                        <td>${value.service}</td>
+                                                        <td>${value.price}</td>
+                                                    </tr>`)
+                            })
+                        }
+                    })
+                }
             })
         </script>
         <!-- End of Services Script -->

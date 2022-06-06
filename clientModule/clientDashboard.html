@@ -193,18 +193,19 @@
                 type: 'GET',
                 url: 'php/getMyAppointments.php',
                 success: function(response){
-                    var data = JSON.parse(response);
-                    console.log(data);
-                    $(data).each(function(index,value){
-                        appointmentList.append(`<tr>
-                                                    <td>${value.name}</td>
-                                                    <td>${value.concern}</td>
-                                                    <td>${value.vet}</td>
-                                                    <td>${value.date}</td>
-                                                    <td>${value.time}</td>
-                                                </tr>`)
-                                                clientName = value.name;
-                    })
+                    // var data = JSON.parse(response);
+                    // console.log(data);
+                    // $(data).each(function(index,value){
+                    //     appointmentList.append(`<tr>
+                    //                                 <td>${value.name}</td>
+                    //                                 <td>${value.concern}</td>
+                    //                                 <td>${value.vet}</td>
+                    //                                 <td>${value.date}</td>
+                    //                                 <td>${value.time}</td>
+                    //                             </tr>`)
+                    //                             clientName = value.name;
+                    // })
+                    console.log(response);
                 }
             })
             //get client id from php session
