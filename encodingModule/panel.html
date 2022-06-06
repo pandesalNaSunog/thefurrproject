@@ -30,6 +30,9 @@
                     <li class="nav-item">
                         <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
                     </li>
+                    <li class="nav-item">
+                        <a id="services-link" class="nav-link" aria-current="page" href="#">Services</a>
+                    </li>
 
                     <li class="nav-item">
                         <a id="logout" class="nav-link" aria-current="page" href="#">Logout</a>
@@ -37,8 +40,10 @@
                     <script>
                         $(document).ready(function(){
                             $('#owner-records').hide();
+                            $('#services-section').hide();
                             var patientRecords = $('#patient-record-link');
                             var medicalRecords = $('#medical-records-link');
+                            var servicesLink = $('#services-link');
                             var logout = $('#logout');
 
                             logout.on('click', function(){
@@ -52,19 +57,33 @@
                                     }
                                 })
                             })
+
+                            servicesLink.on('click', function(e){
+                                patientRecords.removeClass('active');
+                                medicalRecords.removeClass('active');
+                                servicesLink.addClass('active');
+                                $('#medical-records').hide();
+                                $('#list').hide();
+                                $('#owner-records').hide();
+                                $('#services-section').show();
+                            })
                             patientRecords.on('click', function(e){
                                 patientRecords.addClass('active');
                                 medicalRecords.removeClass('active');
+                                servicesLink.removeClass('active');
                                 $('#medical-records').hide();
                                 $('#list').hide();
                                 $('#owner-records').show()
+                                $('#services-section').hide();
                             })
                             medicalRecords.on('click', function(e){
                                 patientRecords.removeClass('active');
                                 medicalRecords.addClass('active');
+                                servicesLink.removeClass('active');
                                 $('#medical-records').show();
                                 $('#list').show();
                                 $('#owner-records').hide();
+                                $('#services-section').hide();
                             })
 
                             $.ajax({
@@ -859,8 +878,77 @@
                 })
             })
         </script>
-
     </div>
+
+
+
+    <!-- Services Section -->
+    <section id="services-section">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="fw-bold">List of Services</h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Service Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="service-list">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="d-lg-flex justify-content-between mt-5">
+                <div class="col-lg-5">
+                    <input id="service-input" type="text" class="form-control" placeholder="Service">
+                </div>
+                <div class="col-lg-5">
+                    <input id="service-price-input" type="text" class="form-control" placeholder="Price">
+                </div>
+            </div>
+
+            <button class="btn btn-danger mt-2" style="border-radius: 50px;" id="add-service">
+                Add Service
+            </button>
+        </div>
+
+
+        <!-- Services Script -->
+        <script>
+            $(document).ready(function(){
+                var serviceList = $('#service-list');
+                var addService = $('#add-service');
+                var serviceInput = $('#service-input');
+                var servicePriceInput = $('#service-price-input');
+                addService.on('click', function(e){
+                    e.preventDefault();
+                    
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/createService.php',
+                            data: {
+                                service: serviceInput.val(),
+                                price: servicePriceInput.val(),
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                     
+                })
+            })
+        </script>
+        <!-- End of Services Script -->
+
+    </section>
+    <!-- End of Services Section -->
     
 
     <!-- Patient Medical Record Modal -->

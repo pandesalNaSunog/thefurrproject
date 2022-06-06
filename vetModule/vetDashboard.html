@@ -19,7 +19,26 @@
         var appointments = $('#appointments');
         var logout = $('#logout');
         var serviceProcessing = $('#service-processing');
+        var serviceProcessingList = $('#service-processing-list');
+        var addServiceButton = $('#add-service-button');
+        var totalAmount = $('#total-amount');
+        var total = 0;
+        var customServiceInput = $('#custom-service-input');
+        var customServicePrice = $('#custom-service-price');
+        var customServiceConfirm = $('#custom-service-confirm');
+
+
+        customServiceConfirm.on('click', function(e){
+            e.preventDefault();
+            addCustomService();
+        })
         getApointments();
+
+
+        addServiceButton.on('click', function(e){
+            e.preventDefault();
+            getServices();
+        })
         logout.on('click', function(){
             logoutFun();
         });
@@ -27,6 +46,39 @@
 
 
 
+
+
+        function addCustomService(){
+            if(customServiceInput.val() != "" && customServicePrice.val() != ""){
+                serviceProcessingList.append(`<tr><td>${customServiceInput.val()}</td><td>${customServicePrice.val()}</td></tr>`);
+                total = parseFloat(total) + parseFloat(customServicePrice.val());
+                totalAmount.text(total.toFixed(2));
+            }
+        }
+        function getServices(){
+            var addServiceDropDown = $('#add-service-dropdown');
+            addServiceDropDown.children().remove();
+            
+            $.ajax({
+                type: 'GET',
+                url: 'php/getServices.php',
+                success: function(response){
+                    var data = JSON.parse(response)
+                    $(data).each(function(index, value){
+                        addServiceDropDown.append(`<li><button value="${index}" class="dropdown-item service-item">${value.service}</button></li>`);
+                    })
+
+                    var serviceItem = $('.service-item');
+                    serviceItem.on('click', function(e){
+                        var thisIndex = $(this).val();
+                        e.preventDefault();
+                        serviceProcessingList.append(`<tr><td>${data[thisIndex].service}</td><td>${data[thisIndex].price}</td></tr>`)
+                        total = parseFloat(total) + parseFloat(data[thisIndex].price);
+                        totalAmount.text(total.toFixed(2));
+                    })
+                }
+            })
+        }
 
 
         function getApointments(){
@@ -152,7 +204,7 @@
 
 
 
-    <!-- View Appointment Modal -->
+    <!-- Cater Appointment Modal -->
     <section class="cater-appointment">
         <div class="modal fade" id="cater-appointment-modal">
             <div class="modal-dialog modal-fullscreen">
@@ -175,22 +227,37 @@
                                             <th scope="col">Service</th>
                                             <th scope="col">Amount</th>
                                         </thead>
+                                        <tbody id="service-processing-list">
+
+                                        </tbody>
                                     </table>
                                 </div>
-                                
-                                
-                            </div> 
+                                <div class="card-footer">
+                                    <p><span>Total: </span><span id="total-amount" class="fw-bold fs-5"></span></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="dropdown">
-                            <button class="my-5 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
-                                Add Services
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#" class="dropdown-item">Service</a>
-                                </li>
-                            </ul>
+
+                        <div class="d-flex">
+                            <div class="dropdown">
+                                <button style="border-radius: 50px;" id="add-service-button" class="mb-5 mt-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    Add Services
+                                </button>
+                                <ul class="dropdown-menu" id="add-service-dropdown">
+                                </ul>
+                            </div>
+                            <div class="dropdown ms-2">
+                                <button style="border-radius: 50px;" id="add-service-button" class="mb-5 mt-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                    Add Custom Service
+                                </button>
+                                <form class="dropdown-menu p-3">
+                                    <textarea id="custom-service-input" class="form-control" placeholder="Service"></textarea>
+                                    <input id="custom-service-price" type="number" class="form-control mt-3" placeholder="Price">
+                                    <button id="custom-service-confirm" class="btn btn-primary mt-3" style="border-radius: 50px; padding-left: 200px; padding-right: 200px">Confirm</button>
+                                </form>
+                            </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
