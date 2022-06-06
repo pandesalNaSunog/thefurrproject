@@ -22,6 +22,7 @@ return array(
     'App\\Models\\AdminCred' => $baseDir . '/app/Models/AdminCred.php',
     'App\\Models\\Appointment' => $baseDir . '/app/Models/Appointment.php',
     'App\\Models\\Doctor' => $baseDir . '/app/Models/Doctor.php',
+    'App\\Models\\Invoice' => $baseDir . '/app/Models/Invoice.php',
     'App\\Models\\MedicalRecord' => $baseDir . '/app/Models/MedicalRecord.php',
     'App\\Models\\Service' => $baseDir . '/app/Models/Service.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',

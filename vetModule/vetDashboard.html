@@ -26,6 +26,9 @@
         var customServiceInput = $('#custom-service-input');
         var customServicePrice = $('#custom-service-price');
         var customServiceConfirm = $('#custom-service-confirm');
+        var confirmInvoice = $('#confirm-invoice');
+
+        
 
 
         customServiceConfirm.on('click', function(e){
@@ -42,9 +45,6 @@
         logout.on('click', function(){
             logoutFun();
         });
-
-
-
 
 
 
@@ -124,8 +124,14 @@
 
         function viewAndCaterAppointment(caterAppointment){
             caterAppointment.on('click', function(e){
+                total = 0;
+                totalAmount.text("");
                 var thisCaterAppointment = $(this);
+                serviceProcessingList.children().remove();
                 getClientNameAndCode(thisCaterAppointment);
+
+
+                
             })
         }
 
@@ -140,6 +146,40 @@
                     var data = JSON.parse(response);
                     serviceProcessing.children('p').remove();
                     serviceProcessing.prepend(`<p class="lh-sm fw-bold fs-3"><span class="fs-5 lead">Name: </span>${data.name}<br><span id="client-code-modal" class="fw-normal fs-5">${data.client_code}</span></p>`);
+                    var clientId = data.id;
+
+                    confirmInvoice.on('click', function(e){
+                        e.preventDefault();
+
+                        if(serviceProcessingList.children().length != 0){
+                            var services = [];
+                            var prices = [];
+                            serviceProcessingList.children().each(function(index, value){
+                                var serviceText = $(this).children().first().text();
+                                var pricesText = $(this).children().eq(1).text();
+                                services.push(serviceText);
+                                prices.push(pricesText);
+                            })
+
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/createInvoice.php',
+                                data:{
+                                    services: services,
+                                    prices: prices,
+                                    total: total,
+                                    client_id: clientId,
+                                    appointment_id: thisCaterAppointment.val()
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        location.reload();
+                                    }
+                                    
+                                }
+                            })
+                        }
+                    })
                 }
             })
         }
@@ -238,15 +278,15 @@
                             </div>
                         </div>
 
-                        <div class="d-flex">
-                            <div class="dropdown">
+                        <div class="d-lg-flex">
+                            <div class="col dropdown">
                                 <button style="border-radius: 50px;" id="add-service-button" class="mb-5 mt-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     Add Services
                                 </button>
                                 <ul class="dropdown-menu" id="add-service-dropdown">
                                 </ul>
                             </div>
-                            <div class="dropdown ms-2">
+                            <div class="col dropdown ms-2">
                                 <button style="border-radius: 50px;" id="add-service-button" class="mb-5 mt-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     Add Custom Service
                                 </button>
@@ -256,6 +296,8 @@
                                     <button id="custom-service-confirm" class="btn btn-primary mt-3" style="border-radius: 50px; padding-left: 200px; padding-right: 200px">Confirm</button>
                                 </form>
                             </div>
+
+                            <button id="confirm-invoice" class="col btn btn-primary align-self-start mt-2 ms-2" style="border-radius: 50px">Confirm Invoice</button>
                         </div>
                         
                     </div>
