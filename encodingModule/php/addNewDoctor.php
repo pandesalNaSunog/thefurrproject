@@ -3,7 +3,7 @@
     $con = connect();
 
     if(isset($_POST)){
-        $doctorsName = "Dr.".$_POST['name'];
+        $doctorsName = "Dr. ".$_POST['name'];
         $doctorsEmail = $_POST['email'];
 
 

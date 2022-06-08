@@ -28,6 +28,7 @@
                         password: password.val()
                     },
                     success: function(response){
+                        console.log(response);
                         if(response != 'nothing'){
                             window.location.replace(response);
                         }   

@@ -942,6 +942,40 @@
             <button class="btn btn-danger mt-2" style="border-radius: 50px;" id="add-service">
                 Add Service
             </button>
+
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h1 class="fw-bold">
+                        Laboratory Procedures
+                    </h1>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Procedure</th>
+                            <th scope="col">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lab-procedures">
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <h1 class="fw-bold mt-5">Insert New Laboratory Procedure</h1>
+            <hr>
+
+            <div class="d-lg-flex justify-content-between">
+                <div class="col col-lg-5">
+                    <input id="lab-procedure-input" type="text" class="form-control" placeholder="Procedure">
+                </div>
+                <div class="col col-lg-5">
+                    <input id="lab-procedure-price" type="number" class="mt-lg-0 mt-3 col col-lg-5 form-control" placeholder="Price">
+                </div>
+                
+            </div>
+            <button id="insert-lab-procedure" class="btn btn-danger mt-3 mb-5" style="border-radius: 50px;">Add New Procedure</button>
+
         </div>
 
 
@@ -952,10 +986,40 @@
                 var addService = $('#add-service');
                 var serviceInput = $('#service-input');
                 var servicePriceInput = $('#service-price-input');
+                var inputLabProcedure = $('#lab-procedure-input');
+                var labProcedurePrice = $('#lab-procedure-price');
+                var insertLabProcedure = $('#insert-lab-procedure');
+                var labProcedures = $('#lab-procedures');
+
                 getAllServices();
+                getAllLabProcedures();
+
+
+
+                insertLabProcedure.on('click', function(){
+                    if(inputLabProcedure.val() != "" && labProcedurePrice.val() != ""){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/addNewLabProcedure.php',
+                            data:{
+                                name: inputLabProcedure.val(),
+                                price: labProcedurePrice.val(),
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                labProcedures.append(`<tr><td>${data.name}</td><td>${data.price}</td></tr>`)
+                                inputLabProcedure.val("");
+                                labProcedurePrice.val("");
+                            }
+                        })
+                    }
+                })
+
+
+                
                 addService.on('click', function(e){
                     e.preventDefault();
-                    
+                    if(serviceInput.val() != "" && servicePriceInput.val() != ""){
                         $.ajax({
                             type: 'POST',
                             url: 'php/createService.php',
@@ -964,9 +1028,13 @@
                                 price: servicePriceInput.val(),
                             },
                             success: function(response){
-                                console.log(response);
+                                var data = JSON.parse(response);
+                                serviceList.append(`<tr><td>${data.service}</td><td>${data.price}</td></tr>`)
+                                serviceInput.val("");
+                                servicePriceInput.val("");
                             }
                         })
+                    }
                      
                 })
 
@@ -983,6 +1051,21 @@
                                                         <td>${value.service}</td>
                                                         <td>${value.price}</td>
                                                     </tr>`)
+                            })
+                        }
+                    })
+                }
+
+                function getAllLabProcedures(){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getAllLabProcedures.php',
+                        success: function(response){
+                            
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index, value){
+                                labProcedures.append(`<tr><td>${value.name}</td><td>${value.price}</td></tr>`)
                             })
                         }
                     })
@@ -1078,9 +1161,10 @@
                         <div class="input-group mt-3">
                             <span class="input-group-text">Dr.</span>
                             <input id="doctors-name" type="text" class="form-control" placeholder="Doctor's Name">
-                            <input id="doctors-email" type="text" class="form-control" placeholder="Doctor's Email">
+                            
                         </div>
-                        <button id="insert-new-doctor" class="btn btn-primary fw-bold" style="border-radius: 50px">Confirm</button>
+                        <input id="doctors-email" type="text" class="form-control mt-3" placeholder="Doctor's Email">
+                        <button id="insert-new-doctor" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
                     </div>
                 </div>
             </div>
