@@ -26,6 +26,10 @@
                     <li class="nav-item">
                         <a id="patient-record-link" class="nav-link" aria-current="page" href="#">Client Records</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a id="staff-link" class="nav-link" aria-current="page" href="#">Staff</a>
+                    </li>
                     
                     <li class="nav-item">
                         <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
@@ -41,9 +45,11 @@
                         $(document).ready(function(){
                             $('#owner-records').hide();
                             $('#services-section').hide();
+                            $('#staff-section').hide();
                             var patientRecords = $('#patient-record-link');
                             var medicalRecords = $('#medical-records-link');
                             var servicesLink = $('#services-link');
+                            var staffLink = $('#staff-link');
                             var logout = $('#logout');
 
                             logout.on('click', function(){
@@ -58,29 +64,47 @@
                                 })
                             })
 
+                            staffLink.on('click', function(){
+                                patientRecords.removeClass('active');
+                                medicalRecords.removeClass('active');
+                                staffLink.addClass('active');
+                                servicesLink.removeClass('active');
+                                $('#medical-records').hide();
+                                $('#list').hide();
+                                $('#owner-records').hide();
+                                $('#staff-section').show();
+                                $('#services-section').hide();
+                            })
+
                             servicesLink.on('click', function(e){
                                 patientRecords.removeClass('active');
                                 medicalRecords.removeClass('active');
+                                staffLink.removeClass('active');
                                 servicesLink.addClass('active');
                                 $('#medical-records').hide();
                                 $('#list').hide();
                                 $('#owner-records').hide();
+                                $('#staff-section').hide();
                                 $('#services-section').show();
                             })
                             patientRecords.on('click', function(e){
                                 patientRecords.addClass('active');
                                 medicalRecords.removeClass('active');
                                 servicesLink.removeClass('active');
+                                staffLink.removeClass('active');
                                 $('#medical-records').hide();
                                 $('#list').hide();
                                 $('#owner-records').show()
                                 $('#services-section').hide();
+                                $('#staff-section').hide();
                             })
                             medicalRecords.on('click', function(e){
                                 patientRecords.removeClass('active');
                                 medicalRecords.addClass('active');
                                 servicesLink.removeClass('active');
+                                staffLink.removeClass('active');
                                 $('#medical-records').show();
+                                $('#staff-section').hide();
                                 $('#list').show();
                                 $('#owner-records').hide();
                                 $('#services-section').hide();
@@ -928,7 +952,6 @@
                 var addService = $('#add-service');
                 var serviceInput = $('#service-input');
                 var servicePriceInput = $('#service-price-input');
-
                 getAllServices();
                 addService.on('click', function(e){
                     e.preventDefault();
@@ -970,6 +993,100 @@
 
     </section>
     <!-- End of Services Section -->
+
+    <!-- Staff Section -->
+    <section id="staff-section">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="fw-bold">Doctors</h3>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctors-list">
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-doctor-modal" style="border-radius: 50px">Add New</button>
+        </div>
+        <!-- Staff Script -->
+        <script>
+            $(document).ready(function(){
+                var doctorsList = $('#doctors-list');
+                var doctorsName = $('#doctors-name');
+                var doctorsEmail = $('#doctors-email');
+                var insertNewDoctor = $('#insert-new-doctor');
+
+                onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail);
+                getAllDoctors(doctorsList);
+            })
+
+            function onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail){
+                insertNewDoctor.on('click', function(){
+                    if(doctorsName.val() != "" && doctorsEmail.val() != ""){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/addNewDoctor.php',
+                            data: {
+                                name: doctorsName.val(),
+                                email: doctorsEmail.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    location.reload();
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function getAllDoctors(doctorsList){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllDoctors.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        
+                        $(data).each(function(index, value){
+                            doctorsList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`);
+                        })
+                        
+                    }
+                })
+            }
+        </script>
+        <!-- End of Staff Script -->
+
+        <!-- Add Doctor Modal -->
+        <div class="modal fade" id="add-doctor-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                        </div>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mt-3">
+                            <span class="input-group-text">Dr.</span>
+                            <input id="doctors-name" type="text" class="form-control" placeholder="Doctor's Name">
+                            <input id="doctors-email" type="text" class="form-control" placeholder="Doctor's Email">
+                        </div>
+                        <button id="insert-new-doctor" class="btn btn-primary fw-bold" style="border-radius: 50px">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End of Staff Section -->
     
 
     <!-- Patient Medical Record Modal -->
