@@ -28,6 +28,25 @@
         var customServiceConfirm = $('#custom-service-confirm');
         var confirmInvoice = $('#confirm-invoice');
         var availableDoctors = $('#available-doctors');
+        var addLaboratoryRequest = $('#add-laboratory-request');
+        var labRequestProcedures = $('#lab-request-procedures');
+
+
+        addLaboratoryRequest.on('click', function(){
+            labRequestProcedures.children().remove();
+
+            $.ajax({
+                type: 'GET',
+                url: 'php/getAllLabProcedures.php',
+                success: function(response){
+                    var data = JSON.parse(response);
+
+                    $(data).each(function(index, value){
+                        labRequestProcedures.append(`<li><button class="dropdown-item">${value.name}</button></li>`)
+                    })
+                }
+            })
+        })
         
 
 
@@ -265,12 +284,12 @@
     <!-- List of Appointments Section -->
     <section id="list-of-appointments">
         <div class="container">
-            <div class="table-responsive">
-                <div class="card mt-5">
-                    
-                        <div class="card-header">
-                            <h3 class="fw-bold">Appointments</h3>
-                        </div>
+            <div class="card mt-5">
+                
+                    <div class="card-header">
+                        <h3 class="fw-bold">Appointments</h3>
+                    </div>
+                    <div class="table-responsive">
                         <table class="table table-striped text-center">
                             <thead>
                                 <th scope="col">Client Name</th>
@@ -278,14 +297,13 @@
                                 <th scope="col">Date</th>
                                 <th scope="col">Time</th>
                                 <th scope="col">Action</th>
-                                
+                                    
                             </thead>
                             <tbody id="appointments">
-                                
+                                    
                             </tbody>
-                        </table>
-                    
-                </div>
+                        </table>   
+                    </div>
             </div>
         </div>
     </section>
@@ -336,7 +354,7 @@
                                 </ul>
                             </div>
                             <div class="dropdown ms-md-2">
-                                <button style="border-radius: 50px;" id="add-service-button" class="mb-md-5 mb-3 mt-md-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                                <button style="border-radius: 50px;" class="mb-md-5 mb-3 mt-md-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     Add Custom Service
                                 </button>
                                 <form class="dropdown-menu p-3">
@@ -344,6 +362,14 @@
                                     <input id="custom-service-price" type="number" class="form-control mt-3" placeholder="Price">
                                     <button id="custom-service-confirm" class="btn btn-primary mt-3" style="border-radius: 50px">Confirm</button>
                                 </form>
+                            </div>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle btn btn-primary mt-md-2 ms-md-2" id="add-laboratory-request" style="border-radius: 50px;" data-bs-toggle="dropdown">
+                                    Add Laboratory Request
+                                </button>
+                                <ul class="dropdown-menu" id="lab-request-procedures">
+
+                                </ul>
                             </div>
 
                             <button id="confirm-invoice" class="btn btn-primary align-self-start mt-md-2 ms-md-2" style="border-radius: 50px">Confirm Invoice</button>
