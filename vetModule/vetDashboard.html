@@ -28,25 +28,12 @@
         var customServiceConfirm = $('#custom-service-confirm');
         var confirmInvoice = $('#confirm-invoice');
         var availableDoctors = $('#available-doctors');
-        var addLaboratoryRequest = $('#add-laboratory-request');
-        var labRequestProcedures = $('#lab-request-procedures');
+        var inputLabProcedure = $('#input-lab-procedure');
+        var inputLabPrice = $('#input-lab-procedure-price');
+        var confirmLabProcedure = $('#confirm-lab-procedure');
+        var labProceduresInvoiceList = $('#lab-procedures-invoice-list');
 
-
-        addLaboratoryRequest.on('click', function(){
-            labRequestProcedures.children().remove();
-
-            $.ajax({
-                type: 'GET',
-                url: 'php/getAllLabProcedures.php',
-                success: function(response){
-                    var data = JSON.parse(response);
-
-                    $(data).each(function(index, value){
-                        labRequestProcedures.append(`<li><button class="dropdown-item">${value.name}</button></li>`)
-                    })
-                }
-            })
-        })
+        
         
 
 
@@ -117,16 +104,54 @@
                                                     <div class="d-flex justify-content-center">
                                                         <button value="${value.appointment.id}" class="btn btn-primary cater" data-bs-toggle="modal" data-bs-target="#cater-appointment-modal" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">View</button>
                                                         <button data-bs-toggle="modal" data-bs-target="#refer-appointment-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 refer" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Refer</button>
+                                                        <button data-bs-toggle="modal" data-bs-target="#set-patient-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 set-patient" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Patient</button>
                                                     </div>
                                                 </td>
                                             </tr>`)
                     })
                     var caterAppointment = $('.cater');
                     var referAppointment = $('.refer');
+                    var setPatient = $('.set-patient');
                     viewAndCaterAppointment(caterAppointment);
                     referAppointment.on('click', function(){
                         availableDoctors.children().remove();
                         getAvailableDoctors($(this).val());
+                    })
+
+                    setPatient.on('click', function(){
+                        var appointmentId = $(this).val();
+                        var petName = $('#pet-name');
+                        var age = $('#age');
+                        var breed = $('#breed');
+                        var species = $('#species');
+                        var weight = $('#weight');
+                        
+                        var confirm = $('#confirm-pet');
+
+
+                        confirm.on('click', function(e){
+                            e.preventDefault();
+
+                            if(petName.val() != "" && age.val()!= "" && breed.val() != "" && species.val() != "" && weight.val() != ""){
+                                var sexValue = $('input[name="sex"]:checked').val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/insertPet.php',
+                                    data: {
+                                        appointment_id: appointmentId,
+                                        pet_name: petName.val(),
+                                        age: age.val(),
+                                        breed: breed.val(),
+                                        species: species.val(),
+                                        weight: weight.val(),
+                                        sex: sexValue
+                                    },
+                                    success: function(response){
+                                        console.log(response);
+                                    }
+                                })
+                            }
+                        })
                     })
                 }
             })
@@ -193,7 +218,26 @@
                 var thisCaterAppointment = $(this);
                 serviceProcessingList.children().remove();
                 getClientNameAndCode(thisCaterAppointment);
-                
+                getLabRequests(thisCaterAppointment);
+            })
+        }
+
+        function getLabRequests(thisCaterAppointment){
+            $.ajax({
+                type: 'POST',
+                url: 'php/getClientLabRequests.php',
+                data: {
+                    appointment_id: thisCaterAppointment.val()
+                },
+                success: function(response){
+                    var data = JSON.parse(response);
+
+                    $(data).each(function(index, value){
+                        labProceduresInvoiceList.children().remove();
+
+                        labProceduresInvoiceList.append(`<tr><td>${value.lab_request}</td><td>${value.lab_request_price}</td></tr>`);
+                    })
+                }
             })
         }
 
@@ -205,11 +249,40 @@
                     appointment_id: thisCaterAppointment.val(),
                 },
                 success: function(response){
-                    console.log(response);
                     var data = JSON.parse(response);
                     serviceProcessing.children('p').remove();
-                    serviceProcessing.prepend(`<p class="lh-sm fw-bold fs-3"><span class="fs-5 lead">Name: </span>${data.name}<br><span id="client-code-modal" class="fw-normal fs-5">${data.client_code}</span></p>`);
+                    serviceProcessing.prepend(`<p class="lh-base fw-bold fs-5">
+                                                    <span class="fs-5 lead">
+                                                        Client Name: 
+                                                    </span>${data.name}<br>
+                                                    <span id="client-code-modal" class="fs-5 lead">
+                                                        Client Code: 
+                                                    </span>${data.client_code}<br>
+                                                    <span class="fs-5 lead">Pet Name: </span><span clss="fw-normal fs-5">${data.pet_name}</span> 
+                                                </p>`);
                     var clientId = data.id;
+
+                    confirmLabProcedure.on('click', function(e){
+                        e.preventDefault();
+
+                        if(inputLabProcedure.val() != "" && inputLabPrice.val() != ""){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/submitLabRequest.php',
+                                data:{
+                                    appointment_id: thisCaterAppointment.val(),
+                                    pet_id: data.pet_id,
+                                    client_id: data.client_id,
+                                    lab_request: inputLabProcedure.val(),
+                                    price: inputLabPrice.val(),
+                                },
+                                success: function(response){
+                                    var data = JSON.parse(response);
+                                    labProceduresInvoiceList.append(`<tr><td>${data.lab_request}</td><td>${data.lab_request_price}</td></tr>`);
+                                }
+                            })
+                        }
+                    })
 
                     confirmInvoice.on('click', function(e){
                         console.log('clicked');
@@ -313,48 +386,78 @@
 
     <!-- Cater Appointment Modal -->
     <section class="cater-appointment">
-        <div class="modal fade" id="cater-appointment-modal">
-            <div class="modal-dialog modal-fullscreen">
+        <div class="modal fade" id="cater-appointment-modal" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-scrollable modal-xl">
                 <div class="modal-content">
                     <div class="container">
                         <div class="modal-header">
                             <div class="modal-title">
                                 <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" id="service-processing">
+
+                            
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="fw-bold">Generate Invoice</h3>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <th scope="col">Service</th>
-                                            <th scope="col">Amount</th>
-                                        </thead>
-                                        <tbody id="service-processing-list">
-
-                                        </tbody>
-                                    </table>
+                                <div class="card-body">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="fw-bold">Services</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <th scope="col">Service</th>
+                                                        <th scope="col">Amount</th>
+                                                    </thead>
+                                                    <tbody id="service-processing-list">
+            
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mt-4">
+                                        <div class="card-header">
+                                            <h5 class="fw-bold">Laboratory Procedures</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <th scope="col">Procedure</th>
+                                                        <th scope="col">Price</th>
+                                                    </thead>
+                                                    <tbody id="lab-procedures-invoice-list">
+        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>        
                                 </div>
+                                
                                 <div class="card-footer">
                                     <p><span>Total: </span><span id="total-amount" class="fw-bold fs-5"></span></p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-md-flex ms-3">
-                            <div class="dropdown">
-                                <button style="border-radius: 50px;" id="add-service-button" class="mb-md-5 mb-3 mt-md-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        <div class="ms-3">
+                            <div class="dropdown mb-3">
+                                <button style="border-radius: 50px;" id="add-service-button" class=" btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     Add Services
                                 </button>
                                 <ul class="dropdown-menu" id="add-service-dropdown">
                                 </ul>
                             </div>
-                            <div class="dropdown ms-md-2">
-                                <button style="border-radius: 50px;" class="mb-md-5 mb-3 mt-md-2 btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
+                            <div class="dropdown mb-3">
+                                <button style="border-radius: 50px;" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">
                                     Add Custom Service
                                 </button>
                                 <form class="dropdown-menu p-3">
@@ -363,16 +466,18 @@
                                     <button id="custom-service-confirm" class="btn btn-primary mt-3" style="border-radius: 50px">Confirm</button>
                                 </form>
                             </div>
-                            <div class="dropdown">
-                                <button class="dropdown-toggle btn btn-primary mt-md-2 ms-md-2" id="add-laboratory-request" style="border-radius: 50px;" data-bs-toggle="dropdown">
+                            <div class="dropdown mb-3">
+                                <button class="dropdown-toggle btn btn-primary" id="add-laboratory-request" style="border-radius: 50px;" data-bs-toggle="dropdown">
                                     Add Laboratory Request
                                 </button>
-                                <ul class="dropdown-menu" id="lab-request-procedures">
-
-                                </ul>
+                                <form class="dropdown-menu p-3">
+                                    <textarea id="input-lab-procedure" class="form-control mt-2" placeholder="Laboratory Procedure"></textarea>
+                                    <input id="input-lab-procedure-price" type="number" class="form-control mt-2" placeholder="Price">
+                                    <button id="confirm-lab-procedure" class="btn btn-primary mt-2" style="border-radius: 50px; width: 100%">Confirm</button>
+                                </form>
                             </div>
 
-                            <button id="confirm-invoice" class="btn btn-primary align-self-start mt-md-2 ms-md-2" style="border-radius: 50px">Confirm Invoice</button>
+                            <button id="confirm-invoice" class="btn btn-primary align-self-start mb-3" style="border-radius: 50px">Confirm Invoice</button>
                         </div>
                         
                     </div>
@@ -400,6 +505,43 @@
         </div>
     </div>
     <!-- End of Refer Appointment Modal -->
+
+
+    <!-- Set Patient Modal -->
+    <div class="modal fade" id="set-patient-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="pet-name" type="text" class="form-control mt-2" placeholder="Pet Name">
+                    <input id="age" type="number" class="form-control mt-2" placeholder="Age">
+                    <input id="breed" type="text" class="form-control mt-2" placeholder="Breed">
+                    <input id="species" type="text" class="form-control mt-2" placeholder="Species">
+                    <input id="weight"type="text" class="form-control mt-2" placeholder="Weight">
+
+                    <div class="form-check mt-2">
+                        <input value="Male" type="radio" name="sex" class="form-check-input" id="male">
+                        <label for="male" class="form-check-label">
+                            Male
+                        </label>
+                        
+                    </div>
+                    <div class="form-check mt-2">
+                        <input value="Female" type="radio" name="sex" class="form-check-input" id="female">
+                        <label for="male" class="form-check-label">
+                            Female
+                        </label>
+                    </div>
+                    <button id="confirm-pet" class="btn btn-primary mt-2" style="border-radius: 50px; width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     
 </body>

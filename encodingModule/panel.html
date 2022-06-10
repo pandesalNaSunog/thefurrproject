@@ -873,19 +873,21 @@
                                 contact_no: clientContact.val()
                             },
                             success: function(response){
-                                if(response == 'ok'){
-                                    $('#client-record-successfully-added-toast').toast({delay:5000});
-                                    $('#client-record-successfully-added-toast').toast('show');
+                                // if(response == 'ok'){
+                                //     $('#client-record-successfully-added-toast').toast({delay:5000});
+                                //     $('#client-record-successfully-added-toast').toast('show');
 
-                                    clientRecordTable.append(`<tr>
-                                                                <td>${clientName.val()}</td>
-                                                                <td>${clientCode.val()}</td>
-                                                                <td>${clientContact.val()}</td>
-                                                            </tr>`)
-                                }else{
-                                    $('#client-record-error-toast').toast({delay:5000});
-                                    $('#client-record-error-toast').toast('show');
-                                }
+                                //     clientRecordTable.append(`<tr>
+                                //                                 <td>${clientName.val()}</td>
+                                //                                 <td>${clientCode.val()}</td>
+                                //                                 <td>${clientContact.val()}</td>
+                                //                             </tr>`)
+                                // }else{
+                                //     $('#client-record-error-toast').toast({delay:5000});
+                                //     $('#client-record-error-toast').toast('show');
+                                // }
+
+                                console.log(response);
                             }
                         })
                     }else{

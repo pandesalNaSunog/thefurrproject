@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('lab_requests', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id');
-            $table->integer('doctor_id');
+            $table->integer('appointment_id');
             $table->integer('pet_id');
-            $table->string('service_breakdown');
-            $table->decimal('total_price');
+            $table->integer('client_id');
+            $table->string('lab_request');
+            $table->string('lab_request_price');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('lab_requests');
     }
 };

@@ -36,7 +36,7 @@
                 }
             })
             login.on('click',function(e){
-                
+                e.preventDefault();
                 if(email.val() != "" && password.val() != ""){
                     $.ajax({
                         type: 'POST',
@@ -102,9 +102,10 @@
                                 Invalid Password
                             </div>
                             <button id="login" class="mt-3 fw-bold fs-4 solid-blue-btn">Log In</button>
-                            <p class="mt-3">Don't have an account?</p>
-                            <button id="signup" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign Up</button>
-                        </form>  
+                            
+                        </form>
+                        <p class="mt-3">Don't have an account?</p>
+                        <button id="signup" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign Up</button>  
                     </div>
                 </div>
                 <p class="lead mt-3" id="copyright">The Furr Project &copy; 2022</p>
