@@ -17,6 +17,7 @@
         $pet = $con->query($query) or die($con->error);
         $petRow = $pet->fetch_assoc();
 
+
         $query = "SELECT * FROM users WHERE id = '$clientId'";
         $user = $con->query($query) or die($con->error);
         $row = $user->fetch_assoc();

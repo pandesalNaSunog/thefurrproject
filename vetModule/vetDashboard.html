@@ -231,12 +231,16 @@
                 },
                 success: function(response){
                     var data = JSON.parse(response);
-
+                    labProceduresInvoiceList.children().remove();
                     $(data).each(function(index, value){
-                        labProceduresInvoiceList.children().remove();
-
+                        
+                        
                         labProceduresInvoiceList.append(`<tr><td>${value.lab_request}</td><td>${value.lab_request_price}</td></tr>`);
+                        
+                        total = parseFloat(total) + parseFloat(value.lab_request_price);
+                        
                     })
+                    totalAmount.text(total.toFixed(2));
                 }
             })
         }
@@ -260,7 +264,9 @@
                                                     </span>${data.client_code}<br>
                                                     <span class="fs-5 lead">Pet Name: </span><span clss="fw-normal fs-5">${data.pet_name}</span> 
                                                 </p>`);
-                    var clientId = data.id;
+                    var clientId = data.client_id;
+                    var petId = data.pet_id;
+                    console.log(petId);
 
                     confirmLabProcedure.on('click', function(e){
                         e.preventDefault();
@@ -271,21 +277,22 @@
                                 url: 'php/submitLabRequest.php',
                                 data:{
                                     appointment_id: thisCaterAppointment.val(),
-                                    pet_id: data.pet_id,
-                                    client_id: data.client_id,
+                                    pet_id: petId,
+                                    client_id: clientId,
                                     lab_request: inputLabProcedure.val(),
                                     price: inputLabPrice.val(),
                                 },
                                 success: function(response){
                                     var data = JSON.parse(response);
                                     labProceduresInvoiceList.append(`<tr><td>${data.lab_request}</td><td>${data.lab_request_price}</td></tr>`);
+                                    total = parseFloat(total) + parseFloat(inputLabPrice.val());
+                                    totalAmount.text(total.toFixed(2));
                                 }
                             })
                         }
                     })
 
                     confirmInvoice.on('click', function(e){
-                        console.log('clicked');
                         e.preventDefault();
 
                         if(serviceProcessingList.children().length != 0){
@@ -298,11 +305,19 @@
                                 prices.push(pricesText);
                             })
 
+                            labProceduresInvoiceList.children().each(function(index, value){
+                                var requestText = $(this).children().first().text();
+                                var priceText = $(this).children().eq(1).text();
+                                services.push(requestText);
+                                prices.push(priceText);
+                            })
+
                             $.ajax({
                                 type: 'POST',
                                 url: 'php/createInvoice.php',
                                 data:{
                                     services: services,
+                                    pet_id: petId,
                                     prices: prices,
                                     total: total,
                                     client_id: clientId,

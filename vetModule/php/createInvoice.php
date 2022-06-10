@@ -14,6 +14,7 @@
         $clientId = $_POST['client_id'];
         $doctorId = $_SESSION['doctor_id'];
         $appointmentId = $_POST['appointment_id'];
+        $petId = $_POST['pet_id'];
 
         $index = 0;
 
@@ -26,7 +27,7 @@
         }
 
 
-        $query = "INSERT INTO invoices(`client_id`,`doctor_id`,`service_breakdown`,`total_price`) VALUES('$clientId','$doctorId','$breakdown','$total')";
+        $query = "INSERT INTO invoices(`client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$clientId','$doctorId','$breakdown','$total','$petId')";
         $con->query($query) or die($con->error);
         $query = "DELETE FROM appointments WHERE id = '$appointmentId'";
         $con->query($query) or die($con->error);
