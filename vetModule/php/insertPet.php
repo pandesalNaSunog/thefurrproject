@@ -23,10 +23,10 @@
         $user = $con->query($query) or die($con->error);
         $row = $user->fetch_assoc();
         $clientCode = $row['client_code'];
-
+        $clientId = $row['id'];
 
         //insert pet
-        $query = "INSERT INTO patient_details(`appointment_id`,`pet_name`,`age`,`breed`,`species`,`weight`,`sex`) VALUES('$appointmentId','$petName','$age','$breed','$species','$weight','$sex')";
+        $query = "INSERT INTO patient_details(`appointment_id`,`pet_name`,`age`,`breed`,`species`,`weight`,`sex`,`client_id`) VALUES('$appointmentId','$petName','$age','$breed','$species','$weight','$sex','$clientId')";
         $con->query($query) or die($con->error);
 
         //return last inserted record

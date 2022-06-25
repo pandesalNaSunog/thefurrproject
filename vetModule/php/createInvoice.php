@@ -1,5 +1,6 @@
 <?php
-
+    date_default_timezone_set('Asia/Manila');
+    $createdAt = date('Y-m-d H:i:s');
     include('../../encodingModule/php/connection.php');
     $con = connect();
 
@@ -27,7 +28,7 @@
         }
 
 
-        $query = "INSERT INTO invoices(`client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$clientId','$doctorId','$breakdown','$total','$petId')";
+        $query = "INSERT INTO invoices(`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
         $con->query($query) or die($con->error);
         $query = "DELETE FROM appointments WHERE id = '$appointmentId'";
         $con->query($query) or die($con->error);

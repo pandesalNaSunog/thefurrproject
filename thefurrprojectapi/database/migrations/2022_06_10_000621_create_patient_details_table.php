@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('patient_details', function (Blueprint $table) {
             $table->id();
             $table->integer('appointment_id');
+            $table->integer('client_id');
             $table->string('pet_name');
             $table->integer('age')->nullable();
             $table->string('breed')->nullable();

@@ -270,7 +270,7 @@
                                             var data = JSON.parse(response);
                                             concern.show();
                                             $(data).each(function(index,value){
-                                                doctorsList.append(`<button value="${value.id}" class="btn btn-outline-primary mt-3 fw-bold doctor" style="width: 100%; border-radius: 50px">${value.name}</button>`)
+                                                doctorsList.append(`<button value="${value.id}" data-bs-dismiss="modal" class="btn btn-outline-primary mt-3 fw-bold doctor" style="width: 100%; border-radius: 50px">${value.name}</button>`)
                                             });
 
                                             var doctor = $('.doctor');

@@ -1,6 +1,8 @@
 <?php
+    date_default_timezone_set('Asia/Manila');
     include('connection.php');
     $con = connect();
+    $createdAt = date('Y-m-d H:i:s');
 
     if(isset($_POST)){
         $clientId = $_POST['client_id'];
@@ -9,7 +11,7 @@
         $time = $_POST['time'];
         $concern = $_POST['concern'];
 
-        $query = "INSERT INTO appointments(`client_id`,`doctor_id`,`date`,`time`,`concern`)VALUES('$clientId','$doctorId','$date','$time','$concern')";
+        $query = "INSERT INTO appointments(`client_id`,`doctor_id`,`date`,`time`,`concern`,`created_at`,`updated_at`)VALUES('$clientId','$doctorId','$date','$time','$concern','$createdAt','$createdAt')";
         $con->query($query) or die($con->error);
 
 

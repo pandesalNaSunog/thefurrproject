@@ -1,4 +1,6 @@
 <?php
+    date_default_timezone_set('Asia/Manila');
+    $createdAt = date('Y-m-d H:i:s');
     include('../../encodingModule/php/connection.php');
     $con = connect();
 
@@ -10,7 +12,7 @@
         $price = $_POST['price'];
 
         //insert lab request
-        $query = "INSERT INTO lab_requests(`appointment_id`,`pet_id`,`client_id`,`lab_request`,`lab_request_price`) VALUES('$appointmentId','$petId','$clientId','$labRequest','$price')";
+        $query = "INSERT INTO lab_requests(`created_at`,`updated_at`,`appointment_id`,`pet_id`,`client_id`,`lab_request`,`lab_request_price`) VALUES('$createdAt','$createdAt','$appointmentId','$petId','$clientId','$labRequest','$price')";
         $con->query($query) or die($con->error);
         
         //fetch inserted lab request
