@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        session();
+        function session(){
+            $.ajax({
+                type: 'GET',
+                url: 'php/dashBoardSession.php',
+                success: function(response){
+                    if(response != 'ok'){
+                        window.location.replace(response);
+                    }
+                }
+            })
+        }
+
+        
+
+        $(document).ready(function(){
+            var labRequestTable = $('#lab-request-table');
+
+            getAllLabRequests();
+
+
+
+            function getAllLabRequests(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getLabRequests.php',
+                    success: function(response){
+                        console.log(response);
+                        var data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            if(value.result == 'php/'){
+                                labRequestTable.append(`<tr>
+                                                        <td>${value.name}</td>
+                                                        <td>${value.request}</td>
+                                                        <td><a href="#"><img src="${value.result}" class="img-fluid" style="height:50px; width: 50px;"></a></td>
+                                                        <td>
+                                                            <input type="file" class="form-control result">
+                                                            <button value="${value.request_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
+                                                        </td>
+                                                    </tr>`);
+                            }else{
+                                labRequestTable.append(`<tr>
+                                                        <td>${value.name}</td>
+                                                        <td>${value.request}</td>
+                                                        <td><a href="${value.result}"><img src="${value.result}" class="img-fluid" style="height:50px; width: 50px;"></a></td>
+                                                        <td>
+                                                            <input type="file" class="form-control result">
+                                                            <button value="${value.request_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
+                                                        </td>
+                                                    </tr>`);
+                            }
+                            
+                        })
+                        var upload = $('.upload');
+
+                        upload.on('click', function(){
+                            var requestId = $(this).val();
+                            var thisResult = $(this).parent().children().eq(0); 
+                            var formData = new FormData();
+                            var thisImageResult = thisResult.parent().parent().children().eq(2).children().children('img');
+                            var imageLink = thisImageResult.parent();
+                            formData.append('image', thisResult[0].files[0]);
+                            formData.append('lab_request_id', requestId);
+                            if(thisResult.val() != ""){
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/uploadLabResult.php',
+                                    data: formData,
+                                    contentType: false,
+                                    processData: false,
+                                    success: function(response){
+                                        if(response != 'invalid'){
+                                            thisImageResult.attr('src',response);
+                                            imageLink.attr('href',response);
+                                        }else{
+                                            alert('Invalid file. Please choose image files only.')
+                                        }
+                                    }
+                                })
+                            }else{
+                                alert('Please choose an image to upload')
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    </script>
+    <title>Lab Technician</title>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:darkblue">
+        <div class="container">
+            <div class="navbar-brand">
+                <h5>Lab Technician Module</h5>
+            </div>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto fw-bold">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            Requests
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Lab Requests Section -->
+    <section id="lab-request-section">
+        <div class="container">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Laboratory Requests
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <th scope="col">Patient Name</th>
+                            <th scope="col">Laboratory Request</th>
+                            <th scipe="col">Result</th>
+                            <th scope="col">Upload Result</th>
+                        </thead>
+                        <tbody id="lab-request-table">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>

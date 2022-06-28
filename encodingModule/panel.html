@@ -873,21 +873,19 @@
                                 contact_no: clientContact.val()
                             },
                             success: function(response){
-                                // if(response == 'ok'){
-                                //     $('#client-record-successfully-added-toast').toast({delay:5000});
-                                //     $('#client-record-successfully-added-toast').toast('show');
+                                if(response == 'ok'){
+                                    $('#client-record-successfully-added-toast').toast({delay:5000});
+                                    $('#client-record-successfully-added-toast').toast('show');
 
-                                //     clientRecordTable.append(`<tr>
-                                //                                 <td>${clientName.val()}</td>
-                                //                                 <td>${clientCode.val()}</td>
-                                //                                 <td>${clientContact.val()}</td>
-                                //                             </tr>`)
-                                // }else{
-                                //     $('#client-record-error-toast').toast({delay:5000});
-                                //     $('#client-record-error-toast').toast('show');
-                                // }
-
-                                console.log(response);
+                                    clientRecordTable.append(`<tr>
+                                                                <td>${clientName.val()}</td>
+                                                                <td>${clientCode.val()}</td>
+                                                                <td>${clientContact.val()}</td>
+                                                            </tr>`)
+                                }else{
+                                    $('#client-record-error-toast').toast({delay:5000});
+                                    $('#client-record-error-toast').toast('show');
+                                }
                             }
                         })
                     }else{
@@ -1099,6 +1097,24 @@
             </div>
 
             <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-doctor-modal" style="border-radius: 50px">Add New</button>
+
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="fw-bold">Laboratory Technicians</h3>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lab-tech-list">
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-lab-tech-modal" style="border-radius: 50px">Add New</button>
         </div>
         <!-- Staff Script -->
         <script>
@@ -1107,10 +1123,40 @@
                 var doctorsName = $('#doctors-name');
                 var doctorsEmail = $('#doctors-email');
                 var insertNewDoctor = $('#insert-new-doctor');
+                var labtechList = $('#lab-tech-list');
+                var labTechName = $('#lab-tech-name');
+                var labTechEmail = $('#lab-tech-email');
+                var insertNewLabTech = $('#insert-new-lab-tech');
 
                 onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail);
+                onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList);
                 getAllDoctors(doctorsList);
             })
+
+            function onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList){
+                insertNewLabTech.on('click', function(e){
+                    e.preventDefault();
+                    if(labTechName.val() == ""){
+                        labTechName.addClass('is-invalid');
+                    }else if(labTechEmail.val() == ""){
+                        labTechEmail.addClass('is-invalid');
+                    }else{
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/insertLabTech.php',
+                            data: {
+                                name: labTechName.val(),
+                                email: labTechEmail.val()
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                labtechList.append(`<tr><td>${data.name}</td><td>${data.email}</td></tr>`)
+                            }
+                        })
+                    }
+                })
+            }
 
             function onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail){
                 insertNewDoctor.on('click', function(){
@@ -1167,6 +1213,30 @@
                         </div>
                         <input id="doctors-email" type="text" class="form-control mt-3" placeholder="Doctor's Email">
                         <button id="insert-new-doctor" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="add-lab-tech-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                        </div>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="lab-tech-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                        <input id="lab-tech-email" type="text" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                        <button id="insert-new-lab-tech" data-bs-dismiss="modal" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
                     </div>
                 </div>
             </div>

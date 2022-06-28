@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    
+    <title>Laboratory Technician</title>
+</head>
+<body class="bg-light">
+
+    <script>
+        $(document).ready(function(){
+            var email = $('#email');
+            var password = $('#password');
+            var login = $('#log-in');
+
+            login.on('click', function(e){
+                e.preventDefault();
+                if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else if(password.val() == ""){
+                    password.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/login.php',
+                        data: {
+                            email: email.val(),
+                            password: password.val()
+                        },
+                        success: function(response){
+                            if(response == 'dashboard.html'){
+                                window.location.replace(response);
+                            }else{
+                                console.log(response);
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+
+    <div class="col-md-4 col-lg-2 mx-auto mt-5 text-center" id="contents">
+        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+        <p class="lead">Laboratory Technician Module</p>
+        <div class="card mt-5 mx-3">
+            <div class="card-body text-center">
+                <input id="email" type="text" placeholder="Username" class="form-control mt-3" required>
+                <div class="invalid-feedback">
+                    Please fill out this field
+                </div>
+                <input id="password" type="password" placeholder="Password" class="form-control mt-3" required>
+                <div class="invalid-feedback">
+                    Please fill out this field
+                </div>
+                <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
+
+            </div>
+            
+            
+        </div>
+    </div>
+</body>
+</html>
