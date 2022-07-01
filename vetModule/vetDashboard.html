@@ -32,6 +32,7 @@
         var inputLabPrice = $('#input-lab-procedure-price');
         var confirmLabProcedure = $('#confirm-lab-procedure');
         var labProceduresInvoiceList = $('#lab-procedures-invoice-list');
+        var labResultList = $('#lab-result-list');
 
         
         
@@ -53,6 +54,34 @@
         });
 
 
+        function getAppointmentLabRequests(appointmentId){
+            labResultList.children().remove();
+            $.ajax({
+                type: 'GET',
+                url: 'php/getAppointmentLabRequests.php',
+                data: {
+                    appointment_id: appointmentId
+                },
+                success: function(response){
+                    console.log(response)
+                    var data = JSON.parse(response);
+                    $(data).each(function(index, value){
+                        if(value.lab_result == ""){
+                            labResultList.append(`<tr>
+                                                <td>${value.lab_request}</td>
+                                                <td>Pending</td>
+                                            </tr>`);
+                        }else{
+                            labResultList.append(`<tr>
+                                                <td>${value.lab_request}</td>
+                                                <td><a href="../labtechmodule/php/${value.lab_result}"><img src="../labtechmodule/php/${value.lab_result}" style="height: 50px;width: 50px;"></a></td>
+                                            </tr>`);
+                        }
+                        
+                    })
+                }
+            })
+        }
 
         function addCustomService(){
             if(customServiceInput.val() != "" && customServicePrice.val() != ""){
@@ -105,6 +134,7 @@
                                                         <button value="${value.appointment.id}" class="btn btn-primary cater" data-bs-toggle="modal" data-bs-target="#cater-appointment-modal" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">View</button>
                                                         <button data-bs-toggle="modal" data-bs-target="#refer-appointment-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 refer" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Refer</button>
                                                         <button data-bs-toggle="modal" data-bs-target="#set-patient-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 set-patient" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Patient</button>
+                                                        <button data-bs-toggle="modal" data-bs-target="#view-lab-results" value="${value.appointment.id}" class="btn btn-primary ms-2 view-lab-results-btn" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Lab Results</button>
                                                     </div>
                                                 </td>
                                             </tr>`)
@@ -112,6 +142,13 @@
                     var caterAppointment = $('.cater');
                     var referAppointment = $('.refer');
                     var setPatient = $('.set-patient');
+                    var viewLabResultsBtn = $('.view-lab-results-btn');
+
+                    viewLabResultsBtn.on('click', function(){
+                        var appointmentId = $(this).val()
+                        getAppointmentLabRequests(appointmentId);
+                    })
+
                     viewAndCaterAppointment(caterAppointment);
                     referAppointment.on('click', function(){
                         availableDoctors.children().remove();
@@ -558,6 +595,34 @@
         </div>
     </div>
 
+    <!-- Lab Result Modal -->
+    <div class="modal fade" id="view-lab-results">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Laboratory Request</th>
+                                    <th scope="col">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lab-result-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
 </body>
 </html>

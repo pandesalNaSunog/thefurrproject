@@ -28,7 +28,7 @@
         }
 
 
-        $query = "INSERT INTO invoices(`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
+        $query = "INSERT INTO invoices(`amount_renderred`,`change`,`balance`,`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES(0.0,0.0,'$total','$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
         $con->query($query) or die($con->error);
         $query = "DELETE FROM appointments WHERE id = '$appointmentId'";
         $con->query($query) or die($con->error);

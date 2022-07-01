@@ -25,12 +25,27 @@
         
 
         $(document).ready(function(){
-            var labRequestTable = $('#lab-request-table');
-
+            var labRequestTableWithResults = $('#lab-request-table-with-results');
+            var labRequestTableWithoutResults = $('#lab-request-table-without-results');
+            var logoutBtn = $('#logout');
             getAllLabRequests();
+            logout();
 
 
 
+            function logout(){
+                logoutBtn.on('click', function(){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/logout.php',
+                        success: function(response){
+                            if(response != 'error'){
+                                window.location.replace(response);
+                            }
+                        }
+                    })
+                })
+            }
             function getAllLabRequests(){
                 $.ajax({
                     type: 'GET',
@@ -41,23 +56,23 @@
 
                         $(data).each(function(index, value){
                             if(value.result == 'php/'){
-                                labRequestTable.append(`<tr>
+                                labRequestTableWithoutResults.append(`<tr>
                                                         <td>${value.name}</td>
                                                         <td>${value.request}</td>
                                                         <td><a href="#"><img src="${value.result}" class="img-fluid" style="height:50px; width: 50px;"></a></td>
                                                         <td>
                                                             <input type="file" class="form-control result">
-                                                            <button value="${value.request_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
+                                                            <button value="${value.request_id},${value.pet_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
                                                         </td>
                                                     </tr>`);
                             }else{
-                                labRequestTable.append(`<tr>
+                                labRequestTableWithResults.append(`<tr>
                                                         <td>${value.name}</td>
                                                         <td>${value.request}</td>
                                                         <td><a href="${value.result}"><img src="${value.result}" class="img-fluid" style="height:50px; width: 50px;"></a></td>
                                                         <td>
                                                             <input type="file" class="form-control result">
-                                                            <button value="${value.request_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
+                                                            <button value="${value.request_id},${value.pet_id}" class="mt-2 btn btn-outline-primary rounded-pill upload">Upload</button>
                                                         </td>
                                                     </tr>`);
                             }
@@ -100,7 +115,7 @@
     </script>
     <title>Lab Technician</title>
 </head>
-<body>
+<body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:darkblue">
         <div class="container">
@@ -118,7 +133,14 @@
                             Requests
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a id="logout" href="#" class="nav-link">
+                            Logout
+                        </a>
+                    </li>
                 </ul>
+                    
+
             </div>
         </div>
     </nav>
@@ -126,24 +148,51 @@
     <!-- Lab Requests Section -->
     <section id="lab-request-section">
         <div class="container">
-            <div class="card mt-5">
+            <div class="card mt-5 shadow">
                 <div class="card-header">
                     <h3 class="fw-bold">
                         Laboratory Requests
                     </h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th scope="col">Patient Name</th>
-                            <th scope="col">Laboratory Request</th>
-                            <th scipe="col">Result</th>
-                            <th scope="col">Upload Result</th>
-                        </thead>
-                        <tbody id="lab-request-table">
-
-                        </tbody>
-                    </table>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="fw-bold">With Results</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <th scope="col">Patient Name</th>
+                                    <th scope="col">Laboratory Request</th>
+                                    <th scope="col">Result</th>
+                                    <th scope="col">Upload Result</th>
+                                </thead>
+                                <tbody id="lab-request-table-with-results">
+        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h4 class="fw-bold">Without Results</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Patient Name</th>
+                                        <th scope="col">Laboratory Request</th>
+                                        <th scope="col">Result</th>
+                                        <th scope="col">Upload Result</th>
+                                    </thead>
+                                    <tbody id="lab-request-table-without-results">
+            
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

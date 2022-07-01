@@ -25,6 +25,7 @@
                 $labResultRow['result'] = "";
             }
             $newData[] = array(
+                'pet_id' => $petRow['id'],
                 'name' => $petRow['pet_name'],
                 'request' => $dataItem['lab_request'],
                 'request_id' => $labRequestId,

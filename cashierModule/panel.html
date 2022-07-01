@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            var invoicesTable = $('#invoices-table');
+            var serviceInvoiceTable = $('#service-invoice-table');
+            var totalPrice = $('#total-price');
+            getAllInvoices();
+
+
+            function getAllInvoices(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllInvoices.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            invoicesTable.append(`<tr>
+                                                    <td>${value.client_name}</td>
+                                                    <td>${value.date}</td>
+                                                    <td>
+                                                        <button data-bs-toggle="modal" data-bs-target="#invoices-modal" class="btn btn-primary view-invoice px-3 rounded-pill" value=${value.invoice_id}>View</button>
+                                                    </td>
+                                                </tr>`)
+                        })
+                        var viewInvoice = $('.view-invoice');
+                        viewInvoice.on('click', function(){
+                            var thisViewInvoice = $(this);
+                            getClientInvoiceFunc(thisViewInvoice.val())
+                        })
+                    }
+                })
+            }
+
+            function getClientInvoiceFunc(invoiceId){
+                serviceInvoiceTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getClientInvoice.php',
+                    data: {
+                        invoice_id: invoiceId
+                    },
+                    success: function(response){
+                        console.log(response);
+                        var data = JSON.parse(response);
+                        var serviceArray = data.service_breakdown.split('\n')
+                        var total = 0;
+                        $(serviceArray).each(function(index, value){
+                            if(value != ""){
+                                var eachServiceArray = value.split("**");
+                                var service = eachServiceArray[0];
+                                var price = eachServiceArray[1];
+                                total += parseFloat(price);
+                                serviceInvoiceTable.append(`<tr>
+                                                                <td>${service}</td>
+                                                                <td>${"P"+ price}</td>
+                                                            </tr>`)
+                            }                    
+                        })
+                        totalPrice.text("P" + total);
+                    }
+                })
+            }
+            
+        })
+    </script>
+    <title>Document</title>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:darkblue">
+        <div class="container">
+            <div class="navbar-brand">
+                <h5>Lab Technician Module</h5>
+            </div>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto fw-bold">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            Invoices
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout" href="#" class="nav-link">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="invoices">
+        <div class="container">
+            <div class="card mt-5 shadow">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Invoices
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Created At</th>
+                                <th scope="col">Action</th>
+                                
+                            </thead>
+                            <tbody id="invoices-table">
+    
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="modal fade" id="invoices-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Services</th>
+                                <th scope="col">Price</th>
+                            </thead>
+                            <tbody id="service-invoice-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p><span class="fw-bold">Total: </span><span id="total-price"></span></p>
+                    <div class="col-md-5">
+                        <input type="number" class="form-control" placeholder="Amount Renderred">
+                    </div>
+                    <button class="btn btn-primary px-5 rounded-pill mt-3">Confirm</button>
+
+                    
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
