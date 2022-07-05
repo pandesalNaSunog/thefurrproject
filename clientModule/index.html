@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/jquery.js"></script>
     <title>Document</title>
 
@@ -79,8 +79,8 @@
 
 </head>
 <body class="bg-light">
-    <div class="container">
-
+    
+    <div class="container mb-5">
         <!-- Header -->
         <div class="d-lg-flex justify-content-evenly" id="header">
 
@@ -126,26 +126,37 @@
                     </div>
                     <div class="modal-body text-center">
                         <p class="fw-bold">Sign Up</p>
-                        <input id="signup-name" class="form-control" type="text" placeholder="Name">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
+                        <div>
+                            <input id="signup-name" class="form-control" type="text" placeholder="Name">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
                         </div>
-                        <input id="signup-email" class="form-control mt-3" type="text" placeholder="Email">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
+                        <div>
+                            <input id="signup-email" class="form-control mt-3" type="text" placeholder="Email">
+                            <div class="invalid-feedback" id="email-validation">
+                                Please fill out this field.
+                            </div>
                         </div>
-                        <input id="signup-contact" class="form-control mt-3" type="text" placeholder="Contact Number">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
+                        <div>
+                            <input id="signup-contact" class="form-control mt-3" type="text" placeholder="Contact Number">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
                         </div>
-                        <input id="signup-password" class="form-control mt-3" type="password" placeholder="Password">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
+                        <div>
+                            <input id="signup-password" class="form-control mt-3" type="password" placeholder="Password">
+                            <div class="invalid-feedback" id="password-validation">
+                                Please fill out this field.
+                            </div>
                         </div>
-                        <input id="signup-retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
+                        <div>
+                            <input id="signup-retype-password" class="form-control mt-3" type="password" placeholder="Re-type Password">
+                            <div class="invalid-feedback" id="retype-password-validation">
+                                Please fill out this field.
+                            </div>
                         </div>
+                        
                         <button class="solid-blue-btn mt-3" id="confirm-signup">Confirm</button>
                     </div>
                 </div>
@@ -180,7 +191,7 @@
 
                 signUp.on('click', function(e){
                     e.preventDefault();
-                    if(name.val() != "" && email.val() != "" && contact.val() != "" && password.val() != "" && retypePassword.val() != ""){
+                    if(name.val() != "" && email.val() != "" && contact.val() != "" && password.val() != "" && retypePassword.val() != "" && password.val() == retypePassword.val()){
                         $.ajax({
                             type: 'POST',
                             url: 'php/signup.php',
@@ -191,7 +202,13 @@
                                 password: password.val(),
                             },
                             success: function(response){
-                                window.location.replace(response);
+                                if(response == 'email exists'){
+                                    email.addClass('is-invalid');
+                                    $('#email-validation').text('This email already exists');
+                                }else{
+                                    window.location.replace(response);
+                                }
+                                
                             }
                         })
                     }else{
@@ -209,6 +226,10 @@
                         }
                         if(retypePassword.val() == ""){
                             retypePassword.addClass('is-invalid');
+                        }else if(password.val() != retypePassword.val()){
+                            password.addClass('is-invalid');
+                            $('#password-validation').text('Password mismatch.')
+                            $('#retype-password-validation').text('Password mismatch.')
                         }
 
                     }
@@ -217,5 +238,7 @@
         </script>
 
     </div>
+
+    
 </body>
 </html>

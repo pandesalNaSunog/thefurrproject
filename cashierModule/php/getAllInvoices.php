@@ -20,11 +20,21 @@
             $client = $con->query($query) or die($con->error);
             $clientRow = $client->fetch_assoc();
             $clientName = $clientRow['name'];
+            $status = "";
+            if($dataItem['amount_renderred'] >= $dataItem['total_price']){
+                $status = "Paid";
+            }else if($dataItem['balance'] == $dataItem['total_price']){
+                $status = "Unpaid";
+            }else{
+                $status = "Partially Paid";
+            }
             
             $response[] = array(
                 'client_name' => $clientName,
                 'invoice_id' => $dataItem['id'],
-                'date' => $formattedDate
+                'date' => $formattedDate,
+                'status' => $status,
+                'balance' => $dataItem['balance']
             );
         }
 

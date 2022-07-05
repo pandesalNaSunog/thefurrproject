@@ -27,12 +27,25 @@
             $index++;
         }
 
+        $transactionId = transactioIdGenerator();
 
-        $query = "INSERT INTO invoices(`amount_renderred`,`change`,`balance`,`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES(0.0,0.0,'$total','$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
+
+        $query = "INSERT INTO invoices(`transaction_id`,`amount_renderred`,`change`,`balance`,`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$transactionId',0.0,0.0,'$total','$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
         $con->query($query) or die($con->error);
-        $query = "DELETE FROM appointments WHERE id = '$appointmentId'";
+        $query = "UPDATE appointments SET status = 'Done' WHERE id = '$appointmentId'";
         $con->query($query) or die($con->error);
         echo 'ok';
+    }
+
+    function transactioIdGenerator(){
+        $characters = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+        $generated = "";
+        for($i = 0;$i < 10;$i++){
+            $index = rand(0, strlen($characters) - 1);
+            $generated .= $characters[$index];
+        }
+
+        return $generated;
     }
 
 ?>

@@ -1115,6 +1115,24 @@
             </div>
 
             <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-lab-tech-modal" style="border-radius: 50px">Add New</button>
+
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3 class="fw-bold">Cashier</h3>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cashier-list">
+                    </tbody>
+                </table>
+            </div>
+
+            <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-cashier-modal" style="border-radius: 50px">Add New</button>
         </div>
         <!-- Staff Script -->
         <script>
@@ -1127,12 +1145,67 @@
                 var labTechName = $('#lab-tech-name');
                 var labTechEmail = $('#lab-tech-email');
                 var insertNewLabTech = $('#insert-new-lab-tech');
-
+                var cashierList = $('#cashier-list');
+                var cashierName = $('#cashier-name');
+                var cashierEmail = $('#cashier-email');
+                var insertNewCashier = $('#insert-new-cashier');
                 onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail);
                 onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList);
+                onClickInsertNewCashier(insertNewCashier, cashierName, cashierEmail, cashierList);
                 getAllDoctors(doctorsList);
+                getAllLabTechs(labtechList)
+                getAllCashiers(cashierList);
             })
 
+            function onClickInsertNewCashier(insertNewCashier, cashierName, cashierEmail, cashierList){
+                insertNewCashier.on('click', function(){
+                    if(cashierName.val() == ""){
+                        cashierName.addClass('is-invalid')
+                    }else if(cashierEmail.val() == ""){
+                        cashierEmail.addClass('is-invalid');
+                    }else{
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/insertNewCashier.php',
+                            data:{
+                                name: cashierName.val(),
+                                email: cashierEmail.val()
+                            },
+                            success: function(response){
+                                console.log(response);
+                                var data = JSON.parse(response);
+                                cashierList.append(`<tr><td>${data.name}</td><td>${data.email}</td></tr>`)
+                            }
+                        })
+                    }
+                })
+            }
+
+            function getAllCashiers(cashierList){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllCashiers.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            cashierList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`)
+                        })
+                        
+                    }
+                })
+            }
+            function getAllLabTechs(labtechList){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllLabTechs.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            labtechList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`)
+                        })
+                    }
+                })
+            }
             function onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList){
                 insertNewLabTech.on('click', function(e){
                     e.preventDefault();
@@ -1237,6 +1310,30 @@
                             Please fill out this field.
                         </div>
                         <button id="insert-new-lab-tech" data-bs-dismiss="modal" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="add-cashier-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                        </div>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="cashier-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                        <input id="cashier-email" type="text" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                        <button id="insert-new-cashier" data-bs-dismiss="modal" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
                     </div>
                 </div>
             </div>

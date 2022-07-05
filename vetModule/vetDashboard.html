@@ -129,15 +129,23 @@
                                                 <td>${value.appointment.concern}</td>
                                                 <td>${value.appointment.date}</td>
                                                 <td>${value.appointment.time}</td>
+                                                <td class="fw-bold">${value.appointment.status}</td>
                                                 <td>
                                                     <div class="d-flex justify-content-center">
-                                                        <button value="${value.appointment.id}" class="btn btn-primary cater" data-bs-toggle="modal" data-bs-target="#cater-appointment-modal" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">View</button>
-                                                        <button data-bs-toggle="modal" data-bs-target="#refer-appointment-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 refer" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Refer</button>
-                                                        <button data-bs-toggle="modal" data-bs-target="#set-patient-modal" value="${value.appointment.id}" class="btn btn-primary ms-2 set-patient" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Patient</button>
-                                                        <button data-bs-toggle="modal" data-bs-target="#view-lab-results" value="${value.appointment.id}" class="btn btn-primary ms-2 view-lab-results-btn" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Lab Results</button>
+                                                        <button data-bs-toggle="modal" data-bs-target="#set-patient-modal" value="${value.appointment.id}" class="fw-bold btn btn-outline-primary ms-2 set-patient" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Patient</button>
+                                                        <button value="${value.appointment.id}" class="ms-2 fw-bold btn btn-outline-primary cater" data-bs-toggle="modal" data-bs-target="#cater-appointment-modal" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">View</button>
+                                                        <button data-bs-toggle="modal" data-bs-target="#refer-appointment-modal" value="${value.appointment.id}" class="fw-bold btn btn-outline-primary ms-2 refer" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Refer</button>
+                                                        
+                                                        <button data-bs-toggle="modal" data-bs-target="#view-lab-results" value="${value.appointment.id}" class="fw-bold btn btn-outline-primary ms-2 view-lab-results-btn" style="border-radius: 50px; padding-left: 20px; padding-right: 20px;">Lab Results</button>
                                                     </div>
                                                 </td>
+                                                
                                             </tr>`)
+                        if(value.show_view == true){
+                            appointments.children().eq(index).children().eq(5).children().eq(0).children().eq(1).show();
+                        }else{
+                            appointments.children().eq(index).children().eq(5).children().eq(0).children().eq(1).hide();
+                        }
                     })
                     var caterAppointment = $('.cater');
                     var referAppointment = $('.refer');
@@ -184,7 +192,7 @@
                                         sex: sexValue
                                     },
                                     success: function(response){
-                                        console.log(response);
+                                        location.reload();
                                     }
                                 })
                             }
@@ -408,8 +416,8 @@
 
     <!-- List of Appointments Section -->
     <section id="list-of-appointments">
-        <div class="container">
-            <div class="card mt-5">
+        <div class="container px-5">
+            <div class="rounded-4 shadow card mt-5">
                 
                     <div class="card-header">
                         <h3 class="fw-bold">Appointments</h3>
@@ -421,8 +429,9 @@
                                 <th scope="col">Concern</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Time</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Action</th>
-                                    
+                                
                             </thead>
                             <tbody id="appointments">
                                     

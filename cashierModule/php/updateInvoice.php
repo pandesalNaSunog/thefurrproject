@@ -14,12 +14,23 @@
         $invoice = $con->query($query) or die($con->error);
         $invoiceRow = $invoice->fetch_assoc();
         $balance = $invoiceRow['balance'];
+        $fetchedAmount = $invoiceRow['amount_renderred'];
+
+        $totalAmount = $fetchedAmount + $amount;
+
         //check if amount is greater than price
         $totalPrice = $invoiceRow['total_price'];
-        if($amount >= $totalPrice){
-            $change = $amount - $totalPrice;
+        if($totalAmount >= $totalPrice){
+            $change = $totalAmount - $totalPrice;
+            $balance = 0;
         }else{
-            $balance = $totalPrice - $amount;
+            $change = 0;
+            $balance = $totalPrice - $totalAmount;
         }
+
+        $query = "UPDATE invoices SET amount_renderred = '$totalAmount', balance = '$balance', `change` = '$change', updated_at = '$date' WHERE id = '$invoiceId'";
+        $con->query($query) or die($con->error);
+
+        echo 'ok';
     }
 ?>

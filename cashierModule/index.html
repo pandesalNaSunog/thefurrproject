@@ -9,12 +9,60 @@
     <script src="../js/jquery.js"></script>
     <script src="../js/bootstrap.min.js"></script>
 
-    <script>
-        
-    </script>
-    <title>Document</title>
-</head>
-<body>
     
+    <title>Cashier</title>
+</head>
+<body class="bg-light">
+
+    <script>
+        $(document).ready(function(){
+            var email = $('#email');
+            var password = $('#password');
+            var login = $('#log-in');
+
+            login.on('click', function(e){
+                e.preventDefault();
+                if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else if(password.val() == ""){
+                    password.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/login.php',
+                        data: {
+                            email: email.val(),
+                            password: password.val()
+                        },
+                        success: function(response){
+                            if(response == 'panel.html'){
+                                window.location.replace(response);
+                            }else{
+                                console.log(response);
+                            }
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+
+    <div class="col-xl-2 col-lg-4 col-md-4 col-sm-4 mx-auto mt-5 text-center" id="contents">
+        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+        <p class="lead mt-3">Cashier's Module</p>
+        <div class="shadow card mt-5 mx-3">
+            <div class="card-body text-center">
+                    <input id="email" type="text" placeholder="Email" class="form-control mt-3">
+                    <div class="invalid-feedback">
+                        Please fill out this field
+                    </div>
+                    <input id="password" type="password" placeholder="Password" class="form-control mt-3">
+                    <div class="invalid-feedback">
+                        Please fill out this field
+                    </div>
+                    <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

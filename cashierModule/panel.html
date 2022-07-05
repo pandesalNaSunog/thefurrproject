@@ -14,9 +14,54 @@
             var invoicesTable = $('#invoices-table');
             var serviceInvoiceTable = $('#service-invoice-table');
             var totalPrice = $('#total-price');
+            var amountRenderred = $('#amount-renderred');
+            var confirmRenderred = $('#confirm-renderred');
+            var globalInvoiceId = 0;
+            var globalAmount = 0;
+            var logout = $('#logout');
             getAllInvoices();
+            session();
+            logoutFunc();
+
+            amountRenderred.on('keydown', function(){
+                amountRenderred.removeClass('is-invalid');
+            })
+
+            confirmRenderred.on('click', function(){
+                if(amountRenderred.val() == ""){
+                    amountRenderred.addClass('is-invalid');
+                }else{
+                    globalAmount = amountRenderred.val()
+                    updateInvoice(globalInvoiceId, globalAmount)
+                }
+            })
 
 
+            function logoutFunc(){
+                logout.on('click', function(){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/logout.php',
+                        success: function(response){
+                            window.location.replace(response);
+                        }
+                    })
+                })
+            }
+
+            function updateInvoice(globalInvoiceId, amount){
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/updateInvoice.php',
+                    data: {
+                        amount: amount,
+                        invoice_id: globalInvoiceId
+                    },
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
             function getAllInvoices(){
                 $.ajax({
                     type: 'GET',
@@ -27,6 +72,9 @@
                             invoicesTable.append(`<tr>
                                                     <td>${value.client_name}</td>
                                                     <td>${value.date}</td>
+                                                    
+                                                    <td>${value.status}</td>
+                                                    <td>P${value.balance}</td>
                                                     <td>
                                                         <button data-bs-toggle="modal" data-bs-target="#invoices-modal" class="btn btn-primary view-invoice px-3 rounded-pill" value=${value.invoice_id}>View</button>
                                                     </td>
@@ -41,8 +89,20 @@
                 })
             }
 
+            function session(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/panelSessionCheck.php',
+                    success: function(response){
+                        if(response != 'ok'){
+                            window.location.replace(response);
+                        }
+                    }
+                })
+            }
             function getClientInvoiceFunc(invoiceId){
                 serviceInvoiceTable.children().remove();
+                globalInvoiceId = invoiceId;
                 $.ajax({
                     type: 'GET',
                     url: 'php/getClientInvoice.php',
@@ -66,6 +126,13 @@
                                                             </tr>`)
                             }                    
                         })
+                        if(data.balance == 0){
+                            amountRenderred.hide();
+                            confirmRenderred.hide();
+                        }else{
+                            amountRenderred.show();
+                            confirmRenderred.show();
+                        }
                         totalPrice.text("P" + total);
                     }
                 })
@@ -79,7 +146,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:darkblue">
         <div class="container">
             <div class="navbar-brand">
-                <h5>Lab Technician Module</h5>
+                <h5>Cashier's Module</h5>
             </div>
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
                 <span class="navbar-toggler-icon"></span>
@@ -103,7 +170,13 @@
 
     <section id="invoices">
         <div class="container">
-            <div class="card mt-5 shadow">
+            <div class="search-input ms-auto input-group mt-5">
+                <button class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                  </svg></button>
+                <input type="text" class="form-control" placeholder="Search here">
+            </div>
+            <div class="card mt-2 shadow">
                 <div class="card-header">
                     <h3 class="fw-bold">
                         Invoices
@@ -115,6 +188,9 @@
                             <thead>
                                 <th scope="col">Client Name</th>
                                 <th scope="col">Created At</th>
+                                
+                                <th scope="col">Status</th>
+                                <th scope="col">Balance</th>
                                 <th scope="col">Action</th>
                                 
                             </thead>
@@ -152,9 +228,12 @@
 
                     <p><span class="fw-bold">Total: </span><span id="total-price"></span></p>
                     <div class="col-md-5">
-                        <input type="number" class="form-control" placeholder="Amount Renderred">
+                        <input id="amount-renderred" type="number" class="form-control" placeholder="Amount Renderred">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
                     </div>
-                    <button class="btn btn-primary px-5 rounded-pill mt-3">Confirm</button>
+                    <button id="confirm-renderred" class="btn btn-primary px-5 rounded-pill mt-3">Confirm</button>
 
                     
                 </div>
