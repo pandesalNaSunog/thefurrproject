@@ -25,17 +25,6 @@
             }else{
                 $isToday = false;
             }
-            $dateDifference = date_diff($today,$bookedDate);
-            $dateDiffResult = $dateDifference->format("%R");
-
-            if($dateDiffResult == "+"){
-                $status = "Booked";
-            }else{
-                $status = "Did Not Arrive";
-            }
-            $appointmentId = $dataItem['id'];
-            $query = "UPDATE appointments SET status = '$status' WHERE id = '$appointmentId'";
-            $con->query($query) or die($con->error);
 
             $formattedDate = date_format(date_create($dataItem['date']), 'M d, Y');
 
@@ -43,7 +32,7 @@
             $query = "SELECT * FROM doctors WHERE id = '$doctorId'";
             $doctor = $con->query($query) or die($con->error);
             $row = $doctor->fetch_assoc();
-            $response[] = array('is_today' => $isToday, 'id' => $dataItem['id'], 'status' => $status, 'name' => $dataItem['name'], 'concern' => $dataItem['concern'], 'vet' => $row['name'], 'date' => $formattedDate, 'time' => $dataItem['time']);
+            $response[] = array('is_today' => $isToday, 'id' => $dataItem['id'], 'name' => $dataItem['name'], 'concern' => $dataItem['concern'], 'vet' => $row['name'], 'date' => $formattedDate, 'time' => $dataItem['time']);
         }
         echo json_encode($response);
     }

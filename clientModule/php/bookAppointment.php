@@ -10,7 +10,7 @@
         $date = $_POST['date'];
         $time = $_POST['time'];
         $concern = $_POST['concern'];
-        $query = "INSERT INTO appointments(`status`,`client_id`,`doctor_id`,`date`,`time`,`concern`,`created_at`,`updated_at`)VALUES('Booked','$clientId','$doctorId','$date','$time','$concern','$createdAt','$createdAt')";
+        $query = "INSERT INTO appointments(`client_id`,`doctor_id`,`date`,`time`,`concern`,`created_at`,`updated_at`)VALUES('$clientId','$doctorId','$date','$time','$concern','$createdAt','$createdAt')";
         $con->query($query) or die($con->error);
         
 
