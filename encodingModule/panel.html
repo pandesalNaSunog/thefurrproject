@@ -549,7 +549,7 @@
                             success: function(response){
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
-                                    vetList.append(`<li><button class="dropdwon-item" value="${value.id}">${value.name}</button></li>`);
+                                    vetList.append(`<li><a class="dropdwon-item" href="#" value="${value.id}">${value.name}</button></li>`);
                                 })
                             }
                         })
