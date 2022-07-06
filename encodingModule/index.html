@@ -50,6 +50,8 @@
                         success: function(response){
                             if(response == 'ok'){
                                 window.location.replace('panel.html');
+                            }else{
+                                alert('Invalid Username and Password.')
                             }
                         }
                     })
@@ -73,15 +75,19 @@
         <p class="lead mt-3">Administrator Module</p>
         <div class="shadow card mt-5 mx-3">
             <div class="card-body text-center">
+                <div>
                     <input id="username" type="text" placeholder="Username" class="form-control mt-3">
                     <div class="invalid-feedback">
                         Please fill out this field
                     </div>
+                </div>
+                <div>
                     <input id="password" type="password" placeholder="Password" class="form-control mt-3">
                     <div class="invalid-feedback">
                         Please fill out this field
                     </div>
-                    <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
+                </div>
+                <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
             </div>
         </div>
     </div>
