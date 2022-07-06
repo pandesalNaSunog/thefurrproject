@@ -11,5 +11,6 @@
         while($row = $user->fetch_assoc()){
             $data[] = $row;
         }
+        echo json_encode($data);
     }
 ?>
