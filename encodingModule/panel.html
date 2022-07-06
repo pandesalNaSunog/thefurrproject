@@ -538,6 +538,9 @@
                                                             <td>${value.breed}</td>
                                                             <td>${value.species}</td>
                                                             <td>${value.sex}</td>
+                                                            <td>
+                                                                <button class="btn btn-outline-danger rounded-pill">...</button>
+                                                            </td>
                                                           </tr>`)
                             })
                         }
@@ -860,42 +863,6 @@
                                 Please fill out this field.
                             </div>
                         </div>
-                        <div >
-                            <input id="client-pet-name" type="text" class="form-control mt-3" placeholder="Pet Name">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="pet-age" type="text" class="form-control mt-3" placeholder="Pet Age">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="pet-breed" type="text" class="form-control mt-3" placeholder="Pet Breed">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="pet-species" type="text" class="form-control mt-3" placeholder="Pet Species">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div>
-                            <input id="pet-weight" type="text" class="form-control mt-3" placeholder="Pet Weight">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="pet-sex" type="text" class="form-control mt-3" placeholder="Pet Sex">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
                         <button id="insert-client-record" style="width: 100%" class="rounded-pill btn btn-danger mt-3">Confirm</button>
                     </div>
                     
@@ -911,19 +878,42 @@
                 var clientName = $('#client-client-name');
                 var clientCode = $('#client-client-code');
                 var clientContact = $('#client-client-contact');
+                var clientPetName = $('#client-pet-name');
+                var petAge = $('#pet-age');
+                var petBreed = $('#pet-breed');
+                var petSpecies = $('#pet-species');
+                var petWeight = $('#pet-weight');
+                var petSex = $('#pet-sex');
                 var insertClientRecord = $('#insert-client-record');
                 var clientRecordTable = $('#client-record-table');
-
                 insertClientRecord.on('click', function(e){
                     e.preventDefault();
-                    if(clientCode.val() != "" && clientName.val() != "" && clientContact.val() != ""){
+                    if(clientName.val() == ""){
+                        clientName.addClass('is-invalid');
+                    }else if(clientCode.val() == ""){
+                        clientCode.addClass('is-invalid');
+                    }else if(clientContact.val() == ""){
+                        clientContact.addClass('is-invalid');
+                    }else if(clientPetName.val() == ""){
+                        clientPetName.addClass('is-invalid');
+                    }else if(petAge.val() == ""){
+                        petAge.addClass('is-invalid');
+                    }else if(petBreed.val() == ""){
+                        petBreed.addClass('is-invalid');
+                    }else if(petSpecies.val() == ""){
+                        petSpecies.addClass('is-invalid');
+                    }else if(petWeight.val() == ""){
+                        petWeight.addClass('is-invalid');
+                    }else if(petSex.val() == ""){
+                        petSex.addClass('is-invalid');
+                    }else{
                         $.ajax({
                             type: 'POST',
                             url: 'php/insertClientRecord.php',
                             data: {
                                 client_name: clientName.val(),
                                 client_code: clientCode.val(),
-                                contact_no: clientContact.val()
+                                contact_no: clientContact.val(),
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -944,16 +934,6 @@
                                 }
                             }
                         })
-                    }else{
-                        if(clientName.val() == ""){
-                            clientName.addClass('is-invalid');
-                        }
-                        if(clientCode.val() == ""){
-                            clientCode.addClass('is-invalid');
-                        }
-                        if(clientContact.val() == ""){
-                            clientContact.addClass('is-invalid');
-                        }
                     }
                 })
             })
@@ -1190,6 +1170,59 @@
 
             <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-cashier-modal" style="border-radius: 50px">Add New</button>
         </div>
+
+
+        <div class="modal fade" id="patient-details-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                        </div>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div >
+                            <input id="client-pet-name" type="text" class="form-control mt-3" placeholder="Pet Name">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                        <div >
+                            <input id="pet-age" type="text" class="form-control mt-3" placeholder="Pet Age">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                        <div >
+                            <input id="pet-breed" type="text" class="form-control mt-3" placeholder="Pet Breed">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                        <div >
+                            <input id="pet-species" type="text" class="form-control mt-3" placeholder="Pet Species">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                        <div>
+                            <input id="pet-weight" type="text" class="form-control mt-3" placeholder="Pet Weight">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                        <div >
+                            <input id="pet-sex" type="text" class="form-control mt-3" placeholder="Pet Sex">
+                            <div class="invalid-feedback">
+                                Please fill out this field.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Staff Script -->
         <script>
             $(document).ready(function(){
