@@ -636,7 +636,9 @@
                                 pet_sex: petSex.val()
                             },
                             success: function(response){
-                                console.log(response);
+                                if(response == 'ok'){
+                                    location.reload();
+                                }
                             }
                         })
                     })
