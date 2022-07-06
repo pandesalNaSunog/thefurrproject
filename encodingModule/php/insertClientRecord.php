@@ -22,6 +22,7 @@
                         VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
             $con->query($query) or die($con->error);
             sendSMS($contactNo, $email, $password);
+            echo 'ok';
         }else{
             echo 'exists';
         }
@@ -43,7 +44,7 @@
         $parameters = array(
             'apikey' => '34a51284e39cc4d5f1d6bace2cbbf124',
             'number' => $contactNo,
-            'message' => "You have been given an account for The Furr Project Veterinary Clinic \nEmail: ".$email."\nPassword: ".$password.". Visit www.thefurr.com to book an appointment.",
+            'message' => "You have been given an account for The Furr Project Veterinary Clinic \nEmail: ".$email."\nPassword: ".$password.". Visit furrproject.com to book an appointment.",
             'sendername' => 'SEMAPHORE'
         );
         curl_setopt( $ch, CURLOPT_URL,'https://api.semaphore.co/api/v4/priority' );
@@ -56,6 +57,5 @@
         curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
         $output = curl_exec( $ch );
         curl_close ($ch);
-        echo $output;
     }
 ?>
