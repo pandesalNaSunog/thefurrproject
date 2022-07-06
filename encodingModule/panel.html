@@ -539,7 +539,37 @@
                     var clientRecordTable = $('#client-record-table');
                     var chooseAttendingVet = $('#choose-attending-vet');
                     var vetList = $('#vet-list');
+                    var appointmentsTable = $('#appointments-table');
 
+
+
+
+
+                    function getAppointmentHistory(globalUserId){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getAppointmentHistory.php',
+                            data:{
+                                user_id: globalUserId,
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                $(data).each(function(index, value){
+                                    appointmentsTable.append(`<tr>
+                                                                <td>${value.client_name}</td>
+                                                                <td>${value.attending_vet}</td>
+                                                                <td>${value.client_concern}</td>
+                                                                <td>${value.pet_name}</td>
+                                                                <td>${value.pet_age}</td>
+                                                                <td>${value.pet_breed}</td>
+                                                                <td>${value.pet_species}</td>
+                                                                <td>${value.pet_weight}</td>
+                                                                <td>${value.pet_sex}</td>
+                                                            </tr>`)
+                                })
+                            }
+                        })
+                    }
 
                     chooseAttendingVet.on('click', function(){
                         vetList.children().remove();
@@ -554,7 +584,6 @@
                                 })
 
                                 var vet = $('.vet');
-
                                 vet.on('click', function(){
                                     var thisVet = $(this);
                                     globalVetId = thisVet.val();
@@ -582,6 +611,8 @@
                             var moreOptions = $('.more-options');
                             moreOptions.on('click', function(){
                                 globalUserId = $(this).val();
+                                appointmentsTable.children().remove();
+                                getAppointmentHistory(globalUserId);
                             })
                         }
                     })
@@ -647,10 +678,6 @@
                             })
                         }
                     })
-
-                confirmInsert.on('click', function(){
-                    
-                })
 
                     $.ajax({
                         type: 'GET',
@@ -1432,6 +1459,27 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Attending Vet</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Client Concern</th>
+                                <th scope="col">Pet Name</th>
+                                <th scope="col">Pet Age</th>
+                                <th scope="col">Pet Breed</th>
+                                <th scope="col">Pet Species</th>
+                                <th scope="col">Pet Weight</th>
+                                <th scope="col">Pet Sex</th>
+                            </thead>
+                            <tbody id="appointments-table">
+
+                            </tbody>
+                        </table>
+                    </div>
                     <div>
                         <input id="appointment-date" type="date" class="form-control" placeholder="Appointment Date">
                         <div class="invalid-feedback">
