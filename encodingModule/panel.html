@@ -664,7 +664,7 @@
                                 },
                                 success: function(response){
                                     if(response != 'exists'){
-                                        
+                                        var data = JSON.parse(response);
                                         $('#client-record-successfully-added-toast').toast({delay:5000});
                                         $('#client-record-successfully-added-toast').toast('show');
 
