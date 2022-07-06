@@ -32,8 +32,6 @@
 
         $query = "INSERT INTO invoices(`transaction_id`,`amount_renderred`,`change`,`balance`,`created_at`, `updated_at`, `client_id`,`doctor_id`,`service_breakdown`,`total_price`,`pet_id`) VALUES('$transactionId',0.0,0.0,'$total','$createdAt', '$createdAt', '$clientId','$doctorId','$breakdown','$total','$petId')";
         $con->query($query) or die($con->error);
-        $query = "UPDATE appointments SET status = 'Done' WHERE id = '$appointmentId'";
-        $con->query($query) or die($con->error);
         echo 'ok';
     }
 
