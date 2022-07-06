@@ -880,6 +880,9 @@
                                                                 <td>${clientCode.val()}</td>
                                                                 <td>${clientContact.val()}</td>
                                                             </tr>`)
+                                    clientName.val('');
+                                    clientCode.val('');
+                                    clientContact.val('');
                                 }else{
                                     $('#client-record-error-toast').toast({delay:5000});
                                     $('#client-record-error-toast').toast('show');
