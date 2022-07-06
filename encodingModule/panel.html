@@ -30,10 +30,6 @@
                     <li class="nav-item">
                         <a id="staff-link" class="nav-link" aria-current="page" href="#">Staff</a>
                     </li>
-                    
-                    <li class="nav-item">
-                        <a id="medical-records-link" class="nav-link" aria-current="page" href="#">Medical Records</a>
-                    </li>
                     <li class="nav-item">
                         <a id="services-link" class="nav-link" aria-current="page" href="#">Services</a>
                     </li>
@@ -43,7 +39,8 @@
                     </li>
                     <script>
                         $(document).ready(function(){
-                            $('#owner-records').hide();
+                            $('#medical-records').hide();
+                            $('#owner-records').show();
                             $('#services-section').hide();
                             $('#staff-section').hide();
                             var patientRecords = $('#patient-record-link');
