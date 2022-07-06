@@ -19,7 +19,7 @@
             $row = $labRequest->fetch_assoc();
 
             if($row == null){
-                $query = "INSERT INTO lab_results(`lab_tech_id`,`lab_request_id`,`result`,`created_at`,`updated_at`)VALUES('$labId','$labRequestId','$target_file','$date','$date')";
+                $query = "INSERT INTO lab_results(`pet_id`,`lab_tech_id`,`lab_request_id`,`result`,`created_at`,`updated_at`)VALUES('$labId','$labRequestId','$target_file','$date','$date')";
             }else{
                 $labResultId = $row['id'];
                 $query = "UPDATE lab_results SET result = '$target_file' WHERE id = '$labResultId'";
