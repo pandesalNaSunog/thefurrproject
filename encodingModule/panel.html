@@ -1037,7 +1037,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card col-md-6 rounded-4 shadow">
+            <div class="card col-md-6 rounded-4 shadow mx-auto">
                 <div class="card-header">
                     <h3 class="fw-bold">Insert New Service</h3>
                 </div>
@@ -1050,14 +1050,15 @@
                             <input id="service-price-input" type="text" class="form-control" placeholder="Price">
                         </div>
                     </div>
+                    <button class="btn btn-danger mt-2" style="border-radius: 50px;" id="add-service">
+                        Add Service
+                    </button>
                 </div>
             </div>
             
            
 
-            <button class="btn btn-danger mt-2" style="border-radius: 50px;" id="add-service">
-                Add Service
-            </button>
+           
 
             <div class="card rounded-4 shadow col-md-6 mx-auto mt-5">
                 <div class="card-header">
@@ -1084,19 +1085,25 @@
                 
             </div>
 
-            <h1 class="fw-bold mt-5">Insert New Laboratory Procedure</h1>
-            <hr>
-
-            <div class="d-lg-flex justify-content-between">
-                <div class="col col-lg-5">
-                    <input id="lab-procedure-input" type="text" class="form-control" placeholder="Procedure">
+            <div class="card col-md-6 rounded-4 shadow mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold mt-5">Insert New Laboratory Procedure</h3>
                 </div>
-                <div class="col col-lg-5">
-                    <input id="lab-procedure-price" type="number" class="mt-lg-0 mt-3 col col-lg-5 form-control" placeholder="Price">
+                <div class="card-body">
+                    <div class="d-lg-flex justify-content-between">
+                        <div class="col col-lg-5">
+                            <input id="lab-procedure-input" type="text" class="form-control" placeholder="Procedure">
+                        </div>
+                        <div class="col col-lg-5">
+                            <input id="lab-procedure-price" type="number" class="mt-lg-0 mt-3 col col-lg-5 form-control" placeholder="Price">
+                        </div>
+                        
+                    </div>
+                    <button id="insert-lab-procedure" class="btn btn-danger mt-3 mb-5" style="border-radius: 50px;">Add New Procedure</button>
                 </div>
-                
             </div>
-            <button id="insert-lab-procedure" class="btn btn-danger mt-3 mb-5" style="border-radius: 50px;">Add New Procedure</button>
+            
+            
 
         </div>
 
