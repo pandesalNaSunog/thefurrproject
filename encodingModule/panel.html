@@ -533,6 +533,11 @@
                                                             <td>${value.name}</td>
                                                             <td>${value.client_code}</td>
                                                             <td>${value.contact_no}</td>
+                                                            <td>${value.pet_name}</td>
+                                                            <td>${value.age}</td>
+                                                            <td>${value.breed}</td>
+                                                            <td>${value.species}</td>
+                                                            <td>${value.sex}</td>
                                                           </tr>`)
                             })
                         }
@@ -814,6 +819,13 @@
                                 <th scope="col">Client Name</th>
                                 <th scope="col">Client Code</th>
                                 <th scope="col">Contact Number</th>
+                                <th scope="col">Pet Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Breed</th>
+                                <th scope="col">Species</th>
+                                <th scope="col">Weight</th>
+                                <th scope="col">Sex</th>
+                                <th scope="col">Attending Vet</th>
                             </tr>
                         </thead>
     
@@ -827,25 +839,61 @@
 
             <h1 class="mt-5">Insert New Client Record</h1>
             <hr>
-            <div class="d-md-flex justify-content-between mt-1">
+            <div class="mt-1">
                 <div class="col-md-3">
-                    <input id="client-client-name" type="text" class="form-control mt-3 mt-lg-0" placeholder="Client Name">
+                    <input id="client-client-name" type="text" class="form-control mt-3" placeholder="Client Name">
                     <div id="client-name-invalid" class="invalid-feedback">
                         Please fill out this field.
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <input id="client-client-code" type="text" class="form-control mt-3 mt-lg-0" placeholder="Client Code">
-                    <div id="client-code-invalid" class="invalid-feedback">
+                    <input id="client-client-code" type="text" class="form-control mt-3" placeholder="Client Code">
+                    <d class="invalid-feedback">
                         Please fill out this field.
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <input id="client-client-contact" type="text" class="form-control mt-3 mt-lg-0" placeholder="Contact Number">
-                    <div id="client-number-invalid" class="invalid-feedback">
+                    <input id="client-client-contact" type="text" class="form-control mt-3" placeholder="Contact Number">
+                    <div class="invalid-feedback">
                         Please fill out this field.
                     </div>
-                </div>    
+                </div>
+                <div class="col-md-3">
+                    <input id="client-pet-name" type="text" class="form-control mt-3" placeholder="Pet Name">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input id="pet-age" type="text" class="form-control mt-3" placeholder="Pet Age">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input id="pet-breed" type="text" class="form-control mt-3" placeholder="Pet Breed">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input id="pet-species" type="text" class="form-control mt-3" placeholder="Pet Species">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input id="pet-weight" type="text" class="form-control mt-3" placeholder="Pet Weight">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input id="pet-sex" type="text" class="form-control mt-3" placeholder="Pet Sex">
+                    <div class="invalid-feedback">
+                        Please fill out this field.
+                    </div>
+                </div>
             </div>
             <button id="insert-client-record" style="border-radius: 50px" class="btn btn-danger mt-3">Confirm</button>
         </div>
