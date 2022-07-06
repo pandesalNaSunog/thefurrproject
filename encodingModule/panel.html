@@ -669,9 +669,9 @@
                                         $('#client-record-successfully-added-toast').toast('show');
 
                                         clientRecordTable.append(`<tr>
-                                                                    <td>${data.client_name}</td>
+                                                                    <td>${data.name}</td>
                                                                     <td>${data.client_code}</td>
-                                                                    <td>${data.client_contact}</td>
+                                                                    <td>${data.contact_no}</td>
                                                                     <td>
                                                                         <button value="${data.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
                                                                     </td>
@@ -679,6 +679,12 @@
                                         clientName.val('');
                                         clientCode.val('');
                                         clientContact.val('');
+                                        var moreOptions = $('.more-options');
+                                        moreOptions.on('click', function(){
+                                            globalUserId = $(this).val();
+                                            appointmentsTable.children().remove();
+                                            getAppointmentHistory(globalUserId);
+                                        })
                                     }else{
                                         $('#client-record-error-toast').toast({delay:5000});
                                         $('#client-record-error-toast').toast('show');
