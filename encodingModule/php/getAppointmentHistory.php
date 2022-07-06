@@ -14,6 +14,7 @@
         }
         $response = array();
         foreach($appointments as $appointmentItem){
+            $appointmentDate = $appointmentItem['date'];
             $appointmentId = $appointmentItem['id'];
             $clientId = $appointmentItem['client_id'];
             $vetId = $appointmentItem['doctor_id'];
@@ -50,6 +51,7 @@
                 'pet_species' => $species,
                 'pet_weight' => $weight,
                 'pet_sex' => $sex,
+                'appointment_date' => $appointmentDate
             );
         }
 
