@@ -1392,7 +1392,23 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div >
+                    <div>
+                        <input id="appointment-date" type="date" class="form-control" placeholder="Appointment Date">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle btn btn-outline danger" data-bs-toggle="dropdown">
+                                Choose Attending Vet
+                            </button>
+                            <ul class="dropdown-menu" id="vet-list">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
                         <input id="client-pet-name" type="text" class="form-control mt-3" placeholder="Pet Name">
                         <div class="invalid-feedback">
                             Please fill out this field.
@@ -1428,7 +1444,7 @@
                             Please fill out this field.
                         </div>
                     </div>
-                    <button class="btn btn-danger rounded-pill" style="width: 100%">Confirm</button>
+                    <button class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
