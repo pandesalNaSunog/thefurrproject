@@ -1,9 +1,9 @@
 <?php
     function connect(){
         $hostname = "localhost";
-        $username = "root";
-        $password = "";
-        $database = "thrfurr_db";
+        $username = "u568496919_thefurr";
+        $password = "Thefurrpassword";
+        $database = "u568496919_thefurr_db";
 
         $con = new mysqli($hostname, $username, $password, $database);
         if($con->connect_error){

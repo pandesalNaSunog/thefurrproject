@@ -1,6 +1,10 @@
 <?php
     function connect(){
-        $con = new mysqli('localhost','root','','thrfurr_db');
+        $hostname = "localhost";
+        $username = "u568496919_thefurr";
+        $password = "Thefurrpassword";
+        $database = "u568496919_thefurr_db";
+        $con = new mysqli($hostname,$username,$password,$database);
         return $con;
     }
     function getCurrentDate(){
