@@ -2,7 +2,7 @@
     function connect(){
         $hostname = "localhost";
         $username = "u568496919_thefurr";
-        $password = "Thefurrpassword";
+        $password = "Thefurrpassword11";
         $database = "u568496919_thefurr_db";
         $con = new mysqli($hostname,$username,$password,$database);
         return $con;
