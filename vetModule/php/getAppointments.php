@@ -19,20 +19,6 @@
 
         $response = array();
         foreach($data as $dataItem){
-
-            $todayDateObject = date_create($today);
-            $bookedDate = date_create($dataItem['date']);
-            $dateDiff = date_diff($todayDateObject,$bookedDate);
-            $dateDiffResult = $dateDiff->format('%R');
-
-            if($dateDiffResult == "+"){
-                $status = "Booked";
-            }else{
-                $status = "Did Not Arrive";
-            }
-            $appointmentId = $dataItem['id'];
-            $query = "UPDATE appointments SET status = '$status' WHERE id = '$appointmentId'";
-            $con->query($query) or die($con->error);
             $clientId = $dataItem['client_id'];
             $query = "SELECT * FROM users WHERE id = '$clientId'";
             $user = $con->query($query) or die($con->error);
