@@ -519,9 +519,41 @@
 
             <script>
                 $(document).ready(function(){
+                    var globalVetId = 0;
+                    var globalUserId = 0;
                     var tableBody = $('#table-body');
                     var clientRecordTable = $('#client-record-table');
+                    var clientName = $('#client-client-name');
+                    var clientCode = $('#client-client-code');
+                    var clientContact = $('#client-client-contact');
+                    var clientPetName = $('#client-pet-name');
+                    var clientConcern = $('#client-concern');
+                    var appointmentDate = $('#appointment-date');
+                    var petAge = $('#pet-age');
+                    var petBreed = $('#pet-breed');
+                    var petSpecies = $('#pet-species');
+                    var petWeight = $('#pet-weight');
+                    var petSex = $('#pet-sex');
+                    var insertClientRecord = $('#insert-client-record');
+                    var confirmInsert = $('#confirm-insert-appointment');
+                    var clientRecordTable = $('#client-record-table');
+                    var chooseAttendingVet = $('#choose-attending-vet');
+                    var vetList = $('#vet-list');
 
+
+                    chooseAttendingVet.on('click', function(){
+                        vetList.children().remove();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getAllDoctors.php',
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                $(data).each(function(index, value){
+                                    vetList.append(`<li><button class="dropdwon-item" value="${value.id}">${value.name}</button></li>`);
+                                })
+                            }
+                        })
+                    })
                     $.ajax({
                         type: 'GET',
                         url: 'php/getClientRecords.php',
@@ -539,12 +571,82 @@
                                                             <td>${value.species}</td>
                                                             <td>${value.sex}</td>
                                                             <td>
-                                                                <button data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="btn btn-outline-danger rounded-3">...</button>
+                                                                <button value="${value.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
                                                             </td>
                                                           </tr>`)
                             })
+                            var moreOptions = $('.more-options');
+                            moreOptions.on('click', function(){
+                                globalUserId = $(this).val();
+                            })
                         }
                     })
+
+                    confirmInsert.on('click', function(){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/adminEncodeData.php',
+                            data:{
+                                attending_vet_id: globalVetId, 
+                                user_id: globalUserId,
+                                pet_name: clientPetName.val(),
+                                client_concern: clientConcern.val(),
+                                appointment_date: appointmentDate.val(),
+                                pet_age: petAge.val(),
+                                pet_breed: petBreed.val(),
+                                pet_species: petSpecies.val(),
+                                pet_weight: petWeight.val(),
+                                pet_sex: petSex.val()
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    })
+
+                    
+                    insertClientRecord.on('click', function(e){
+                        e.preventDefault();
+                        if(clientName.val() == ""){
+                            clientName.addClass('is-invalid');
+                        }else if(clientCode.val() == ""){
+                            clientCode.addClass('is-invalid');
+                        }else if(clientContact.val() == ""){
+                            clientContact.addClass('is-invalid');
+                        }else{
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/insertClientRecord.php',
+                                data: {
+                                    client_name: clientName.val(),
+                                    client_code: clientCode.val(),
+                                    contact_no: clientContact.val(),
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        $('#client-record-successfully-added-toast').toast({delay:5000});
+                                        $('#client-record-successfully-added-toast').toast('show');
+
+                                        clientRecordTable.append(`<tr>
+                                                                    <td>${clientName.val()}</td>
+                                                                    <td>${clientCode.val()}</td>
+                                                                    <td>${clientContact.val()}</td>
+                                                                </tr>`)
+                                        clientName.val('');
+                                        clientCode.val('');
+                                        clientContact.val('');
+                                    }else{
+                                        $('#client-record-error-toast').toast({delay:5000});
+                                        $('#client-record-error-toast').toast('show');
+                                    }
+                                }
+                            })
+                        }
+                    })
+
+                confirmInsert.on('click', function(){
+                    
+                })
 
                     $.ajax({
                         type: 'GET',
@@ -875,67 +977,7 @@
         <!-- client record script -->
         <script>
             $(document).ready(function(){
-                var clientName = $('#client-client-name');
-                var clientCode = $('#client-client-code');
-                var clientContact = $('#client-client-contact');
-                var clientPetName = $('#client-pet-name');
-                var petAge = $('#pet-age');
-                var petBreed = $('#pet-breed');
-                var petSpecies = $('#pet-species');
-                var petWeight = $('#pet-weight');
-                var petSex = $('#pet-sex');
-                var insertClientRecord = $('#insert-client-record');
-                var clientRecordTable = $('#client-record-table');
-                insertClientRecord.on('click', function(e){
-                    e.preventDefault();
-                    if(clientName.val() == ""){
-                        clientName.addClass('is-invalid');
-                    }else if(clientCode.val() == ""){
-                        clientCode.addClass('is-invalid');
-                    }else if(clientContact.val() == ""){
-                        clientContact.addClass('is-invalid');
-                    }else if(clientPetName.val() == ""){
-                        clientPetName.addClass('is-invalid');
-                    }else if(petAge.val() == ""){
-                        petAge.addClass('is-invalid');
-                    }else if(petBreed.val() == ""){
-                        petBreed.addClass('is-invalid');
-                    }else if(petSpecies.val() == ""){
-                        petSpecies.addClass('is-invalid');
-                    }else if(petWeight.val() == ""){
-                        petWeight.addClass('is-invalid');
-                    }else if(petSex.val() == ""){
-                        petSex.addClass('is-invalid');
-                    }else{
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/insertClientRecord.php',
-                            data: {
-                                client_name: clientName.val(),
-                                client_code: clientCode.val(),
-                                contact_no: clientContact.val(),
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    $('#client-record-successfully-added-toast').toast({delay:5000});
-                                    $('#client-record-successfully-added-toast').toast('show');
-
-                                    clientRecordTable.append(`<tr>
-                                                                <td>${clientName.val()}</td>
-                                                                <td>${clientCode.val()}</td>
-                                                                <td>${clientContact.val()}</td>
-                                                            </tr>`)
-                                    clientName.val('');
-                                    clientCode.val('');
-                                    clientContact.val('');
-                                }else{
-                                    $('#client-record-error-toast').toast({delay:5000});
-                                    $('#client-record-error-toast').toast('show');
-                                }
-                            }
-                        })
-                    }
-                })
+                
             })
         </script>
     </div>
@@ -1450,7 +1492,7 @@
                             Please fill out this field.
                         </div>
                     </div>
-                    <button class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                    <button id="confirm-insert-appointment" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
