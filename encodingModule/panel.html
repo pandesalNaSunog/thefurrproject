@@ -663,14 +663,18 @@
                                     contact_no: clientContact.val(),
                                 },
                                 success: function(response){
-                                    if(response == 'ok'){
+                                    if(response != 'exists'){
+                                        
                                         $('#client-record-successfully-added-toast').toast({delay:5000});
                                         $('#client-record-successfully-added-toast').toast('show');
 
                                         clientRecordTable.append(`<tr>
-                                                                    <td>${clientName.val()}</td>
-                                                                    <td>${clientCode.val()}</td>
-                                                                    <td>${clientContact.val()}</td>
+                                                                    <td>${data.client_name}</td>
+                                                                    <td>${data.client_code}</td>
+                                                                    <td>${data.client_contact}</td>
+                                                                    <td>
+                                                                        <button value="${data.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
+                                                                    </td>
                                                                 </tr>`)
                                         clientName.val('');
                                         clientCode.val('');

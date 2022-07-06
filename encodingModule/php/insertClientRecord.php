@@ -21,8 +21,12 @@
             $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`)
                         VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
             $con->query($query) or die($con->error);
+
+            $query = "SELECT * FROM users WHERE id = LAST_INSERT_ID()";
+            $user = $con->query($query) or die($con->error);
+            $userRow = $user->fetch_assoc();
             sendSMS($contactNo, $email, $password);
-            echo 'ok';
+            echo json_encode($userRow);
         }else{
             echo 'exists';
         }
