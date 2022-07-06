@@ -543,13 +543,22 @@
 
                     chooseAttendingVet.on('click', function(){
                         vetList.children().remove();
+                        globalVetId = 0;
                         $.ajax({
                             type: 'POST',
                             url: 'php/getAllDoctors.php',
                             success: function(response){
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
-                                    vetList.append(`<li><button class="dropdown-item" href="#" value="${value.id}">${value.name}</button></li>`);
+                                    vetList.append(`<li><button class="dropdown-item vet" href="#" value="${value.id}">${value.name}</button></li>`);
+                                })
+
+                                var vet = $('.vet');
+
+                                vet.on('click', function(){
+                                    var thisVet = $(this);
+                                    globalVetId = thisVet.val();
+                                    chooseAttendingVet.text(thisVet.text());
                                 })
                             }
                         })
