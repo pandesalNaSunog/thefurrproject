@@ -541,11 +541,28 @@
                     var chooseAttendingVet = $('#choose-attending-vet');
                     var vetList = $('#vet-list');
                     var appointmentsTable = $('#appointments-table');
+                    var editClientName = $('#edit-client-name');
+                    var editClientCode = $('#edit-client-code');
+                    var editClientContact = $('#edit-client-code');
+                    var confirmEditClient = $('#confirm-edit-client')
 
 
-
-
-
+                    function editClientFunc(globalUserId){
+                        $.ajax({
+                            type: 'GET',
+                            url: 'php/getSpecificClient.php',
+                            data: {
+                                user_id: globalUserId
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                editClientName.val(data.name);
+                                editClientCode.val(data.client_code);
+                                editClientContact.val(data.contact_no);
+                            }
+                        })
+                    }
+                    
                     function deleteClientFunc(globalUserId, mainElement){
                         $.ajax({
                             type: 'POST',
@@ -647,6 +664,11 @@
                                 globalUserId = $(this).val();
                                 appointmentsTable.children().remove();
                                 getAppointmentHistory(globalUserId);
+                            })
+
+                            editClient.on('click', function(){
+                                globalUserId = $(this).val();
+                                editClientFunc(globalUserId);
                             })
                         }
                     })
@@ -1840,7 +1862,7 @@
                     <input type="text" class="form-control" placeholder="Client Name">
                     <input type="text" class="form-control mt-3" placeholder="Client Code">
                     <input type="text" class="form-control mt-3" placeholder="Contact Number">
-                    <button class="btn btn-danger rounded-pill">Confirm</button>
+                    <button class="btn btn-danger rounded-pill mt-3">Confirm</button>
                 </div>
             </div>
         </div>
