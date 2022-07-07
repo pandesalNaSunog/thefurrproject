@@ -25,7 +25,7 @@
             $query = "SELECT * FROM users WHERE id = LAST_INSERT_ID()";
             $user = $con->query($query) or die($con->error);
             $userRow = $user->fetch_assoc();
-            sendSMS($contactNo, $email, $password);
+            //sendSMS($contactNo, $email, $password);
             echo json_encode($userRow);
         }else{
             echo 'exists';
