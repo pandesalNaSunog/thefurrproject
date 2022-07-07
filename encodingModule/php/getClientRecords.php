@@ -3,7 +3,7 @@
     $con = connect();
 
     if(isset($_GET)){
-        $query = "SELECT * FROM users";
+        $query = "SELECT * FROM users ORDER BY name ASC";
 
         $user = $con->query($query) or die($con->error);
 
