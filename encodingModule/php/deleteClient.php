@@ -4,6 +4,6 @@
 
     if(isset($_POST)){
         $userId = $_POST['user_id'];
-        echo $userId;
+        echo 'ok';
     }
 ?>

@@ -546,7 +546,7 @@
 
 
 
-                    function deleteClientFunc(globalUserId){
+                    function deleteClientFunc(globalUserId, mainElement){
                         $.ajax({
                             type: 'POST',
                             url: 'php/deleteClient.php',
@@ -554,7 +554,9 @@
                                 user_id: globalUserId,
                             },
                             success: function(response){
-                                console.log(response);
+                                if(response == 'ok'){
+                                    mainElement.remove();
+                                }
                             }
                         })
                     }
@@ -638,7 +640,8 @@
 
                             deleteClient.on('click', function(){
                                 globalUserId = $(this).val();
-                                deleteClientFunc(globalUserId);
+                                var mainElement = $(this).parent().parent();
+                                deleteClientFunc(globalUserId, mainElement);
                             })
                             moreOptions.on('click', function(){
                                 globalUserId = $(this).val();
