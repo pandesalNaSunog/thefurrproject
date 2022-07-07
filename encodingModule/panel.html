@@ -622,7 +622,7 @@
                                                             <td>${value.contact_no}</td>
                                                             <td>
                                                                 <button value="${value.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
-                                                                <button value="${value.id}" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-client-modal">
+                                                                <button value="${value.id}" class="edit-client btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-client-modal">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
                                                                     <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
                                                                     </svg>
@@ -637,7 +637,7 @@
                             })
                             var moreOptions = $('.more-options');
                             var deleteClient = $('.delete-client');
-
+                            var editClient = $('.edit-client');
                             deleteClient.on('click', function(){
                                 globalUserId = $(this).val();
                                 var mainElement = $(this).parent().parent();
@@ -1825,6 +1825,21 @@
                 Client not available. Please check the client code.
             </div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit-client-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid">
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere dolores similique, dignissimos quod error placeat, deleniti libero odio debitis soluta delectus illo eveniet repellendus voluptate ab vel aspernatur quisquam ea quasi aut? Quos praesentium quod aliquam exercitationem vero enim veritatis saepe illum asperiores facere! Quibusdam, officiis quod perferendis exercitationem earum quaerat, molestias dignissimos itaque sunt aspernatur animi accusantium. Repellat exercitationem nostrum eveniet fuga tempora unde, culpa eaque nesciunt labore. Ipsam blanditiis officiis, voluptatibus illo vero beatae assumenda fugiat, ullam eligendi facilis doloribus. Voluptatem nam vel neque harum eum et doloribus fugit! Eligendi quod et officia commodi, rem in ducimus soluta nam velit necessitatibus accusantium dolor eveniet nihil dolorem repellendus voluptatibus facilis. Ex voluptatum labore consequuntur provident rem sapiente totam nemo natus corrupti cum fugiat error minus fugit quae quis ratione officiis suscipit enim voluptatibus, rerum ut in aspernatur fuga dolorem. Dolores, nobis? Quae, ut! Aliquid facilis natus veritatis voluptates dolorem! Pariatur inventore tempora sequi, amet illo accusantium perferendis rerum. Vitae magni accusantium ut ex dignissimos. Voluptates, hic nobis. Assumenda officiis hic, inventore fugit adipisci accusamus fugiat magni eum ut nesciunt rerum, voluptates, iure in debitis distinctio aperiam odio. Aut, pariatur. Deserunt suscipit, aliquid facilis magni est labore aperiam eligendi officiis culpa at debitis tenetur quaerat, veniam earum vero enim dolore tempore harum cumque voluptatum recusandae voluptas atque incidunt! Eos in non nulla aspernatur nobis corrupti repudiandae nihil adipisci! Corrupti deleniti ab, ad laudantium, quia veniam sequi dolorem maxime assumenda incidunt quod pariatur dicta sunt. Natus culpa deserunt, minus dolores illo soluta delectus eaque laboriosam quibusdam quo quae repudiandae similique eius optio necessitatibus omnis tempore dolorem facilis odio commodi amet molestiae facere. Sed ipsum laudantium mollitia ullam ex illum voluptas pariatur inventore et enim necessitatibus blanditiis tempora accusamus veritatis iure eos temporibus facilis numquam aut rem eius, aliquid impedit ut? Ratione labore sit neque sed libero nostrum et ullam, fuga voluptatum accusantium nisi! Id, eius reprehenderit fugit cum illum quas. Est, rem in. Reprehenderit nobis tempora veritatis quia expedita officiis, illum omnis repellendus id dolore delectus atque iusto reiciendis. Optio est quibusdam repudiandae, laboriosam cum quae sint laborum error modi dolor commodi unde eum labore harum sunt quam eius. Eos praesentium impedit natus animi ipsam possimus fugiat harum amet voluptatum, sunt, laborum modi id dolorem, laboriosam deleniti porro vel architecto illum voluptates? Recusandae neque, officiis sequi explicabo obcaecati distinctio corporis quos laudantium! Harum, dolor laboriosam placeat fugit repudiandae adipisci doloremque accusantium!</p>
+                </div>
+            </div>
         </div>
     </div>
     
