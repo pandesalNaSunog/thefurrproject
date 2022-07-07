@@ -547,6 +547,26 @@
                     var confirmEditClient = $('#confirm-edit-client')
 
 
+
+                    confirmEditClient.on('click', function(){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateClient.php',
+                            data:{
+                                user_id: globalUserId,
+                                client_name: editClientName.val(),
+                                client_code: editClientCode.val(),
+                                client_contact: editClientContact.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Client details has been successfully updated.');
+                                    location.reload();
+                                }
+                                
+                            }
+                        })
+                    })
                     function editClientFunc(globalUserId){
                         $.ajax({
                             type: 'GET',
