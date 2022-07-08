@@ -14,7 +14,7 @@
         $response = array();
         foreach($data as $dataItem){
             $petId = $dataItem['pet_id'];
-            $query = "SELECT * FROM patient_details WHERE pet_id = '$petId'";
+            $query = "SELECT * FROM patient_details WHERE id = '$petId'";
             $patient = $con->query($query) or die($con->error);
             $patientRow = $patient->fetch_assoc();
             $name = $patientRow['pet_name'];
