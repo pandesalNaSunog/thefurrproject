@@ -547,6 +547,11 @@
                     var editClientContact = $('#edit-client-contact');
                     var confirmEditClient = $('#confirm-edit-client')
                     var confirmInsertPet = $('#confirm-insert-pet');
+                    var clientPetsTable = $('#client-pets-table');
+
+
+
+
 
                     confirmEditClient.on('click', function(){
                         $.ajax({
@@ -587,6 +592,29 @@
                             }
                         })
                     })
+
+
+                    function getClientPetsFunc(globalAppointmentId){
+                        $.ajax({
+                            type: 'GET',
+                            url: 'php/getClientPets.php',
+                            data:{
+                                appointment_id: globalAppointmentId
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                $(data).each(function(index, value){
+                                    clientPetsTable.append(`<tr>
+                                                                <td>${value.name}</td>
+                                                                <td>${value.age}</td>
+                                                                <td>${value.breed}</td>
+                                                                <td>${value.species}</td>
+                                                                <td>${value.weight}</td>
+                                                                <td>${value.species}</td>`)
+                                })
+                            }
+                        })
+                    }
                     function editClientFunc(globalUserId){
                         $.ajax({
                             type: 'GET',
@@ -1678,6 +1706,28 @@
                     </div>
                 </div>
                 <div class="modal-body">
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h3 class="fw-bold">
+                                Client's Pets
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Breed</th>
+                                        <th scope="col">Species</th>
+                                        <th scope="col">Sex</th>
+                                    </thead>
+                                    <tbody id="client-pets-table">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     <div class="dropdown">
                         <button style="width: 100%" data-bs-toggle="dropdown" class="btn btn-danger dropdown-toggle">
                             Choose Existing Pets
