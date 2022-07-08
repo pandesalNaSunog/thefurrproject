@@ -14,11 +14,13 @@
         $weight = $_POST['weight'];
         $sex = $_POST['sex'];
 
-        $query = "INSERT INTO patient_details(`client_id`,`pet_name`,`breed`,`species`,`sex`,`created_at`,`updated_at`)VALUES('$clientId','$name','$age','$breed','$species','$weight','$sex','$today','$today')";
-        $con->query($query) or die($con->error);
+        // $query = "INSERT INTO patient_details(`client_id`,`pet_name`,`breed`,`species`,`sex`,`created_at`,`updated_at`)VALUES('$clientId','$name','$age','$breed','$species','$weight','$sex','$today','$today')";
+        // $con->query($query) or die($con->error);
 
-        $query = "INSERT INTO pet_age_and_sexes(`weight`,`age`,`created_at`,`updated_at`,`appointment_id`)VALUES('$weight','$age','$today','$today','$appointmentId')";
-        $con->query($query) or die($con->error);
-        echo 'ok';
+        // $query = "INSERT INTO pet_age_and_sexes(`weight`,`age`,`created_at`,`updated_at`,`appointment_id`)VALUES('$weight','$age','$today','$today','$appointmentId')";
+        // $con->query($query) or die($con->error);
+        // echo 'ok';
+
+        echo json_encode($_POST);
     }
 ?>
