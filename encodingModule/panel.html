@@ -696,14 +696,8 @@
                             data:{
                                 attending_vet_id: globalVetId, 
                                 user_id: globalUserId,
-                                pet_name: clientPetName.val(),
                                 client_concern: clientConcern.val(),
                                 appointment_date: appointmentDate.val(),
-                                pet_age: petAge.val(),
-                                pet_breed: petBreed.val(),
-                                pet_species: petSpecies.val(),
-                                pet_weight: petWeight.val(),
-                                pet_sex: petSex.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
