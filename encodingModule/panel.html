@@ -669,6 +669,7 @@
                                 viewPets.on('click', function(){
                                     var thisViewPets = $(this);
                                     globalAppointmentId = thisViewPets.val();
+                                    getClientPetsFunc(globalAppointmentId);
                                 })
                             }
                         })
