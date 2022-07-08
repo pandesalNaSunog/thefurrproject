@@ -522,6 +522,7 @@
                 $(document).ready(function(){
                     var globalVetId = 0;
                     var globalUserId = 0;
+                    var globalAppointmentId = 0;
                     var tableBody = $('#table-body');
                     var clientRecordTable = $('#client-record-table');
                     var clientName = $('#client-client-name');
@@ -545,7 +546,7 @@
                     var editClientCode = $('#edit-client-code');
                     var editClientContact = $('#edit-client-contact');
                     var confirmEditClient = $('#confirm-edit-client')
-
+                    var confirmInsertPet = $('#confirm-insert-pet');
 
                     confirmEditClient.on('click', function(){
                         $.ajax({
@@ -563,6 +564,28 @@
                                     location.reload();
                                 }
                                 
+                            }
+                        })
+                    })
+
+                    confirmInsertPet.on('click', function(){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/insertPet.php',
+                            data:{
+                                client_id: globalUserId,
+                                appointment_id: globalAppointmentId,
+                                pet_name: clientPetName.val(),
+                                age: petAge.val(),
+                                breed: petBreed.val(),
+                                species: petSpecies.val(),
+                                weight: petWeight.val(),
+                                sex: petSex.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    location.reload();
+                                }
                             }
                         })
                     })
@@ -1697,7 +1720,7 @@
                             Please fill out this field.
                         </div>
                     </div>
-                    <button class="btn btn-danger rounded-pill mt-3" style="width:100%">Confirm</button>
+                    <button id="confirm-insert-pet" class="btn btn-danger rounded-pill mt-3" style="width:100%">Confirm</button>
                 </div>
             </div>
         </div>
