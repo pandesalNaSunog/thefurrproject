@@ -633,11 +633,15 @@
                                                                 <td>${value.appointment_date}</td>
                                                                 <td>${value.client_concern}</td>
                                                                 <td>
-                                                                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#pet-details-modal">...</button>
+                                                                    <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#pet-details-modal">...</button>
                                                                 </td>
                                                             </tr>`)
                                 })
-                                console.log(data);
+                                var viewPets = $('.view-pets');
+                                viewPets.on('click', function(){
+                                    var thisViewPets = $(this);
+                                    globalAppointmentId = thisViewPets.val();
+                                })
                             }
                         })
                     }

@@ -31,6 +31,7 @@
             $clientConcern = $appointmentItem['concern'];
 
             $response[] = array(
+                'id' => $appointmentId,
                 'client_name' => $clientName,
                 'attending_vet' => $attendingVet,
                 'client_concern' => $clientConcern,
