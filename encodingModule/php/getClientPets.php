@@ -5,7 +5,7 @@
 
     if(isset($_GET)){
         $appointmentId = $_GET['appointment_id'];
-        $query = "SELECT * FROM pet_age_and_sex WHERE appointment_id = '$appointmentId'";
+        $query = "SELECT * FROM pet_age_and_sexes WHERE appointment_id = '$appointmentId'";
         $pet = $con->query($query) or die($con->error);
         $data = array();
         while($row = $pet->fetch_assoc()){
