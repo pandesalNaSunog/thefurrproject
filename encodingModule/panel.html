@@ -564,7 +564,7 @@
                             success: function(response){
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
-                                    petList.append(`<li><button value="${value.id}" class="dropdown-link">${value.pet_name}</button></li>`)
+                                    petList.append(`<li><button value="${value.id}" class="dropdown-item">${value.pet_name}</button></li>`)
                                 })
                             }
                         })
