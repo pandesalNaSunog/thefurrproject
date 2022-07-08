@@ -574,7 +574,7 @@
                     })
 
                     confirmInsertPet.on('click', function(){
-                        clientPetsTable.children().remove();
+                        
                         $.ajax({
                             type: 'POST',
                             url: 'php/insertPet.php',
@@ -596,6 +596,7 @@
 
 
                     function getClientPetsFunc(globalAppointmentId){
+                        clientPetsTable.children().remove();
                         $.ajax({
                             type: 'GET',
                             url: 'php/getClientPets.php',
