@@ -707,6 +707,10 @@
                                 viewPets.on('click', function(){
                                     var thisViewPets = $(this);
                                     globalAppointmentId = thisViewPets.val();
+                                    clientPetName.val('');
+                                    petBreed.val('')
+                                    petSpecies.val('');
+                                    petSex.val('');
                                     getClientPetsFunc(globalAppointmentId);
                                 })
                             }
