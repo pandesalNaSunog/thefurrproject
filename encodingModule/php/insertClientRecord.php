@@ -17,9 +17,9 @@
             $data[] = $row;
         }
         if(count($data) == 0){
-            $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+            // $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
             $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`)
-                        VALUES('$ownerName','$email','$clientCode','$contactNo','$encryptedPassword')";
+                        VALUES('$ownerName','$email','$clientCode','$contactNo','$password')";
             $con->query($query) or die($con->error);
 
             $query = "SELECT * FROM users WHERE id = LAST_INSERT_ID()";
