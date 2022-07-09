@@ -578,7 +578,7 @@
                                         },
                                         success: function(response){
                                             var data = JSON.parse(response);
-                                            clientPetName.va(data.pet_name);
+                                            clientPetName.val(data.pet_name);
                                             petBreed.val(data.breed)
                                             petSpecies.val(data.species);
                                             petSex.val(data.sex);
