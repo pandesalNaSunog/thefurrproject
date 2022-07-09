@@ -625,7 +625,16 @@
                                 sex: petSex.val()
                             },
                             success: function(response){
-                                console.log(response);
+                                if(response == 'ok'){
+                                    alert('Record Successfully Inserted.');
+                                    clientPetsTable.append(`<tr>
+                                                                <td>${clientPetName.val()}</td>
+                                                                <td>${petAge.va()}</td>
+                                                                <td>${petBreed.val()}</td>
+                                                                <td>${petSpecies.val()}</td>
+                                                                <td>${petWeight.val()}</td>
+                                                                <td>${petSex.val()}</td>`);
+                                }
                             }
                         })
                     })
