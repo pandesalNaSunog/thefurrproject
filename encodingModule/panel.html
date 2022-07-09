@@ -564,7 +564,26 @@
                             success: function(response){
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
-                                    petList.append(`<li><button value="${value.id}" class="dropdown-item">${value.pet_name}</button></li>`)
+                                    petList.append(`<li><button value="${value.id}" class="pet dropdown-item">${value.pet_name}</button></li>`)
+                                })
+
+                                var pet = $('.pet');
+                                pet.on('click', function(){
+                                    var thisPet = $(this).val();
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: 'php/getOnePet.php',
+                                        data:{
+                                            pet_id: thisPet,
+                                        },
+                                        success: function(response){
+                                            var data = JSON.parse(response);
+                                            clientPetName.va(data.pet_name);
+                                            petBreed.val(data.breed)
+                                            petSpecies.val(data.species);
+                                            petSex.val(data.sex);
+                                        }
+                                    })
                                 })
                             }
                         })
