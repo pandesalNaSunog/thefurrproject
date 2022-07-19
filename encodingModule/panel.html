@@ -49,12 +49,41 @@
             })
 
             confirmEditPet.on('click', function(){
-
+                updatePet(globalPetId, editPetName, editPetSex, editPetBreed, editPetSpecies);
             })
 
 
             getClients();
             
+
+            function updatePet(petId, name, sex, breed, species){
+                if(name.val() == ""){
+                    name.addClass('is-invalid');
+                }else if(sex.val() == ""){
+                    sex.addClass('is-invalid')
+                }else if(breed.val() == ""){
+                    breed.addClass('is-invalid')
+                }else if(species.val() == ""){
+                    species.addClass('is-invalid')
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/updatePet.php',
+                        data:{
+                            name: name.val(),
+                            sex: sex.val(),
+                            breed: breed.val(),
+                            species: species.val(),
+                            pet_id: petId,
+                        },
+                        success: function(response){
+                            if(response = 'ok'){
+                                alert('Pet Successfully Updated.');
+                            }
+                        }
+                    })
+                }
+            }
 
             function updateClient(userId, name, email, contact, code){
                 if(name.val() == ""){
