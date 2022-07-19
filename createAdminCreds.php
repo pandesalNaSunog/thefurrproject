@@ -1,6 +1,6 @@
 <?php
 
-    $con = new mysqli("localhost","root","","thrfurr_db");
+    $con = new mysqli("localhost","u568496919_thefurr","Thefurrpassword11","u568496919_thefurr_db");
 
     $password = password_hash('password', PASSWORD_DEFAULT);
     $query = "INSERT INTO users(`name`,`email`,`password`,`user_type`)VALUES('Administrator','admin@gmail.com','$password','admin')";
