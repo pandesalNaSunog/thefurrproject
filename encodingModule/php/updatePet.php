@@ -8,10 +8,10 @@
             $breed = htmlspecialchars($_POST['breed']);
             $species = htmlspecialchars($_POST['species']);
             $sex = htmlspecialchars($_POST['sex']);
+            $birthDate = $_POST['birth_date'];
 
 
-
-            $query = "UPDATE pets SET name = '$name', breed = '$breed', species = '$species', sex = '$sex' WHERE id = '$petId'";
+            $query = "UPDATE pets SET birth_date = '$birthDate', name = '$name', breed = '$breed', species = '$species', sex = '$sex' WHERE id = '$petId'";
             $con->query($query) or die($con->error);
 
             echo 'ok';

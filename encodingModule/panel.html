@@ -36,12 +36,15 @@
             var editPetSex = $('#edit-pet-sex');
             var confirmEditPet = $('#confirm-edit-pet');
             var petsTable = $('#pets-table');
+            var logout = $('#logout');
+            var addBirthDate = $('#birth_date');
+            var editPetBirthDate = $('#edit-pet-birth-date');
             confirmAddClient.on('click', function(){
                 addClient(addName,addEmail,addContact,addClientCode);
             })
 
             confirmAddPet.on('click', function(){
-                addPet(globalUserId, addPetName, addPetBreed, addPetSpecies, addPetSex);
+                addPet(globalUserId, addPetName, addPetBreed, addPetSpecies, addPetSex, addBirthDate);
             })
 
             confirmEditClient.on('click', function(){
@@ -49,14 +52,39 @@
             })
 
             confirmEditPet.on('click', function(){
-                updatePet(globalPetId, editPetName, editPetSex, editPetBreed, editPetSpecies);
+                updatePet(globalPetId, editPetName, editPetSex, editPetBreed, editPetSpecies, editPetBirthDate);
+            })
+
+            logout.on('click', function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/logout.php',
+                    success: function(response){
+                        if(response == 'ok'){
+                            window.location.replace('index.html');
+                        }
+                    }
+                })
             })
 
 
             getClients();
-            
+            session();
 
-            function updatePet(petId, name, sex, breed, species){
+
+            function session(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/panelSessionCheck.php',
+                    success: function(response){
+                        if(response != 'ok'){
+                            window.location.replace(response);
+                        }
+                    }
+                })
+            }
+
+            function updatePet(petId, name, sex, breed, species, birthDate){
                 if(name.val() == ""){
                     name.addClass('is-invalid');
                 }else if(sex.val() == ""){
@@ -74,6 +102,7 @@
                             sex: sex.val(),
                             breed: breed.val(),
                             species: species.val(),
+                            birth_date: birthDate.val(),
                             pet_id: petId,
                         },
                         success: function(response){
@@ -114,7 +143,7 @@
                 }
             }
 
-            function addPet(clientId ,name, breed, species, sex){
+            function addPet(clientId ,name, breed, species, sex, birthDate){
                 if(name.val() == ""){
                     name.addClass('is-invalid');
                 }else if(breed.val() == ""){
@@ -133,10 +162,16 @@
                             breed: breed.val(),
                             species: species.val(),
                             sex: sex.val(),
+                            birth_date: birthDate.val()
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            addPetsToTable(data.id, data.name, data.sex, data.breed, data.species);
+                            addPetsToTable(data.id, data.name, data.sex, data.breed, data.species, data.age);
+                            name.val('');
+                            breed.val('');
+                            species.val('');
+                            sex.val('');
+                            birthDate.val('');
                             petFunctions();
                         }
                     })
@@ -147,12 +182,14 @@
 
 
 
-            function addPetsToTable(id, name, sex, breed, species){
+            function addPetsToTable(id, name, sex, breed, species, age){
                 petsTable.append(`<tr>
                                     <td>${name}</td>
+                                    <td>${age}</td>
                                     <td>${sex}</td>
                                     <td>${breed}</td>
                                     <td>${species}</td>
+                                    
                                     <td>
                                         <button data-bs-toggle="modal" data-bs-target="#edit-pet-modal" value=${id} class="edit-pet btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -254,9 +291,10 @@
                             client_id: globalUserId
                         },
                         success: function(response){
+
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addPetsToTable(value.id, value.name, value.sex, value.breed, value.species);
+                                addPetsToTable(value.id, value.name, value.sex, value.breed, value.species, value.age);
                             })
                             petFunctions();
                         }
@@ -320,6 +358,11 @@
                             code: code.val(),
                         },
                         success: function(response){
+                            alert('Client has been successfully added.')
+                            name.val('');
+                            email.val('');
+                            contact.val('');
+                            code.val('');
                             var data = JSON.parse(response);
                             clientsTable.append(`<tr><td>${data.name}</td>
                                                     <td>${data.email}</td>
@@ -339,7 +382,6 @@
                         }
                     })
                 }
-                
             }
         })
     </script>
@@ -360,6 +402,9 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <a href="#" class="nav-link active">Client Records</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout" href="#" class="nav-link">Log Out</a>
                     </li>
                 </ul>
             </div>
@@ -494,6 +539,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <th scope="col">Name</th>
+                                <th scope="col">Age</th>
                                 <th scope="col">Sex</th>
                                 <th scope="col">Breed</th>
                                 <th scope="col">Species</th>
@@ -504,9 +550,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <h5 class="fw-bold">
+                    <h5 class="fw-bold mt-5">
                         Add Pet
-                    </h3>
+                    </h5>
+                    <hr>
+                    <div>
+                        <label class="form-label" for="birth_date">Birth Date</label>
+                        <input id="birth_date" type="date" class="form-control">
+                    </div>
+                    
                     <div>
                         <input id="add-pet-name" type="text" class="form-control mt-3" placeholder="Name">
                         <div class="invalid-feedback">
@@ -533,8 +585,6 @@
                     </div>
                     
                     <button id="confirm-add-pet" style="width:100%" class="btn btn-danger rounded-pill mt-3">Confirm</button>
-
-                    
                 </div>
             </div>
         </div>
@@ -550,6 +600,11 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+
+                    <div>
+                        <label for="edit-pet-birth-date" class="form-label">Birth Date</label>
+                        <input id="edit-pet-birth-date" type="date" class="form-control mt-3"">
+                    </div>
                     <div>
                         <input id="edit-pet-name" type="text" class="form-control mt-3" placeholder="Name">
                         <div class="invalid-feedback">
