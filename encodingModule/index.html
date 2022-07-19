@@ -11,61 +11,7 @@
     <script src="../js/jquery.js"></script>
 
     <script>
-        $(document).ready(function(){
-            var username = $('#username');
-            var password = $('#password');
-            var login = $('#log-in');
-            var contents = $('#contents');
-            contents.hide();
-            username.on('keydown', function(){
-                username.removeClass('is-invalid');
-            })
-
-            password.on('keydown', function(){
-                password.removeClass('is-invalid');
-            })
-
-            $.ajax({
-                type: 'GET',
-                url: 'php/sessionCheck.php',
-                success: function(response){
-                    if(response == 'panel.html'){
-                        window.location.replace(response);
-                    }else{
-                        contents.show();
-                    }
-                }
-            })
-
-            login.on('click', function(e){
-                e.preventDefault();
-
-                if(username.val() != "" && password.val() != ""){
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/adminlogin.php',
-                        data: {
-                            username: username.val(),
-                            password: password.val()
-                        },
-                        success: function(response){
-                            if(response == 'ok'){
-                                window.location.replace('panel.html');
-                            }else{
-                                alert('Invalid Username and Password.')
-                            }
-                        }
-                    })
-                }else{
-                    if(username.val() == ""){
-                        username.addClass('is-invalid');
-                    }
-                    if(password.val() == ""){
-                        password.addClass('is-invalid');
-                    }
-                }
-            })
-        })
+        
     </script>
     <title>The Furr Project</title>
 </head>

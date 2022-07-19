@@ -9,2019 +9,238 @@
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/jquery.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            var globalUserId = 0;
+            var clientsTable = $('#clients-table');
+            var addName = $('#add-name');
+            var addEmail = $('#add-email');
+            var addContact = $('#add-contact');
+            var addClientCode = $('#add-client-code');
+            var confirmAddClient = $('#confirm-add-client');
+            var editName = $('#edit-name');
+            var editEmail = $('#edit-email');
+            var editContact = $('#edit-contact');
+            var editClientCode = $('#edit-client-code');
+            var confirmEditClient = $('#confirm-edit-client');
+
+            confirmAddClient.on('click', function(){
+                addClient(addName,addEmail,addContact,addClientCode);
+            })
+
+
+
+            getClients();
+
+
+            function getClients(){
+                clientsTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getClients.php',
+                    success: function(response){
+
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            clientsTable.append(`<tr><td>${value.name}</td>
+                                                    <td>${value.email}</td>
+                                                    <td>${value.client_code}</td>
+                                                    <td>${value.contact_no}</td>
+                                                    <td>
+                                                        <button value=${value.id} data-bs-toggle="modal" data-bs-target="#edit-client-modal" class="edit-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                        </svg></button>
+                                                        <button value=${value.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                        </svg></button>
+                                                        <button value=${value.id} class="view-pets btn btn-outline-danger">View Pets</button>
+                                                    </tr>`)
+                        })
+
+                        clientRowFunctions();
+                    }
+                })
+            }
+
+
+            function clientRowFunctions(){
+                var editClient = $('.edit-client');
+                var deleteClient = $('.delete-client');
+                var viewPets = $('view-pets');
+                deleteClient.on('click', function(){
+                    globalUserId = $(this).val();
+
+                    var thisDeleteClient = $(this);
+                    if(confirm('Are your sure you want to delete this client?') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteClient.php',
+                            data:{
+                                client_id: globalUserId,
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDeleteClient.parent().parent().remove();
+                                }
+                            }
+                        })
+                    }
+                })
+                editClient.on('click', function(){
+                    globalUserId = $(this).val();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getSpecificClient.php',
+                        data:{
+                            client_id: globalUserId,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            editName.val(data.name);
+                            editEmail.val(data.email);
+                            editContact.val(data.contact_no);
+                            editClientCode.val(data.client_code);
+                        }
+                    })
+                })
+            }
+            function addClient(name,email,contact,code){
+                if(name.val() == ""){
+                    name.addClass('is-invalid');
+                }else if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else if(contact.val() == ""){
+                    contact.addClass('is-invalid');
+                }else if(code.val() == ""){
+                    code.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addClient.php',
+                        data:{
+                            name: name.val(),
+                            email: email.val(),
+                            contact: contact.val(),
+                            code: code.val(),
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            clientsTable.append(`<tr><td>${data.name}</td>
+                                                    <td>${data.email}</td>
+                                                    <td>${data.client_code}</td>
+                                                    <td>${data.contact_no}</td>
+                                                    <td>
+                                                        <button value=${data.id} data-bs-toggle="modal" data-bs-target="#edit-client-modal" class="edit-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                        </svg></button>
+                                                        <button value=${data.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                        </svg></button>
+                                                        <button value=${data.id} class="view-pets btn btn-outline-danger">View Pets</button>
+                                                    </tr>`);
+                            clientRowFunctions();
+                        }
+                    })
+                }
+                
+            }
+        })
+    </script>
     <title>The Furr Project</title>
 </head>
 <body id="bg">
 
-    <!-- Navigation -->
-    
-    <nav class="navbar navbar-expand-lg bg-danger navbar-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
         <div class="container">
-            <a class="navbar-brand" href="#"><img id="logo" class="img-fluid" src="../images/thefurrproject.PNG" alt="..."></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <div class="navbar-brand">
+                <img src="../images/thefurrproject.PNG" class="img-fluid" style="width: 200px; height: auto">
+            </div>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
 
+            <div id="navmenu" class="collapse navbar-collapse fw-bold">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a id="patient-record-link" class="nav-link" aria-current="page" href="#">Client Records</a>
+                        <a href="#" class="nav-link active">Client Records</a>
                     </li>
-
-                    <li class="nav-item">
-                        <a id="staff-link" class="nav-link" aria-current="page" href="#">Staff</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="services-link" class="nav-link" aria-current="page" href="#">Services</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a id="logout" class="nav-link" aria-current="page" href="#">Logout</a>
-                    </li>
-                    <script>
-                        $(document).ready(function(){
-                            $('#list').hide();
-                            $('#medical-records').hide();
-                            $('#owner-records').show();
-                            $('#services-section').hide();
-                            $('#staff-section').hide();
-                            var patientRecords = $('#patient-record-link');
-                            var medicalRecords = $('#medical-records-link');
-                            var servicesLink = $('#services-link');
-                            var staffLink = $('#staff-link');
-                            var logout = $('#logout');
-
-                            logout.on('click', function(){
-                                $.ajax({
-                                    type: 'GET',
-                                    url: 'php/adminLogout.php',
-                                    success: function(response){
-                                        if(response == 'index.html'){
-                                            window.location.replace(response);
-                                        }
-                                    }
-                                })
-                            })
-
-                            staffLink.on('click', function(){
-                                patientRecords.removeClass('active');
-                                medicalRecords.removeClass('active');
-                                staffLink.addClass('active');
-                                servicesLink.removeClass('active');
-                                $('#medical-records').hide();
-                                $('#list').hide();
-                                $('#owner-records').hide();
-                                $('#staff-section').show();
-                                $('#services-section').hide();
-                            })
-
-                            servicesLink.on('click', function(e){
-                                patientRecords.removeClass('active');
-                                medicalRecords.removeClass('active');
-                                staffLink.removeClass('active');
-                                servicesLink.addClass('active');
-                                $('#medical-records').hide();
-                                $('#list').hide();
-                                $('#owner-records').hide();
-                                $('#staff-section').hide();
-                                $('#services-section').show();
-                            })
-                            patientRecords.on('click', function(e){
-                                patientRecords.addClass('active');
-                                medicalRecords.removeClass('active');
-                                servicesLink.removeClass('active');
-                                staffLink.removeClass('active');
-                                $('#medical-records').hide();
-                                $('#list').hide();
-                                $('#owner-records').show()
-                                $('#services-section').hide();
-                                $('#staff-section').hide();
-                            })
-                            medicalRecords.on('click', function(e){
-                                patientRecords.removeClass('active');
-                                medicalRecords.addClass('active');
-                                servicesLink.removeClass('active');
-                                staffLink.removeClass('active');
-                                $('#medical-records').show();
-                                $('#staff-section').hide();
-                                $('#list').show();
-                                $('#owner-records').hide();
-                                $('#services-section').hide();
-                            })
-
-                            $.ajax({
-                                type: 'GET',
-                                url: 'php/panelSessionCheck.php',
-                                success: function(response){
-                                    if(response == 'index.html'){
-                                        window.location.replace(response);
-                                    }
-                                }
-                            })
-                        });
-                    </script>
-                    <script>
-                        $(document).ready(function(){
-                            var patientName = $('#patient-name');
-                            var insertMedicalRecord = $('#insert-medical-record');
-                            var clientCode = $('#client-code');
-                            var createdDate = $('#created-date');
-                            var medicalHistory = $('#medical-history');
-                            var wellnessBehavior = $('#wellness-behavior');
-                            var birthDate = $('#birth_date');
-                            var species = $('#species');
-                            var breed = $('#breed');
-                            var weight = $('#weight');
-                            var temp = $('#temp');
-                            var hr = $('#hr');
-                            var rr = $('#rr');
-                            var physicalExam = $('#physical-exam');
-                            var cchx = $('#cc-hx');
-                            var dxTools = $('#dx-tools');
-                            var tdxDxCase = $('#tdx-dx-case');
-                            var treatment = $('#treatment');
-                            var surgeryOther = $('#surgery-other');
-                            var surgeryOtherValue = "";
-                            var inPatientOtherValue = "";
-                            var inPatientOther = $('#in-patient-other');
-                            var outPatientOther = $('#out-patient-other');
-                            var outPatientOtherValue = ""
-                            var takeHomeMeds = $('#take-home-meds');
-                            var male = $('#male');
-                            var yesInPatient = $('#yes-in-patient');
-                            var surgeryYes = $('#surgery-yes');
-                            var outPatientYes = $('#yes-out-patient');
-                            var tableBody = $('#table-body');
-                            male.prop("checked", true);
-                            surgeryYes.prop("checked", true);
-                            outPatientYes.prop("checked", true);
-                            yesInPatient.prop("checked", true);
-                            insertMedicalRecord.on('click',function(e){
-                                e.preventDefault()
-                                    
-                                if(clientCode.val() == ""){
-                                    if(!clientCode.hasClass('is-invalid')){
-                                        clientCode.addClass('is-invalid')
-                                        $('<div class="invalid-feedback">Please enter the owner\'s client code.</div>').insertAfter(clientCode);
-                                        $(window).scrollTop(clientCode.offset().top);
-                                    }  
-                                }
-                                if(createdDate.val() == ""){
-                                    if(!createdDate.hasClass('is-invalid')){
-                                        createdDate.addClass('is-invalid')
-                                        $('<div class="invalid-feedback">Please enter the date.</div>').insertAfter(createdDate);
-                                        $(window).scrollTop(clientCode.offset().top);
-                                    }
-                                    
-                                }
-        
-                                if(surgeryOther.val() == ""){
-                                    surgeryOtherValue = $("input[name='surgery']:checked").val();
-                                }else{
-                                    surgeryOtherValue = surgeryOther.val();
-                                }
-        
-                                if(inPatientOther.val() == ""){
-                                    inPatientOtherValue = $("input[name='in-patient']:checked").val();
-                                }else{
-                                    inPatientOtherValue = inPatientOther.val();
-                                }
-        
-                                if(outPatientOther.val() == ""){
-                                    outPatientOtherValue = $("input[name='out-patient']:checked").val();
-                                }else{
-                                    outPatientOtherValue = outPatientOther.val();
-                                }
-        
-                                if(clientCode.val() != "" && createdDate.val() != ""){
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: 'php/medicalRecordInsertion.php',
-                                        data: {
-                                            patient_name: patientName.val(),
-                                            client_code: clientCode.val(),
-                                            created_date: createdDate.val(),
-                                            medical_history: medicalHistory.val(),
-                                            wellness_behavior: wellnessBehavior.val(),
-                                            birth_date: birthDate.val(),
-                                            species: species.val(),
-                                            breed: breed.val(),
-                                            sex: $("input[name='sex']:checked").val(),
-                                            weight: weight.val(),
-                                            temp: temp.val(),
-                                            hr: hr.val(),
-                                            rr: rr.val(),
-                                            physical_exam: physicalExam.val(),
-                                            cc_hx: cchx.val(),
-                                            tdx_dx_case: tdxDxCase.val(),
-                                            dx_tools: dxTools.val(),
-                                            treatment: treatment.val(),
-                                            in_patient: inPatientOtherValue,
-                                            surgery: surgeryOtherValue,
-                                            out_patient: outPatientOtherValue,
-                                            take_home_meds: takeHomeMeds.val()
-                                        },
-        
-                                        success: function(response){
-                                            if(response != 'create client record first'){
-                                                console.log(response);
-                                                var data = JSON.parse(response);
-                                                $('#successfully-added-toast').toast({delay:5000});
-                                                $('#successfully-added-toast').toast('show');
-
-                                                tableBody.append(`<tr>
-                                                            <div class="card m-1 p-2">
-                                                                <div class="card-body">
-                                                                    <td>${patientName.val()}</td>
-                                                                    <td>${clientCode.val()}</td>
-                                                                    <td><button class="btn btn-primary view-record" value="${data.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
-                                                                </div>
-                                                            </div>
-                                                        </tr>`);
-
-                                                        var view = $('.view-record');
-                                                        view.on('click', function(e){
-                                                            var thisView = $(this);
-                                                            e.preventDefault();
-                                                            $.ajax({
-                                                                type: 'POST',
-                                                                url: 'php/getSpecificRecord.php',
-                                                                data: {
-                                                                    record_id: thisView.val()
-                                                                },
-                                                                success: function(response){
-                                                                    console.log(response);
-                                                                    var data = JSON.parse(response);
-                                                                    var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
-                                                                    var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
-                                                                    var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
-                                                                    var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
-                                                                    var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
-                                                                    var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
-                                                                    var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
-                                                                    var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
-                                                                    var species = $('#record-modal').children().children().children().children().children().children().children('#species');
-                                                                    var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
-                                                                    var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
-                                                                    var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
-                                                                    var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
-                                                                    var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
-                                                                    var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
-                                                                    var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
-                                                                    var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
-                                                                    var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
-                                                                    var treatment = $('#record-modal').children().children().children().children().children('#treatment');
-                                                                    var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
-                                                                    var surgeryOtherValue = "";
-                                                                    var inPatientOtherValue = "";
-                                                                    var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
-                                                                    var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
-                                                                    var outPatientOtherValue = ""
-                                                                    var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
-                                                                    var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
-                                                                    var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
-                                                                    var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
-                                                                    var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
-                                                                    var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
-                                                                    var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
-                                                                    var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
-                                                                    patientName.val(data.patient_name);
-                                                                    clientCode.val(data.client_code);
-                                                                    createdDate.val(data.date);
-                                                                    contactNumber.val(data.contact_no);
-                                                                    medicalHistory.val(data.medical_history);
-                                                                    wellnessBehavior.val(data.wellness_behavior);
-                                                                    birthDate.val(data.date_of_birth);
-                                                                    species.val(data.species);
-                                                                    breed.val(data.breed);
-                                                                    weight.val(data.weight);
-                                                                    temp.val(data.temp);
-                                                                    hr.val(data.hr);
-                                                                    rr.val(data.rr);
-                                                                    physicalExam.val(data.physical_exam);
-                                                                    cchx.val(data.cc_hx);
-                                                                    dxTools.val(data.dx_tools);
-                                                                    tdxDxCase.val(data.tdx_dx_case);
-                                                                    treatment.val(data.treatment);
-                                                                    takeHomeMeds.val(data.take_home_meds_rx);
-
-                                                                    if(data.in_patient == 'Yes'){
-                                                                        inPatientYes.prop("checked", true);
-                                                                    }else if(data.in_patient == 'No'){
-                                                                        inPatientNo.prop("checked", true);
-                                                                    }else{
-                                                                        inPatientOther.val(data.in_patient)
-                                                                    }
-
-                                                                    if(data.surgery == 'Yes'){
-                                                                        surgeryYes.prop("checked", true);
-                                                                    }else if(data.surgery == 'No'){
-                                                                        surgeryNo.prop("checked", true);
-                                                                    }else{
-                                                                        surgeryOther.val(data.surgery)
-                                                                    }
-
-                                                                    if(data.out_patient == 'Yes'){
-                                                                        outPatientYes.prop("checked", true);
-                                                                    }else if(data.out_patient == 'No'){
-                                                                        outPatientNo.prop("checked", true);
-                                                                    }else{
-                                                                        outPatientOther.val(data.out_patient)
-                                                                    }
-
-                                                                    if(data.sex == 'Male'){
-                                                                        male.prop("checked", true);
-                                                                    }else{
-                                                                        female.prop("checked", true);
-                                                                    }
-                                                                }
-                                                            })
-                                                        });
-                                            }else{
-                                                $('#medical-record-added-fail-toast').toast({delay:5000});
-                                                $('#medical-record-added-fail-toast').toast("show");
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                        })
-                    </script>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div id="list" class="mt-5">
-        <div class="container">
-            <h1 class="mt-5">List of Patients' Medical Records</h1>
-            <hr>
-            <div class="input-group mb-3" id="searchbar">
-                <button class="btn btn-outline-danger" type="button" id="search-medical-records">Search</button>
-                <input id="search-medical-records-text" type="text" class="form-control" placeholder="Search Medical Records" aria-label="Example text with button addon" aria-describedby="button-addon1">
+
+    <section id="client-records-section">
+        <div class="mx-auto card mt-5 col-lg-6 shadow rounded-4">
+            <div class="card-header rounded-4">
+                <h3 class="fw-bold">
+                    Client Records
+                </h3>
             </div>
-
-            <script>
-                $(document).ready(function(){
-                    var searchMedicalRecords = $('#search-medical-records');
-                    var searchMedicalRecordsText = $('#search-medical-records-text');
-                    var tableBody = $('#table-body');
-                    searchMedicalRecords.on('click', function(e){
-                        e.preventDefault();
-
-                        if(searchMedicalRecordsText.val() == ""){
-                            if(!(searchMedicalRecordsText.hasClass('is-invalid'))){
-                                searchMedicalRecordsText.addClass('is-invalid');
-                                $('<div class="invalid-feedback">Please fill out this field</div>').insertAfter(searchMedicalRecordsText);
-                            }
-                        }else{
-                            searchMedicalRecordsText.removeClass('is-invalid');
-                            $('#table-body').children().remove();
-
-                            $.ajax({
-                                type: 'GET',
-                                url: 'php/getSearchedMedicalRecords.php',
-                                data: {
-                                    keyword: searchMedicalRecordsText.val()
-                                },
-                                success: function(response){
-                                    var data = JSON.parse(response);
-                                    $(data).each(function(index,value){
-                                        tableBody.append(`<tr>
-                                                            <div class="card m-1 p-2">
-                                                                <div class="card-body">
-                                                                    <td>${value.patient_name}</td>
-                                                                    <td>${value.client_code}</td>
-                                                                    <td><button class="btn btn-primary view-record" value="${value.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
-                                                                </div>
-                                                            </div>
-                                                        </tr>`)
-                                    });
-                                    var view = $('.view-record');
-                                    view.on('click', function(e){
-                                        var thisView = $(this);
-                                        e.preventDefault();
-                                        $.ajax({
-                                            type: 'POST',
-                                            url: 'php/getSpecificRecord.php',
-                                            data: {
-                                                record_id: thisView.val()
-                                            },
-                                            success: function(response){
-                                                console.log(response);
-                                                var data = JSON.parse(response);
-                                                var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
-                                                var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
-                                                var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
-                                                var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
-                                                var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
-                                                var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
-                                                var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
-                                                var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
-                                                var species = $('#record-modal').children().children().children().children().children().children().children('#species');
-                                                var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
-                                                var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
-                                                var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
-                                                var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
-                                                var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
-                                                var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
-                                                var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
-                                                var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
-                                                var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
-                                                var treatment = $('#record-modal').children().children().children().children().children('#treatment');
-                                                var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
-                                                var surgeryOtherValue = "";
-                                                var inPatientOtherValue = "";
-                                                var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
-                                                var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
-                                                var outPatientOtherValue = ""
-                                                var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
-                                                var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
-                                                var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
-                                                var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
-                                                var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
-                                                var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
-                                                var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
-                                                var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
-                                                patientName.val(data.patient_name);
-                                                clientCode.val(data.client_code);
-                                                createdDate.val(data.date);
-                                                contactNumber.val(data.contact_no);
-                                                medicalHistory.val(data.medical_history);
-                                                wellnessBehavior.val(data.wellness_behavior);
-                                                birthDate.val(data.date_of_birth);
-                                                species.val(data.species);
-                                                breed.val(data.breed);
-                                                weight.val(data.weight);
-                                                temp.val(data.temp);
-                                                hr.val(data.hr);
-                                                rr.val(data.rr);
-                                                physicalExam.val(data.physical_exam);
-                                                cchx.val(data.cc_hx);
-                                                dxTools.val(data.dx_tools);
-                                                tdxDxCase.val(data.tdx_dx_case);
-                                                treatment.val(data.treatment);
-                                                takeHomeMeds.val(data.take_home_meds_rx);
-
-                                                if(data.in_patient == 'Yes'){
-                                                    inPatientYes.prop("checked", true);
-                                                }else if(data.in_patient == 'No'){
-                                                    inPatientNo.prop("checked", true);
-                                                }else{
-                                                    inPatientOther.val(data.in_patient)
-                                                }
-
-                                                if(data.surgery == 'Yes'){
-                                                    surgeryYes.prop("checked", true);
-                                                }else if(data.surgery == 'No'){
-                                                    surgeryNo.prop("checked", true);
-                                                }else{
-                                                    surgeryOther.val(data.surgery)
-                                                }
-
-                                                if(data.out_patient == 'Yes'){
-                                                    outPatientYes.prop("checked", true);
-                                                }else if(data.out_patient == 'No'){
-                                                    outPatientNo.prop("checked", true);
-                                                }else{
-                                                    outPatientOther.val(data.out_patient)
-                                                }
-
-                                                if(data.sex == 'Male'){
-                                                    male.prop("checked", true);
-                                                }else{
-                                                    female.prop("checked", true);
-                                                }
-                                            }
-                                        })
-                                    });
-                                }
-                            });
-                        }
-                    })
-                })
-            </script>
-
-
-            <div class="card" id="table-card">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Patient Name</th>
-                            <th scope="col">Client Code</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        
-                    </tbody>
-                </table>
-            </div>
-
-            <script>
-                $(document).ready(function(){
-                    var globalVetId = 0;
-                    var globalUserId = 0;
-                    var globalAppointmentId = 0;
-                    var tableBody = $('#table-body');
-                    var clientRecordTable = $('#client-record-table');
-                    var clientName = $('#client-client-name');
-                    var clientCode = $('#client-client-code');
-                    var clientContact = $('#client-client-contact');
-                    var clientPetName = $('#client-pet-name');
-                    var clientConcern = $('#client-concern');
-                    var appointmentDate = $('#appointment-date');
-                    var petAge = $('#pet-age');
-                    var petBreed = $('#pet-breed');
-                    var petSpecies = $('#pet-species');
-                    var petWeight = $('#pet-weight');
-                    var petSex = $('#pet-sex');
-                    var insertClientRecord = $('#insert-client-record');
-                    var confirmInsert = $('#confirm-insert-appointment');
-                    var clientRecordTable = $('#client-record-table');
-                    var chooseAttendingVet = $('#choose-attending-vet');
-                    var vetList = $('#vet-list');
-                    var appointmentsTable = $('#appointments-table');
-                    var editClientName = $('#edit-client-name');
-                    var editClientCode = $('#edit-client-code');
-                    var editClientContact = $('#edit-client-contact');
-                    var confirmEditClient = $('#confirm-edit-client')
-                    var confirmInsertPet = $('#confirm-insert-pet');
-                    var clientPetsTable = $('#client-pets-table');
-                    var getPets = $('#get-pets');
-                    var petList = $('#pet-list');
-
-
-
-                    getPets.on('click', function(){
-                        petList.children().remove();
-                        $.ajax({
-                            type: 'GET',
-                            url: 'php/getPets.php',
-                            data:{
-                                client_id: globalUserId,
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                $(data).each(function(index, value){
-                                    petList.append(`<li><button value="${value.id}" class="pet dropdown-item">${value.pet_name}</button></li>`)
-                                })
-
-                                var pet = $('.pet');
-                                pet.on('click', function(){
-                                    var thisPet = $(this).val();
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: 'php/getOnePet.php',
-                                        data:{
-                                            pet_id: thisPet,
-                                        },
-                                        success: function(response){
-                                            var data = JSON.parse(response);
-                                            clientPetName.val(data.pet_name);
-                                            petBreed.val(data.breed)
-                                            petSpecies.val(data.species);
-                                            petSex.val(data.sex);
-                                        }
-                                    })
-                                })
-                            }
-                        })
-                    })
-
-                    confirmEditClient.on('click', function(){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/updateClient.php',
-                            data:{
-                                user_id: globalUserId,
-                                client_name: editClientName.val(),
-                                client_code: editClientCode.val(),
-                                client_contact: editClientContact.val()
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    alert('Client details has been successfully updated.');
-                                    location.reload();
-                                }
-                                
-                            }
-                        })
-                    })
-
-                    confirmInsertPet.on('click', function(){
-                        
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/insertPet.php',
-                            data:{
-                                client_id: globalUserId,
-                                appointment_id: globalAppointmentId,
-                                pet_name: clientPetName.val(),
-                                age: petAge.val(),
-                                breed: petBreed.val(),
-                                species: petSpecies.val(),
-                                weight: petWeight.val(),
-                                sex: petSex.val()
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    alert('Record Successfully Inserted.');
-                                    clientPetsTable.append(`<tr>
-                                                                <td>${clientPetName.val()}</td>
-                                                                <td>${petAge.va()}</td>
-                                                                <td>${petBreed.val()}</td>
-                                                                <td>${petSpecies.val()}</td>
-                                                                <td>${petWeight.val()}</td>
-                                                                <td>${petSex.val()}</td>`);
-                                }
-                            }
-                        })
-                    })
-
-
-                    function getClientPetsFunc(globalAppointmentId){
-                        clientPetsTable.children().remove();
-                        $.ajax({
-                            type: 'GET',
-                            url: 'php/getClientPets.php',
-                            data:{
-                                appointment_id: globalAppointmentId
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                $(data).each(function(index, value){
-                                    clientPetsTable.append(`<tr>
-                                                                <td>${value.name}</td>
-                                                                <td>${value.age}</td>
-                                                                <td>${value.breed}</td>
-                                                                <td>${value.species}</td>
-                                                                <td>${value.weight}</td>
-                                                                <td>${value.sex}</td>`)
-                                })
-                            }
-                        })
-                    }
-                    function editClientFunc(globalUserId){
-                        $.ajax({
-                            type: 'GET',
-                            url: 'php/getSpecificClient.php',
-                            data: {
-                                user_id: globalUserId
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                editClientName.val(data.name);
-                                editClientCode.val(data.client_code);
-                                editClientContact.val(data.contact_no);
-                            }
-                        })
-                    }
-                    
-                    function deleteClientFunc(globalUserId, mainElement){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/deleteClient.php',
-                            data:{
-                                user_id: globalUserId,
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    mainElement.remove();
-                                }
-                            }
-                        })
-                    }
-                    function getAppointmentHistory(globalUserId){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/getAppointmentHistory.php',
-                            data:{
-                                user_id: globalUserId,
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                $(data).each(function(index, value){
-                                    appointmentsTable.append(`<tr>
-                                                                <td>${value.client_name}</td>
-                                                                <td>${value.attending_vet}</td>
-                                                                <td>${value.appointment_date}</td>
-                                                                <td>${value.client_concern}</td>
-                                                                <td>
-                                                                    <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#pet-details-modal">View Pets</button>
-                                                                </td>
-                                                            </tr>`)
-                                })
-                                var viewPets = $('.view-pets');
-                                viewPets.on('click', function(){
-                                    var thisViewPets = $(this);
-                                    globalAppointmentId = thisViewPets.val();
-                                    clientPetName.val('');
-                                    petBreed.val('')
-                                    petSpecies.val('');
-                                    petSex.val('');
-                                    petWeight.val('');
-                                    petAge.val('');
-                                    getClientPetsFunc(globalAppointmentId);
-                                })
-                            }
-                        })
-                    }
-
-                    chooseAttendingVet.on('click', function(){
-                        vetList.children().remove();
-                        globalVetId = 0;
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/getAllDoctors.php',
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                $(data).each(function(index, value){
-                                    vetList.append(`<li><button class="dropdown-item vet" href="#" value="${value.id}">${value.name}</button></li>`);
-                                })
-
-                                var vet = $('.vet');
-                                vet.on('click', function(){
-                                    var thisVet = $(this);
-                                    globalVetId = thisVet.val();
-                                    chooseAttendingVet.text(thisVet.text());
-                                })
-                            }
-                        })
-                    })
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/getClientRecords.php',
-                        success: function(response){
-                            var data = JSON.parse(response);
-
-                            $(data).each(function(index,value){
-                                clientRecordTable.append(`<tr>
-                                                            <td>${value.name}</td>
-                                                            <td>${value.client_code}</td>
-                                                            <td>${value.contact_no}</td>
-                                                            <td>
-                                                                <button value="${value.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
-                                                                <button value="${value.id}" class="edit-client btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-client-modal">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
-                                                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
-                                                                    </svg>
-                                                                </div>
-                                                                <button value="${value.id}" class="delete-client btn btn-outline-danger rounded-3">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                                                    </svg>
-                                                                </button>
-                                                            </td>
-                                                          </tr>`)
-                            })
-                            var moreOptions = $('.more-options');
-                            var deleteClient = $('.delete-client');
-                            var editClient = $('.edit-client');
-                            deleteClient.on('click', function(){
-                                globalUserId = $(this).val();
-                                var mainElement = $(this).parent().parent();
-                                deleteClientFunc(globalUserId, mainElement);
-                            })
-                            moreOptions.on('click', function(){
-                                globalUserId = $(this).val();
-                                appointmentsTable.children().remove();
-                                getAppointmentHistory(globalUserId);
-                            })
-
-                            editClient.on('click', function(){
-                                globalUserId = $(this).val();
-                                editClientFunc(globalUserId);
-                            })
-                        }
-                    })
-
-                    confirmInsert.on('click', function(){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/adminEncodeData.php',
-                            data:{
-                                attending_vet_id: globalVetId, 
-                                user_id: globalUserId,
-                                client_concern: clientConcern.val(),
-                                appointment_date: appointmentDate.val(),
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    location.reload();
-                                }
-                            }
-                        })
-                    })
-
-                    
-                    insertClientRecord.on('click', function(e){
-                        e.preventDefault();
-                        if(clientName.val() == ""){
-                            clientName.addClass('is-invalid');
-                        }else if(clientCode.val() == ""){
-                            clientCode.addClass('is-invalid');
-                        }else{
-                            $.ajax({
-                                type: 'POST',
-                                url: 'php/insertClientRecord.php',
-                                data: {
-                                    client_name: clientName.val(),
-                                    client_code: clientCode.val(),
-                                    contact_no: clientContact.val(),
-                                },
-                                success: function(response){
-                                    if(response != 'exists'){
-                                        var data = JSON.parse(response);
-                                        $('#client-record-successfully-added-toast').toast({delay:5000});
-                                        $('#client-record-successfully-added-toast').toast('show');
-
-                                        clientRecordTable.append(`<tr>
-                                                            <td>${data.name}</td>
-                                                            <td>${data.client_code}</td>
-                                                            <td>${data.contact_no}</td>
-                                                            <td>
-                                                                <button value="${data.id}" data-bs-toggle="modal" data-bs-target="#patient-details-modal" class="more-options btn btn-outline-danger rounded-3">...</button>
-                                                                <button value="${data.id}" class="edit-client btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-client-modal">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
-                                                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
-                                                                    </svg>
-                                                                </div>
-                                                                <button value="${data.id}" class="delete-client btn btn-outline-danger rounded-3">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                                                    </svg>
-                                                                </button>
-                                                            </td>
-                                                          </tr>`)
-                                        clientName.val('');
-                                        clientCode.val('');
-                                        clientContact.val('');
-
-                                        var moreOptions = $('.more-options');
-                                        var deleteClient = $('.delete-client');
-                                        var editClient = $('.edit-client');
-                                        deleteClient.on('click', function(){
-                                            globalUserId = $(this).val();
-                                            var mainElement = $(this).parent().parent();
-                                            deleteClientFunc(globalUserId, mainElement);
-                                        })
-                                        moreOptions.on('click', function(){
-                                            globalUserId = $(this).val();
-                                            appointmentsTable.children().remove();
-                                            getAppointmentHistory(globalUserId);
-                                        })
-
-                                        editClient.on('click', function(){
-                                            globalUserId = $(this).val();
-                                            editClientFunc(globalUserId);
-                                        })
-                                    }else{
-                                        $('#client-record-error-toast').toast({delay:5000});
-                                        $('#client-record-error-toast').toast('show');
-                                    }
-                                }
-                            })
-                        }
-                    })
-
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/getMedicalRecord.php',
-                        success: function(response){
-                            console.log(response);
-                            var data = JSON.parse(response);
-                            $(data).each(function(index,value){
-                                tableBody.append(`<tr>
-                                                    <div class="card m-1 p-2">
-                                                        <div class="card-body">
-                                                            <td>${value.patient_name}</td>
-                                                            <td>${value.client_code}</td>
-                                                            <td><button class="btn btn-primary view-record" value="${value.id}" data-bs-toggle="modal" data-bs-target="#record-modal">View</button></td>
-                                                        </div>
-                                                    </div>
-                                                </tr>`)
-                            });
-                            var view = $('.view-record');
-                            view.on('click', function(e){
-                                var thisView = $(this);
-                                e.preventDefault();
-                                $.ajax({
-                                    type: 'POST',
-                                    url: 'php/getSpecificRecord.php',
-                                    data: {
-                                        record_id: thisView.val()
-                                    },
-                                    success: function(response){
-                                        console.log(response);
-                                        var data = JSON.parse(response);
-                                        var takeHomeMeds = $('#record-modal').children().children().children().children().children("#take-home-meds");
-                                        var patientName = $('#record-modal').children().children().children().children().children().children().children("#patient-name");
-                                        var clientCode = $('#record-modal').children().children().children().children().children().children().children('#client-code');
-                                        var createdDate = $('#record-modal').children().children().children().children().children().children().children('#created-date');
-                                        var contactNumber = $('#record-modal').children().children().children().children().children().children().children('#contact-number');
-                                        var medicalHistory = $('#record-modal').children().children().children().children().children('#medical-history');
-                                        var wellnessBehavior = $('#record-modal').children().children().children().children().children('#wellness-behavior');
-                                        var birthDate = $('#record-modal').children().children().children().children().children().children().children('#birth_date');
-                                        var species = $('#record-modal').children().children().children().children().children().children().children('#species');
-                                        var breed = $('#record-modal').children().children().children().children().children().children().children('#breed');
-                                        var weight = $('#record-modal').children().children().children().children().children().children().children('#weight');
-                                        var temp = $('#record-modal').children().children().children().children().children().children().children('#temp');
-                                        var hr = $('#record-modal').children().children().children().children().children().children().children('#hr');
-                                        var rr = $('#record-modal').children().children().children().children().children().children().children('#rr');
-                                        var physicalExam = $('#record-modal').children().children().children().children().children('#physical-exam');
-                                        var cchx = $('#record-modal').children().children().children().children().children('#cc-hx');
-                                        var dxTools = $('#record-modal').children().children().children().children().children('#dx-tools');
-                                        var tdxDxCase = $('#record-modal').children().children().children().children().children('#tdx-dx-case');
-                                        var treatment = $('#record-modal').children().children().children().children().children('#treatment');
-                                        var surgeryOther = $('#record-modal').children().children().children().children().children().children().children('#surgery-other');
-                                        var surgeryOtherValue = "";
-                                        var inPatientOtherValue = "";
-                                        var inPatientOther = $('#record-modal').children().children().children().children().children().children().children('#in-patient-other');
-                                        var outPatientOther = $('#record-modal').children().children().children().children().children().children().children('#out-patient-other');
-                                        var outPatientOtherValue = ""
-                                        var inPatientYes = $('#record-modal').children().children().children().children().children().children().children('#in-patient-yes');
-                                        var inPatientNo = $('#record-modal').children().children().children().children().children().children().children('#in-patient-no');
-                                        var surgeryYes = $('#record-modal').children().children().children().children().children().children().children('#surgery-yes');
-                                        var surgeryNo = $('#record-modal').children().children().children().children().children().children().children('#surgery-no');
-                                        var outPatientYes = $('#record-modal').children().children().children().children().children().children().children('#out-patient-yes');
-                                        var outPatientNo = $('#record-modal').children().children().children().children().children().children().children('#out-patient-no');
-                                        var male = $('#record-modal').children().children().children().children().children().children().children().children('#male');
-                                        var female = $('#record-modal').children().children().children().children().children().children().children().children('#female');
-                                        patientName.val(data.patient_name);
-                                        clientCode.val(data.client_code);
-                                        createdDate.val(data.date);
-                                        contactNumber.val(data.contact_no);
-                                        medicalHistory.val(data.medical_history);
-                                        wellnessBehavior.val(data.wellness_behavior);
-                                        birthDate.val(data.date_of_birth);
-                                        species.val(data.species);
-                                        breed.val(data.breed);
-                                        weight.val(data.weight);
-                                        temp.val(data.temp);
-                                        hr.val(data.hr);
-                                        rr.val(data.rr);
-                                        physicalExam.val(data.physical_exam);
-                                        cchx.val(data.cc_hx);
-                                        dxTools.val(data.dx_tools);
-                                        tdxDxCase.val(data.tdx_dx_case);
-                                        treatment.val(data.treatment);
-                                        takeHomeMeds.val(data.take_home_meds_rx);
-
-                                        if(data.in_patient == 'Yes'){
-                                            inPatientYes.prop("checked", true);
-                                        }else if(data.in_patient == 'No'){
-                                            inPatientNo.prop("checked", true);
-                                        }else{
-                                            inPatientOther.val(data.in_patient)
-                                        }
-
-                                        if(data.surgery == 'Yes'){
-                                            surgeryYes.prop("checked", true);
-                                        }else if(data.surgery == 'No'){
-                                            surgeryNo.prop("checked", true);
-                                        }else{
-                                            surgeryOther.val(data.surgery)
-                                        }
-
-                                        if(data.out_patient == 'Yes'){
-                                            outPatientYes.prop("checked", true);
-                                        }else if(data.out_patient == 'No'){
-                                            outPatientNo.prop("checked", true);
-                                        }else{
-                                            outPatientOther.val(data.out_patient)
-                                        }
-
-                                        if(data.sex == 'Male'){
-                                            male.prop("checked", true);
-                                        }else{
-                                            female.prop("checked", true);
-                                        }
-                                    }
-                                })
-                            });
-                        }
-                    });
-                });
-            </script>
-        </div>
-    </div>
-
-    <!-- medical records -->
-
-    
-    <div id="medical-records">
-        <div class="container">
-            <h1 class="mt-5">Patient's Medical Record (Initial Check Up)</h1>
-            <hr>
-            <form>
-                <div class="row d-md-flex mt-3">
-                    <div class="col-md-4">
-                        <input id="patient-name" class="form-control" type="text" placeholder="Patient Name">
-                    </div>
-                    <div class="col-md-4">
-                        <input id="client-code" class="form-control" type="text" placeholder="Client Code">
-                    </div>
-                    <div class="col-md-4 d-md-flex">
-                        <p>Date:</p>
-                        <input id="created-date" class="form-control ms-md-3" type="date" placeholder="Date">
-                    </div>
-                </div>   
-
-                
-                <input id="medical-history" class="form-control mt-3" type="text" placeholder="Medical History">
-                <input id="wellness-behavior" class="form-control mt-3" type="text" placeholder="Wellness/Behavior">
-
-                <label for="signalment" class="mt-3"><b>Signalment</b></label>
-                <div class="row d-flex justify-content-between mt-3" name="signalment">
-                    <div class="col-md-3 d-md-flex">
-                        <p>Birth Date:</p>
-                        <input id="birth_date" class="form-control" type="date">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="species" class="form-control" type="text" placeholder="Species">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="breed" class="form-control" type="text" placeholder="Breed">
-                    </div>
-                    
-                    
-                    <div class="col-md-3 d-flex justify-content-evenly" name="radio-sex">
-                        <b>Sex:</b>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sex" id="male" value="Male">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                            Male
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="sex" id="female" value="Female">
-                            <label class="form-check-label" for="flexRadioDefault1">
-                            Female
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <label for="vital-signs" class="mt-3"><b>Vital Signs</b></label>
-                <div class="row d-flex justify-content-between mt-3" name="vital-signs">
-                    <div class="col-md-3">
-                        <input id="weight" class="form-control" type="text" placeholder="Weight">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="temp" class="form-control" type="text" placeholder="Temp">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="hr" class="form-control" type="text" placeholder="HR">
-                    </div>
-                    <div class="col-md-3">
-                        <input id="rr" class="form-control" type="text" placeholder="RR">
-                    </div>
-                
-                </div>
-
-                <textarea id="physical-exam" class="form-control mt-3" placeholder="Physical Exam"></textarea>
-                <textarea id="cc-hx" class="form-control mt-3" placeholder="CC/HX"></textarea>
-                <textarea id="dx-tools" class="form-control mt-3" placeholder="Dx Tools"></textarea>
-                <textarea id="tdx-dx-case" class="form-control mt-3" placeholder="TDX/DX/CASE:"></textarea>
-                <textarea id="treatment" class="form-control mt-3" placeholder="Treatment"></textarea>
-
-                <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
-                    <b>In-Patient:</b>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="in-patient" id="yes-in-patient" value="Yes">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        Yes
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="in-patient" value="No">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        No
-                        </label>
-                    </div>
-                    <div class="col-md-7">
-                        <input id="in-patient-other" type="text" class="form-control" placeholder="Other">
-                    </div>
-                </div>
-                <div class="d-md-flex justify-content-between mt-3" name="radio-surgery">
-                    <b>Surgery:</b>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="surgery" id="surgery-yes" value="Yes">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        Yes
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="surgery" id="surgery-no" value="No">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        No
-                        </label>
-                    </div>
-                    <div class="col-md-7">
-                        <input id="surgery-other" type="text" class="form-control" placeholder="Other">
-                    </div>
-                </div>
-                <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
-                    <b>Out-Patient</b>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="out-patient" id="yes-out-patient" value="Yes">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        Yes
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="out-patient" value="No">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                        No
-                        </label>
-                    </div>
-                    <div class="col-md-7">
-                        <input id="out-patient-other" type="text" class="form-control" placeholder="Other">
-                    </div>
-                </div>
-                <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
-                <button id="insert-medical-record" class="my-3 col-md-3 btn btn-danger" style="border-radius: 50px">Confirm</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Owner Records -->
-
-    <div id="owner-records">
-        <div class="container">
-            <div class="card mx-auto col-md-6 rounded-4 shadow">
-                <div class="card-header">
-                    <h3 class="fw-bold">Client Records</h1>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Client Name</th>
-                                    <th scope="col">Client Code</th>
-                                    <th scope="col">Contact Number</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="client-record-table">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!--  -->
-            <div class="card col-md-6 mx-auto mt-5 shadow rounded-4">
-                <div class="card-header">
-                    <h3 class="fw-bold">Insert New Client Record</h3>
-                </div>
-                <div class="card-body">
-                    <div class="mt-1">
-                        <div>
-                            <input id="client-client-name" type="text" class="form-control mt-3" placeholder="Client Name">
-                            <div id="client-name-invalid" class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="client-client-code" type="text" class="form-control mt-3" placeholder="Client Code">
-                            <d class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <div >
-                            <input id="client-client-contact" type="text" class="form-control mt-3" placeholder="Contact Number">
-                            <div class="invalid-feedback">
-                                Please fill out this field.
-                            </div>
-                        </div>
-                        <button id="insert-client-record" style="width: 100%" class="rounded-pill btn btn-danger mt-3">Confirm</button>
-                    </div>
-                    
-                </div>
-            </div>
-            
-            
-        </div>
-
-        <!-- client record script -->
-        <script>
-            $(document).ready(function(){
-                
-            })
-        </script>
-    </div>
-
-
-
-    <!-- Services Section -->
-    <section id="services-section">
-        <div class="container">
-            <div class="card col-md-6 shadow mx-auto rounded-4">
-                <div class="card-header">
-                    <h3 class="fw-bold">List of Services</h3>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Service Name</th>
-                                    <th scope="col">Service Price</th>
-                                </tr>
-                            </thead>
-                            <tbody id="service-list">
-    
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="card mt-3 col-md-6 rounded-4 shadow mx-auto">
-                <div class="card-header">
-                    <h3 class="fw-bold">Insert New Service</h3>
-                </div>
-                <div class="card-body">
-                    <div class="d-lg-flex justify-content-between mt-2">
-                        <div class="col-lg-5">
-                            <input id="service-input" type="text" class="form-control" placeholder="Service">
-                        </div>
-                        <div class="col-lg-5 mt-2 mt-lg-0">
-                            <input id="service-price-input" type="text" class="form-control" placeholder="Price">
-                        </div>
-                    </div>
-                    <button class="btn btn-danger mt-2" style="border-radius: 50px;" id="add-service">
-                        Add Service
-                    </button>
-                </div>
-            </div>
-            
-           
-
-           
-
-            <div class="card rounded-4 shadow col-md-6 mx-auto mt-5">
-                <div class="card-header">
-                    <h1 class="fw-bold">
-                        Laboratory Procedures
-                    </h1>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Procedure</th>
-                                    <th scope="col">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lab-procedures">
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                </div>
-                
-            </div>
-
-            <div class="card col-md-6 mt-3 mb-5 rounded-4 shadow mx-auto">
-                <div class="card-header">
-                    <h3 class="fw-bold">Insert New Laboratory Procedure</h3>
-                </div>
-                <div class="card-body">
-                    <div class="d-lg-flex justify-content-between">
-                        <div class="col col-lg-5">
-                            <input id="lab-procedure-input" type="text" class="form-control" placeholder="Procedure">
-                        </div>
-                        <div class="col col-lg-5">
-                            <input id="lab-procedure-price" type="number" class="mt-lg-0 mt-3 col col-lg-5 form-control" placeholder="Price">
-                        </div>
-                        
-                    </div>
-                    <button id="insert-lab-procedure" class="btn btn-danger mt-3" style="border-radius: 50px;">Add Procedure</button>
-                </div>
-            </div>
-            
-            
-
-        </div>
-
-
-        <!-- Services Script -->
-        <script>
-            $(document).ready(function(){
-                var serviceList = $('#service-list');
-                var addService = $('#add-service');
-                var serviceInput = $('#service-input');
-                var servicePriceInput = $('#service-price-input');
-                var inputLabProcedure = $('#lab-procedure-input');
-                var labProcedurePrice = $('#lab-procedure-price');
-                var insertLabProcedure = $('#insert-lab-procedure');
-                var labProcedures = $('#lab-procedures');
-
-                getAllServices();
-                getAllLabProcedures();
-
-
-
-                insertLabProcedure.on('click', function(){
-                    if(inputLabProcedure.val() != "" && labProcedurePrice.val() != ""){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/addNewLabProcedure.php',
-                            data:{
-                                name: inputLabProcedure.val(),
-                                price: labProcedurePrice.val(),
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                labProcedures.append(`<tr><td>${data.name}</td><td>${data.price}</td></tr>`)
-                                inputLabProcedure.val("");
-                                labProcedurePrice.val("");
-                            }
-                        })
-                    }
-                })
-
-
-                
-                addService.on('click', function(e){
-                    e.preventDefault();
-                    if(serviceInput.val() != "" && servicePriceInput.val() != ""){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/createService.php',
-                            data: {
-                                service: serviceInput.val(),
-                                price: servicePriceInput.val(),
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                serviceList.append(`<tr><td>${data.service}</td><td>${data.price}</td></tr>`)
-                                serviceInput.val("");
-                                servicePriceInput.val("");
-                            }
-                        })
-                    }
-                     
-                })
-
-
-                function getAllServices(){
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/getAllServices.php',
-                        success: function(response){
-                            var data = JSON.parse(response);
-
-                            $(data).each(function(index, value){
-                                serviceList.append(`<tr>
-                                                        <td>${value.service}</td>
-                                                        <td>${value.price}</td>
-                                                    </tr>`)
-                            })
-                        }
-                    })
-                }
-
-                function getAllLabProcedures(){
-                    $.ajax({
-                        type: 'GET',
-                        url: 'php/getAllLabProcedures.php',
-                        success: function(response){
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Client Code</th>
+                            <th>Contact Number</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody id="clients-table">
                             
-                            var data = JSON.parse(response);
-
-                            $(data).each(function(index, value){
-                                labProcedures.append(`<tr><td>${value.name}</td><td>${value.price}</td></tr>`)
-                            })
-                        }
-                    })
-                }
-            })
-        </script>
-        <!-- End of Services Script -->
-
-    </section>
-    <!-- End of Services Section -->
-
-    <!-- Staff Section -->
-    <section id="staff-section">
-        <div class="container">
-            <div class="card col-md-6 mx-auto rounded-4 shadow">
-                <div class="card-header">
-                    <h3 class="fw-bold">Doctors</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                            </tr>
-                        </thead>
-                        <tbody id="doctors-list">
                         </tbody>
                     </table>
-                    <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-doctor-modal" style="border-radius: 50px">Add New</button>
                 </div>
             </div>
-
-           
-
-            <div class="card col-md-6 mx-auto rounded-4 shadow mt-5">
-                <div class="card-header">
-                    <h3 class="fw-bold">Laboratory Technicians</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lab-tech-list">
-                        </tbody>
-                    </table>
-                    <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-lab-tech-modal" style="border-radius: 50px">Add New</button>
-                </div>
-                
-            </div>
-
-            
-
-            <div class="card col-md-6 mx-auto rounded-4 shadow mt-5">
-                <div class="card-header">
-                    <h3 class="fw-bold">Cashier</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cashier-list">
-                        </tbody>
-                    </table>
-                    <button class="btn btn-danger fw-bold mt-3" data-bs-toggle="modal" data-bs-target="#add-cashier-modal" style="border-radius: 50px">Add New</button>
-                </div>
-            </div>
-
-            
-        </div>
-
-
-        
-        
-        <!-- Staff Script -->
-        <script>
-            $(document).ready(function(){
-                var doctorsList = $('#doctors-list');
-                var doctorsName = $('#doctors-name');
-                var doctorsEmail = $('#doctors-email');
-                var insertNewDoctor = $('#insert-new-doctor');
-                var labtechList = $('#lab-tech-list');
-                var labTechName = $('#lab-tech-name');
-                var labTechEmail = $('#lab-tech-email');
-                var insertNewLabTech = $('#insert-new-lab-tech');
-                var cashierList = $('#cashier-list');
-                var cashierName = $('#cashier-name');
-                var cashierEmail = $('#cashier-email');
-                var insertNewCashier = $('#insert-new-cashier');
-                onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail);
-                onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList);
-                onClickInsertNewCashier(insertNewCashier, cashierName, cashierEmail, cashierList);
-                getAllDoctors(doctorsList);
-                getAllLabTechs(labtechList)
-                getAllCashiers(cashierList);
-            })
-
-            function onClickInsertNewCashier(insertNewCashier, cashierName, cashierEmail, cashierList){
-                insertNewCashier.on('click', function(){
-                    if(cashierName.val() == ""){
-                        cashierName.addClass('is-invalid')
-                    }else if(cashierEmail.val() == ""){
-                        cashierEmail.addClass('is-invalid');
-                    }else{
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/insertNewCashier.php',
-                            data:{
-                                name: cashierName.val(),
-                                email: cashierEmail.val()
-                            },
-                            success: function(response){
-                                console.log(response);
-                                var data = JSON.parse(response);
-                                cashierList.append(`<tr><td>${data.name}</td><td>${data.email}</td></tr>`)
-                            }
-                        })
-                    }
-                })
-            }
-
-            function getAllCashiers(cashierList){
-                $.ajax({
-                    type: 'GET',
-                    url: 'php/getAllCashiers.php',
-                    success: function(response){
-                        var data = JSON.parse(response);
-                        $(data).each(function(index, value){
-                            cashierList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`)
-                        })
-                        
-                    }
-                })
-            }
-            function getAllLabTechs(labtechList){
-                $.ajax({
-                    type: 'GET',
-                    url: 'php/getAllLabTechs.php',
-                    success: function(response){
-                        var data = JSON.parse(response);
-                        $(data).each(function(index, value){
-                            labtechList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`)
-                        })
-                    }
-                })
-            }
-            function onClickInsertNewLabTech(insertNewLabTech, labTechName, labTechEmail, labtechList){
-                insertNewLabTech.on('click', function(e){
-                    e.preventDefault();
-                    if(labTechName.val() == ""){
-                        labTechName.addClass('is-invalid');
-                    }else if(labTechEmail.val() == ""){
-                        labTechEmail.addClass('is-invalid');
-                    }else{
-
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/insertLabTech.php',
-                            data: {
-                                name: labTechName.val(),
-                                email: labTechEmail.val()
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                labtechList.append(`<tr><td>${data.name}</td><td>${data.email}</td></tr>`)
-                            }
-                        })
-                    }
-                })
-            }
-
-            function onClickInsertNewDoctor(insertNewDoctor, doctorsName, doctorsEmail){
-                insertNewDoctor.on('click', function(){
-                    if(doctorsName.val() != "" && doctorsEmail.val() != ""){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/addNewDoctor.php',
-                            data: {
-                                name: doctorsName.val(),
-                                email: doctorsEmail.val()
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    location.reload();
-                                }
-                            }
-                        })
-                    }
-                })
-            }
-
-            function getAllDoctors(doctorsList){
-                $.ajax({
-                    type: 'GET',
-                    url: 'php/getAllDoctors.php',
-                    success: function(response){
-                        var data = JSON.parse(response);
-                        
-                        $(data).each(function(index, value){
-                            doctorsList.append(`<tr><td>${value.name}</td><td>${value.email}</td></tr>`);
-                        })
-                        
-                    }
-                })
-            }
-        </script>
-        <!-- End of Staff Script -->
-
-        <!-- Add Doctor Modal -->
-        <div class="modal fade" id="add-doctor-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
-                        </div>
-                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mt-3">
-                            <span class="input-group-text">Dr.</span>
-                            <input id="doctors-name" type="text" class="form-control" placeholder="Doctor's Name">
-                            
-                        </div>
-                        <input id="doctors-email" type="text" class="form-control mt-3" placeholder="Doctor's Email">
-                        <button id="insert-new-doctor" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="add-lab-tech-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
-                        </div>
-                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input id="lab-tech-name" type="text" class="form-control" placeholder="Name">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                        <input id="lab-tech-email" type="text" class="form-control mt-3" placeholder="Email">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                        <button id="insert-new-lab-tech" data-bs-dismiss="modal" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="add-cashier-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
-                        </div>
-                        <button class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <input id="cashier-name" type="text" class="form-control" placeholder="Name">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                        <input id="cashier-email" type="text" class="form-control mt-3" placeholder="Email">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                        <button id="insert-new-cashier" data-bs-dismiss="modal" class="btn btn-danger fw-bold mt-3" style="border-radius: 50px; width: 100%">Confirm</button>
-                    </div>
-                </div>
+            <div class="card-footer">
+                <button class="btn btn-danger rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#add-client-modal">Add Client</button>
             </div>
         </div>
     </section>
-    <!-- End of Staff Section -->
 
 
-    <div class="modal fade" id="patient-details-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">
-                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
-                    </div>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h3 class="fw-bold">Appointment History</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <th scope="col">Client Name</th>
-                                        <th scope="col">Attending Vet</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Client Concern</th>
-                                        <th scope="col">Action</th>
-                                    </thead>
-                                    <tbody id="appointments-table">
-        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <input id="appointment-date" type="date" class="form-control mt-5" placeholder="Appointment Date">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                    </div>
-                    <div>
-                        <div class="dropdown mt-3">
-                            <button id="choose-attending-vet" style="width:100%" class="dropdown-toggle btn btn-outline-danger" data-bs-toggle="dropdown">
-                                Choose Attending Vet
-                            </button>
-                            <ul class="dropdown-menu" id="vet-list">
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <input id="client-concern" type="text" class="form-control mt-3" placeholder="Client Concern">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                    </div>
-                    
-                    <button id="confirm-insert-appointment" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="modal fade" id="pet-details-modal">
+    <div class="modal fade" id="add-client-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">
                         <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
                     </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="card shadow">
-                        <div class="card-header">
-                            <h3 class="fw-bold">
-                                Client's Pets
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Age</th>
-                                        <th scope="col">Breed</th>
-                                        <th scope="col">Species</th>
-                                        <th scope="col">Weight</th>
-                                        <th scope="col">Sex</th>
-                                    </thead>
-                                    <tbody id="client-pets-table">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button id="get-pets" style="width: 100%" data-bs-toggle="dropdown" class="btn btn-danger dropdown-toggle mt-3">
-                            Choose Existing Pets
-                        </button>
-
-                        <ul class="dropdown-menu" id="pet-list">
-                        </ul>
-                    </div>
                     <div>
-                        <input id="client-pet-name" type="text" class="form-control mt-3" placeholder="Pet Name">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                    </div>
-                    <div >
-                        <input id="pet-age" type="text" class="form-control mt-3" placeholder="Pet Age">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                    </div>
-                    <div >
-                        <input id="pet-breed" type="text" class="form-control mt-3" placeholder="Pet Breed">
-                        <div class="invalid-feedback">
-                            Please fill out this field.
-                        </div>
-                    </div>
-                    <div >
-                        <input id="pet-species" type="text" class="form-control mt-3" placeholder="Pet Species">
+                        <input id="add-name" type="text" class="form-control" placeholder="Client Name">
                         <div class="invalid-feedback">
                             Please fill out this field.
                         </div>
                     </div>
                     <div>
-                        <input id="pet-weight" type="text" class="form-control mt-3" placeholder="Pet Weight">
+                        <input id="add-email" type="email" class="form-control mt-3" placeholder="Client Email">
                         <div class="invalid-feedback">
                             Please fill out this field.
                         </div>
                     </div>
                     <div>
-                        <input id="pet-sex" type="text" class="form-control mt-3" placeholder="Pet Sex">
+                        <input id="add-client-code" type="text" class="form-control mt-3" placeholder="Client Code">
                         <div class="invalid-feedback">
                             Please fill out this field.
                         </div>
                     </div>
-                    <button id="confirm-insert-pet" class="btn btn-danger rounded-pill mt-3" style="width:100%">Confirm</button>
+                    <div>
+                        <input id="add-contact" type="number" class="form-control mt-3" placeholder="Contact Number">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <button id="confirm-add-client" class="btn btn-danger rounded-pill shadow mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
-        </div>
-    </div>
-    
-
-    <!-- Patient Medical Record Modal -->
-    <div class="container">
-
-    
-    <div class="modal fade" id="record-modal">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="row d-flex justify-content-between mt-3">
-                            <div class="col-md-3">
-                                <input id="patient-name" class="form-control" type="text" placeholder="Registered Patient Name">
-                                <div id="patient-name-error">
-        
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <input id="client-code" class="form-control" type="text" placeholder="Client Code">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="created-date" class="form-control" type="date" placeholder="Date">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="contact-number" class="form-control" type="text" placeholder="Contact Number">
-                            </div>
-                        </div>   
-        
-                        
-                        <input id="medical-history" class="form-control mt-3" type="text" placeholder="Medical History">
-                        <input id="wellness-behavior" class="form-control mt-3" type="text" placeholder="Wellness/Behavior">
-        
-                        <label for="signalment" class="mt-3"><b>Signalment</b></label>
-                        <div class="row d-flex justify-content-between mt-3" name="signalment">
-                            <div class="col-md-3">
-                                <input id="birth_date" class="form-control" type="date">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="species" class="form-control" type="text" placeholder="Species">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="breed" class="form-control" type="text" placeholder="Breed">
-                            </div>
-                            
-                            
-                            <div class="col-md-3 d-flex justify-content-evenly" name="radio-sex">
-                                <b>Sex:</b>
-                                <div class="form-check">
-                                    <input id="male" class="form-check-input" type="radio" name="sex" id="male" value="Male">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                    Male
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input id="female" class="form-check-input" type="radio" name="sex" id="female" value="Female">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                    Female
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-        
-                        <label for="vital-signs" class="mt-3"><b>Vital Signs</b></label>
-                        <div class="row d-flex justify-content-between mt-3" name="vital-signs">
-                            <div class="col-md-3">
-                                <input id="weight" class="form-control" type="text" placeholder="Weight">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="temp" class="form-control" type="text" placeholder="Temp">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="hr" class="form-control" type="text" placeholder="HR">
-                            </div>
-                            <div class="col-md-3">
-                                <input id="rr" class="form-control" type="text" placeholder="RR">
-                            </div>
-                        
-                        </div>
-        
-                        <textarea id="physical-exam" class="form-control mt-3" placeholder="Physical Exam"></textarea>
-                        <textarea id="cc-hx" class="form-control mt-3" placeholder="CC/HX"></textarea>
-                        <textarea id="dx-tools" class="form-control mt-3" placeholder="Dx Tools"></textarea>
-                        <textarea id="tdx-dx-case" class="form-control mt-3" placeholder="TDX/DX/CASE:"></textarea>
-                        <textarea id="treatment" class="form-control mt-3" placeholder="Treatment"></textarea>
-        
-                        <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
-                            <b>In-Patient:</b>
-                            <div class="form-check">
-                                <input id="in-patient-yes" class="form-check-input" type="radio" name="in-patient" value="Yes">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                Yes
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input id="in-patient-no" class="form-check-input" type="radio" name="in-patient" value="No">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                No
-                                </label>
-                            </div>
-                            <div class="col-md-7">
-                                <input id="in-patient-other" type="text" class="form-control" placeholder="Other">
-                            </div>
-                        </div>
-                        <div class="d-md-flex justify-content-between mt-3" name="radio-surgery">
-                            <b>Surgery:</b>
-                            <div class="form-check">
-                                <input id="surgery-yes" class="form-check-input" type="radio" name="surgery" id="surgery-yes" value="Yes">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                Yes
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input id="surgery-no" class="form-check-input" type="radio" name="surgery" id="surgery-no" value="No">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                No
-                                </label>
-                            </div>
-                            <div class="col-md-7">
-                                <input id="surgery-other" type="text" class="form-control" placeholder="Other">
-                            </div>
-                        </div>
-                        <div class="d-md-flex justify-content-between mt-3" name="radio-sex">
-                            <b>Out-Patient</b>
-                            <div class="form-check">
-                                <input id="out-patient-yes" class="form-check-input" type="radio" name="out-patient" value="Yes">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                Yes
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input id="out-patient-no" class="form-check-input" type="radio" name="out-patient" value="No">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                No
-                                </label>
-                            </div>
-                            <div class="col-md-7">
-                                <input id="out-patient-other" type="text" class="form-control" placeholder="Other">
-                            </div>
-                        </div>
-                        <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
-                        <button id="insert-medical-record" class="my-3 col-md-3 btn btn-danger" style="border-radius: 50px">Confirm</button>
-                    </form>
-
-
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- record success toast -->
-    <div class="toast align-items-center bg-success text-light position-fixed bottom-0 end-0 border-0" id="successfully-added-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Record has been added successfully!
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-    <!-- client record success toast -->
-    <div class="toast align-items-center bg-success text-light position-fixed bottom-0 end-0 border-0" id="client-record-successfully-added-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Record has been added successfully!
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-
-    <!-- client record success toast -->
-    <div class="toast align-items-center bg-danger text-light position-fixed bottom-0 end-0 border-0" id="client-record-error-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Client Already Exists.
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-    </div>
-
-    <!-- record fail toast -->
-    <div class="toast align-items-center bg-danger text-light position-fixed bottom-0 end-0 border-0" id="medical-record-added-fail-toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Client not available. Please check the client code.
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
 
@@ -2030,14 +249,36 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">
-                        <img src="../images/thefurrproject.PNG" class="img-fluid">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
                     </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input id="edit-client-name" type="text" class="form-control" placeholder="Client Name">
-                    <input id="edit-client-code" type="text" class="form-control mt-3" placeholder="Client Code">
-                    <input id="edit-client-contact"type="text" class="form-control mt-3" placeholder="Contact Number">
-                    <button id="confirm-edit-client" class="btn btn-danger rounded-pill mt-3">Confirm</button>
+                    <div>
+                        <input id="edit-name" type="text" class="form-control" placeholder="Client Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="edit-email" type="email" class="form-control mt-3" placeholder="Client Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="edit-client-code" type="text" class="form-control mt-3" placeholder="Client Code">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="edit-contact" type="number" class="form-control mt-3" placeholder="Contact Number">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <button id="confirm-edit-client" class="btn btn-danger rounded-pill shadow mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
