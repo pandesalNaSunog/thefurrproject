@@ -12,8 +12,14 @@
 
     <script>
         $(document).ready(function(){
+            var bg = $('#bg');
             var globalPetId = 0;
             var globalUserId = 0;
+            var navLink = $('.nav-link');
+            var clientLink = $('#client-link');
+            var staffSection = $('#staff-section');
+            var staffLink = $('#staff-link');
+            var clientRecordsSection = $('#client-records-section');
             var clientsTable = $('#clients-table');
             var addName = $('#add-name');
             var addEmail = $('#add-email');
@@ -39,6 +45,10 @@
             var logout = $('#logout');
             var addBirthDate = $('#birth_date');
             var editPetBirthDate = $('#edit-pet-birth-date');
+            var addDoctorName = $('#add-doctor-name');
+            var addDoctorEmail = $('#add-doctor-email');
+            var confirmAddDoctor = $('#confirm-add-doctor');
+            var doctorsTable = $('#doctors-table')
             confirmAddClient.on('click', function(){
                 addClient(addName,addEmail,addContact,addClientCode);
             })
@@ -55,6 +65,10 @@
                 updatePet(globalPetId, editPetName, editPetSex, editPetBreed, editPetSpecies, editPetBirthDate);
             })
 
+            confirmAddDoctor.on('click', function(){
+                addDoctor(addDoctorName, addDoctorEmail);
+            })
+
             logout.on('click', function(){
                 $.ajax({
                     type: 'GET',
@@ -67,10 +81,76 @@
                 })
             })
 
+            navLink.on('click', function(){
+                navLink.removeClass('active');
+                $(this).addClass('active');
+                bg.children('section').hide();
+            })
 
+            clientLink.on('click', function(){
+                clientRecordsSection.show();
+                getClients();
+                staffSection.hide();
+            })
+
+            staffLink.on('click', function(){
+                clientRecordsSection.hide()
+                staffSection.show();
+                doctorsTable.children().remove();
+                getDoctors();
+            })
+
+
+            clientRecordsSection.show();
+            staffSection.hide();
             getClients();
             session();
 
+
+            function getDoctors(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getDoctors.php',
+                    success: function(response){
+
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToDoctorsTable(value.name, value.email);
+                        })
+                    }
+                })
+            }
+            function addDoctor(name, email){
+                if(name.val() == ""){
+                    name.addClass('is-invalid');
+                }else if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addDoctor.php',
+                        data: {
+                            name: name.val(),
+                            email: email.val()
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            addToDoctorsTable(data.name, data.email);
+                        }
+                    })
+                }
+            }
+
+            function addToDoctorsTable(name, email){
+                doctorsTable.append(`<tr>
+                                        <td>${name}</td>
+                                        <td>${email}</td>
+                                        <td>
+                                            <button class="btn btn-outline-danger">Edit</button>
+                                            <button class="btn btn-outline-danger">Delete</button>
+                                        </td>
+                                        </tr>`)
+            }
 
             function session(){
                 $.ajax({
@@ -401,7 +481,10 @@
             <div id="navmenu" class="collapse navbar-collapse fw-bold">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active">Client Records</a>
+                        <a id="client-link" href="#" class="nav-link active">Client Records</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="staff-link" href="#" class="nav-link">Staff</a>
                     </li>
                     <li class="nav-item">
                         <a id="logout" href="#" class="nav-link">Log Out</a>
@@ -441,8 +524,68 @@
                 </div>
             </div>
         </div>
-        
     </section>
+
+
+    <section id="staff-section">
+        <div class="container">
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Doctors
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="doctors-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger px-5 rounded-pill" data-bs-target="#add-doctor-modal" data-bs-toggle="modal">Add Doctor</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="add-doctor-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <span class="input-group-text" id="basic-addon1">Dr.</span>
+                        <input id="add-doctor-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="add-doctor-email" type="email" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-add-doctor" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div class="modal fade" id="add-client-modal">
