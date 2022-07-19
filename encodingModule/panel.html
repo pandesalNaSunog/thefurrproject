@@ -24,15 +24,73 @@
             var editContact = $('#edit-contact');
             var editClientCode = $('#edit-client-code');
             var confirmEditClient = $('#confirm-edit-client');
-
+            var addPetName = $('#add-pet-name');
+            var addPetSpecies = $('#add-pet-species');
+            var addPetBreed = $('#add-pet-breed');
+            var addPetSex = $('#add-pet-sex');
+            var confirmAddPet = $('#confirm-add-pet');
+            var petsTable = $('#pets-table');
             confirmAddClient.on('click', function(){
                 addClient(addName,addEmail,addContact,addClientCode);
             })
 
+            confirmAddPet.on('click', function(){
+                addPet(globalUserId, addPetName, addPetBreed, addPetSpecies, addPetSex);
+            })
 
 
             getClients();
+            
 
+
+            function addPet(clientId ,name, breed, species, sex){
+                if(name.val() == ""){
+                    name.addClass('is-invalid');
+                }else if(breed.val() == ""){
+                    breed.addClass('is-invalid');
+                }else if(species.val() == ""){
+                    species.addClass('is-invalid');
+                }else if(sex.val() == ""){
+                    sex.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addPet.php',
+                        data: {
+                            client_id: clientId,
+                            name: name.val(),
+                            breed: breed.val(),
+                            species: species.val(),
+                            sex: sex.val(),
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            addPetsToTable(data.name, data.sex, data.breed, data.species);
+                        }
+                    })
+                }
+            }
+
+
+
+
+
+            function addPetsToTable(name, sex, breed, species){
+                petsTable.append(`<tr>
+                                    <td>${name}</td>
+                                    <td>${sex}</td>
+                                    <td>${breed}</td>
+                                    <td>${species}</td>
+                                    <td>
+                                        <button class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg></button>
+                                        <button class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                        </svg></button>
+                                </tr>`)
+            }
 
             function getClients(){
                 clientsTable.children().remove();
@@ -55,7 +113,7 @@
                                                         <button value=${value.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                                         </svg></button>
-                                                        <button value=${value.id} class="view-pets btn btn-outline-danger">View Pets</button>
+                                                        <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
                                                     </tr>`)
                         })
 
@@ -68,7 +126,26 @@
             function clientRowFunctions(){
                 var editClient = $('.edit-client');
                 var deleteClient = $('.delete-client');
-                var viewPets = $('view-pets');
+                var viewPets = $('.view-pets');
+
+
+                viewPets.on('click', function(){
+                    petsTable.children().remove();
+                    globalUserId = $(this).val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getClientPets.php',
+                        data:{
+                            client_id: globalUserId
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addPetsToTable(value.name, value.sex, value.breed, value.species);
+                            })
+                        }
+                    })
+                })
                 deleteClient.on('click', function(){
                     globalUserId = $(this).val();
 
@@ -140,7 +217,7 @@
                                                         <button value=${data.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                                         </svg></button>
-                                                        <button value=${data.id} class="view-pets btn btn-outline-danger">View Pets</button>
+                                                        <button value=${data.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
                                                     </tr>`);
                             clientRowFunctions();
                         }
@@ -175,32 +252,35 @@
 
 
     <section id="client-records-section">
-        <div class="mx-auto card mt-5 col-lg-6 shadow rounded-4">
-            <div class="card-header rounded-4">
-                <h3 class="fw-bold">
-                    Client Records
-                </h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Client Code</th>
-                            <th>Contact Number</th>
-                            <th>Action</th>
-                        </thead>
-                        <tbody id="clients-table">
-                            
-                        </tbody>
-                    </table>
+        <div class="container">
+            <div class="mx-auto card mt-5 col-lg-8 shadow rounded-4">
+                <div class="card-header rounded-4">
+                    <h3 class="fw-bold">
+                        Client Records
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Client Code</th>
+                                <th>Contact Number</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody id="clients-table">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#add-client-modal">Add Client</button>
                 </div>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-danger rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#add-client-modal">Add Client</button>
-            </div>
         </div>
+        
     </section>
 
 
@@ -279,6 +359,66 @@
                         </div>
                     </div>
                     <button id="confirm-edit-client" class="btn btn-danger rounded-pill shadow mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="view-pets-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Sex</th>
+                                <th scope="col">Breed</th>
+                                <th scope="col">Species</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="pets-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <h5 class="fw-bold">
+                        Add Pet
+                    </h3>
+                    <div>
+                        <input id="add-pet-name" type="text" class="form-control mt-3" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="add-pet-breed" type="text" class="form-control mt-3" placeholder="Breed">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="add-pet-species" type="text" class="form-control mt-3" placeholder="Species">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    <div>
+                        <input id="add-pet-sex" type="text" class="form-control mt-3" placeholder="Sex">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-add-pet" style="width:100%" class="btn btn-danger rounded-pill mt-3">Confirm</button>
+
+                    
                 </div>
             </div>
         </div>
