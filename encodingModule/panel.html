@@ -53,7 +53,6 @@
             var doctorsList = $('#doctors-list');
             var chooseAttendingVet = $('#choose-attending-vet');
             var wellnessRecordService = $('#wellness-record-service');
-            var chooseAttendingVet = $('#choose-attending-vet')
             var wellnessRecordRemarks = $('#wellness-record-remarks');
             var wellnessRecordDate = $('#wellness-record-date')
             var wellnessRecordNextAppointment = $('#wellness-record-next-appointment');
@@ -65,6 +64,18 @@
             var addLabTechEmail = $('#add-lab-tech-email');
             var confirmAddLabTech = $('#confirm-add-lab-tech');
             var labTechTable = $('#lab-tech-table');
+            var editWellnessRecordService = $('#edit-wellness-record-service');
+            var editWellnessRecordPetWeight = $('#edit-wellness-record-pet-weight');
+            var editChooseAttendingVet = $('#edit-choose-attending-vet');
+            var editDoctorsList = $('#edit-doctors-list');
+            var editWellnessRecordRemarks = $('#edit-wellness-record-remarks');
+            var editWellnessRecordDate = $('#edit-wellness-record-date');
+            var editWellnessRecordNextAppointment = $('#edit-wellness-record-next-appointment');
+            var confirmEditWellnessRecord = $('#confirm-edit-wellness-record');
+
+            confirmEditWellnessRecord.on('click', function(){
+                
+            })
 
             confirmAddLabTech.on('click', function(){
                 addLabTech(addLabTechName, addLabTechEmail)
@@ -259,7 +270,7 @@
                                                 <td>${date}</td>
                                                 <td>${nextAppointment}</td>
                                                 <td>
-                                                    <button value="${id}" class="edit-wellness-record btn btn-outline-danger">Edit</button>
+                                                    <button value="${id}" class="edit-wellness-record btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-wellness-record-modal">Edit</button>
                                                     <button value="${id}" class="delete-wellness-record btn btn-outline-danger">Delete</button>
                                                 </td>
                                             </tr>`);
@@ -269,6 +280,27 @@
                 var editWellnessRecord = $('.edit-wellness-record');
                 var deleteWellnessRecord  = $('.delete-wellness-record');
 
+
+                editWellnessRecord.on('click', function(){
+                    globalWellnessRecordId = $(this).val();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getSpecificWellnessRecord.php',
+                        data:{
+                            wellness_id: globalWellnessRecordId,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            editWellnessRecordService.val(data.service);
+                            editWellnessRecordPetWeight.val(data.pet_weight);
+                            
+                            editWellnessRecordRemarks.val(data.remarks);
+                            editWellnessRecordDate.val(data.date);
+                            editWellnessRecordNextAppointment.val(data.next_appointment);
+                            editChooseAttendingVet.text(data.doctor);
+                        }
+                    })
+                })
                 deleteWellnessRecord.on('click', function(){
                     globalWellnessRecordId = $(this).val();
                     var thisDeleteWellness = $(this);
@@ -1019,6 +1051,59 @@
                     </div>
                     
                     <button id="confirm-add-pet" style="width:100%" class="btn btn-danger rounded-pill mt-3">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="edit-wellness-record-modal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="edit-wellness-record-service" type="text" class="form-control" placeholder="Service">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div><div>
+                        <input id="edit-wellness-record-pet-weight" type="text" class="form-control mt-3" placeholder="Pet Weight">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button id="edit-choose-attending-vet" class="btn btn-danger dropdown-toggle mt-3" style="width: 100%" data-bs-toggle="dropdown">Choose Attending Vet</button>
+                        <ul class="dropdown-menu" id="edit-doctors-list">
+                        </ul>
+                    </div>
+                    <div>
+                        <input id="edit-wellness-record-remarks" type="text" class="form-control mt-3" placeholder="Remarks">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label mt-3">Date</label>
+                        <input id="edit-wellness-record-date" type="date" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label mt-3">Next Appointment</label>
+                        <input id="edit-wellness-record-next-appointment" type="date" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+
+                    <button id="confirm-edit-wellness-record" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
