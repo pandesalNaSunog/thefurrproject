@@ -4,6 +4,7 @@
         $con = connect();
         $today = getCurrentDate();
         if(isset($_POST)){
+            $petWeight = htmlspecialchars($_POST['pet_weight']);
             $petId = htmlspecialchars($_POST['pet_id']);
             $doctorId = htmlspecialchars($_POST['doctor_id']);
             $service = htmlspecialchars($_POST['service']);
@@ -11,7 +12,7 @@
             $date = htmlspecialchars($_POST['date']);
             $nextAppointment = htmlspecialchars($_POST['next_appointment']);
             $response = array();
-            $query = "INSERT INTO wellness_records(`pet_id`,`doctor_id`,`service`,`remarks`,`date`,`next_appointment`,`created_at`,`updated_at`)VALUES('$petId','$doctorId','$service','$remarks','$date','$nextAppointment','$today','$today')";
+            $query = "INSERT INTO wellness_records(`pet_weight`,`pet_id`,`doctor_id`,`service`,`remarks`,`date`,`next_appointment`,`created_at`,`updated_at`)VALUES('$petWeight','$petId','$doctorId','$service','$remarks','$date','$nextAppointment','$today','$today')";
             $con->query($query) or die($con->error);
 
             $query = "SELECT * FROM wellness_records WHERE id = LAST_INSERT_ID()";
@@ -35,7 +36,8 @@
                 'doctor' => $doctorName,
                 'remarks' => $remarks,
                 'date' => $date,
-                'next_appointment' => $nextAppointment
+                'next_appointment' => $nextAppointment,
+                'pet_weight' => $wellnessRow['pet_weight']
             );
 
             echo json_encode($response);

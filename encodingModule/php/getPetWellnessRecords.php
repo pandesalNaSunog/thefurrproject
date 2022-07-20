@@ -30,7 +30,8 @@
                 'doctor' => $doctorName,
                 'remarks' => $remarks,
                 'date' => $date,
-                'next_appointment' => $nextAppointment
+                'next_appointment' => $nextAppointment,
+                'pet_weight' => $row['pet_weight']
             );
         }
         echo json_encode($data);

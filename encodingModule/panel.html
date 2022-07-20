@@ -59,6 +59,7 @@
             var wellnessRecordNextAppointment = $('#wellness-record-next-appointment');
             var confirmAddWellnessRecord = $('#confirm-add-wellness-record');
             var wellnessRecordTable = $('#wellness-record-table');
+            var wellnessRecordPetWeight = $('#wellness-record-pet-weight');
             var viewPetsClientName = $('#view-pets-client-name');
 
             confirmAddClient.on('click', function(){
@@ -82,7 +83,7 @@
             })
 
             confirmAddWellnessRecord.on('click', function(){
-                addWellnessRecord(globalPetId, globalUserId, wellnessRecordService, wellnessRecordRemarks, wellnessRecordDate, wellnessRecordNextAppointment);
+                addWellnessRecord(wellnessRecordPetWeight,globalPetId, globalUserId, wellnessRecordService, wellnessRecordRemarks, wellnessRecordDate, wellnessRecordNextAppointment);
             })
 
             chooseAttendingVet.on('click', function(){
@@ -140,7 +141,7 @@
             getClients();
             session();
 
-            function addWellnessRecord(petId, doctorId, service, remarks, thisdate, nextAppointment){
+            function addWellnessRecord(petWeight,petId, doctorId, service, remarks, thisdate, nextAppointment){
                 if(service.val() == ""){
                     service.addClass('is-invalid');
                 }else if(remarks.val() == ""){
@@ -149,11 +150,14 @@
                     thisdate.addClass('is-invalid')
                 }else if(nextAppointment.val() == ""){
                     nextAppointment.addClass('is-invalid')
+                }else if(petWeight.val() == ""){
+                    petWeight.addClass('is-invalid')
                 }else{
                     $.ajax({
                         type: 'POST',
                         url: 'php/addWellnessRecord.php',
                         data:{
+                            pet_weight: petWeight.val(),
                             pet_id: petId,
                             doctor_id: doctorId,
                             service: service.val(),
@@ -163,16 +167,22 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            addWellnessRecordToTable(data.service, data.doctor, data.remarks, data.date, data.next_appointment, data.id);
+                            addWellnessRecordToTable(data.pet_weight,data.service, data.doctor, data.remarks, data.date, data.next_appointment, data.id);
                             wellnessRecordFunctions();
+                            petWeight.val('');
+                            service.val('');
+                            remarks.val('');
+                            thisdate.val('');
+                            nextAppointment.val('');
                         }
                     })
                 }
             }
 
-            function addWellnessRecordToTable(service, doctor, remarks, date, nextAppointment, id){
+            function addWellnessRecordToTable(petWeight,service, doctor, remarks, date, nextAppointment, id){
                 wellnessRecordTable.append(`<tr>
                                                 <td>${service}</td>
+                                                <td>${petWeight}</td>
                                                 <td>${doctor}</td>
                                                 <td>${remarks}</td>
                                                 <td>${date}</td>
@@ -406,10 +416,9 @@
                             pet_id: globalPetId,
                         },
                         success: function(response){
-
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addWellnessRecordToTable(value.service, value.doctor, value.remarks, value.date, value.next_appointment, value.id);
+                                addWellnessRecordToTable(value.pet_weight,value.service, value.doctor, value.remarks, value.date, value.next_appointment, value.id);
                             })
 
                             wellnessRecordFunctions();
@@ -883,6 +892,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <th scope="col">Service</th>
+                                <th scope="col">Pet Weight</th>
                                 <th scope="col">Attending Vet</th>
                                 <th scope="col">Remarks</th>
                                 <th scope="col">Date</th>
@@ -900,6 +910,11 @@
                     </h3>
                     <div>
                         <input id="wellness-record-service" type="text" class="form-control" placeholder="Service">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div><div>
+                        <input id="wellness-record-pet-weight" type="text" class="form-control mt-3" placeholder="PetWeight">
                         <div class="invalid-feedback">
                             Please fill out this field
                         </div>
