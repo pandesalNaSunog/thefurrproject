@@ -1,5 +1,5 @@
 <?php
-    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+    // if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         function connect(){
             // return new mysqli("localhost","root","","thrfurr_db");
 
@@ -11,7 +11,7 @@
             $today = date('Y-m-d H:i:s');
             return $today;
         }
-    }else{
-        echo header('HTTP/1.1 403 Forbidden');
-    }
+    // }else{
+    //     echo header('HTTP/1.1 403 Forbidden');
+    // }
 ?>
