@@ -5,6 +5,11 @@
         $today = getCurrentDate();
         if(isset($_POST['client_id'])){
             $clientId = htmlspecialchars($_POST['client_id']);
+
+            $query = "SELECT * FROM users WHERE id = '$clientId'";
+            $user = $con->query($query) or die($con->error);
+            $userRow = $user->fetch_assoc();
+            $userName = $userRow['name'];
             $pets = array();
             $query = "SELECT * FROM pets WHERE user_id = '$clientId'";
             $pet = $con->query($query) or die($con->error);
@@ -30,7 +35,10 @@
                     'sex' => $row['sex']
                 );
             }
-            echo json_encode($pets);
+            echo json_encode(array(
+                'pets' => $pets,
+                'client_name' => $userName 
+            ));
             
         }
     }else{

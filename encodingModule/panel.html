@@ -15,6 +15,7 @@
             var bg = $('#bg');
             var globalPetId = 0;
             var globalUserId = 0;
+            var globalWellnessRecordId = 0;
             var navLink = $('.nav-link');
             var clientLink = $('#client-link');
             var staffSection = $('#staff-section');
@@ -51,6 +52,14 @@
             var doctorsTable = $('#doctors-table')
             var doctorsList = $('#doctors-list');
             var chooseAttendingVet = $('#choose-attending-vet');
+            var wellnessRecordService = $('#wellness-record-service');
+            var chooseAttendingVet = $('#choose-attending-vet')
+            var wellnessRecordRemarks = $('#wellness-record-remarks');
+            var wellnessRecordDate = $('#wellness-record-date')
+            var wellnessRecordNextAppointment = $('#wellness-record-next-appointment');
+            var confirmAddWellnessRecord = $('#confirm-add-wellness-record');
+            var wellnessRecordTable = $('#wellness-record-table');
+            var viewPetsClientName = $('#view-pets-client-name');
 
             confirmAddClient.on('click', function(){
                 addClient(addName,addEmail,addContact,addClientCode);
@@ -72,6 +81,10 @@
                 addDoctor(addDoctorName, addDoctorEmail);
             })
 
+            confirmAddWellnessRecord.on('click', function(){
+                addWellnessRecord(globalPetId, globalUserId, wellnessRecordService, wellnessRecordRemarks, wellnessRecordDate, wellnessRecordNextAppointment);
+            })
+
             chooseAttendingVet.on('click', function(){
                 doctorsList.children().remove();
                 $.ajax({
@@ -81,8 +94,11 @@
                         
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            doctorsList.append(`<li><button value="${value.id}"" class="dropdown-item">${value.name}</button></li>`);
+                            doctorsList.append(`<li><button value="${value.id}" class="attending-vet dropdown-item">${value.name}</button></li>`);
                         })
+                        
+                        attendingVetFunction();
+                        
                     }
                 })
             })
@@ -124,7 +140,82 @@
             getClients();
             session();
 
+            function addWellnessRecord(petId, doctorId, service, remarks, thisdate, nextAppointment){
+                if(service.val() == ""){
+                    service.addClass('is-invalid');
+                }else if(remarks.val() == ""){
+                    remarks.addClass('is-invalid')
+                }else if(thisdate.val() == ""){
+                    thisdate.addClass('is-invalid')
+                }else if(nextAppointment.val() == ""){
+                    nextAppointment.addClass('is-invalid')
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addWellnessRecord.php',
+                        data:{
+                            pet_id: petId,
+                            doctor_id: doctorId,
+                            service: service.val(),
+                            remarks: remarks.val(),
+                            date: thisdate.val(),
+                            next_appointment: nextAppointment.val()
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            addWellnessRecordToTable(data.service, data.doctor, data.remarks, data.date, data.next_appointment, data.id);
+                            wellnessRecordFunctions();
+                        }
+                    })
+                }
+            }
 
+            function addWellnessRecordToTable(service, doctor, remarks, date, nextAppointment, id){
+                wellnessRecordTable.append(`<tr>
+                                                <td>${service}</td>
+                                                <td>${doctor}</td>
+                                                <td>${remarks}</td>
+                                                <td>${date}</td>
+                                                <td>${nextAppointment}</td>
+                                                <td>
+                                                    <button value="${id}" class="edit-wellness-record btn btn-outline-danger">Edit</button>
+                                                    <button value="${id}" class="delete-wellness-record btn btn-outline-danger">Delete</button>
+                                                </td>
+                                            </tr>`);
+            }
+
+            function wellnessRecordFunctions(){
+                var editWellnessRecord = $('.edit-wellness-record');
+                var deleteWellnessRecord  = $('.delete-wellness-record');
+
+                deleteWellnessRecord.on('click', function(){
+                    globalWellnessRecordId = $(this).val();
+                    var thisDeleteWellness = $(this);
+                    if(confirm("Are you sure you want to delete this Wellness Record?") == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteWellnessRecord.php',
+                            data:{
+                                wellness_id: globalWellnessRecordId,
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDeleteWellness.parent().parent().remove();
+                                }
+
+                            }
+                        })
+                    }
+                })
+            }
+
+            function attendingVetFunction(){
+                var attendingVet = $('.attending-vet');
+                attendingVet.on('click', function(){
+                    globalUserId = $(this).val();
+                    chooseAttendingVet.text($(this).text());
+                })
+            }
             function getDoctors(){
                 $.ajax({
                     type: 'GET',
@@ -167,7 +258,7 @@
                                             <button class="btn btn-outline-danger">Edit</button>
                                             <button class="btn btn-outline-danger">Delete</button>
                                         </td>
-                                        </tr>`)
+                                    </tr>`)
             }
 
             function session(){
@@ -296,13 +387,36 @@
                                         <button value=${id} class="delete-pet btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                         </svg></button>
-                                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Wellness Record</button>
+                                        <button value=${id} class="view-wellness btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#wellness-record-modal" data-bs-backdrop="static">View Wellness Record</button>
                                 </tr>`)
             }
 
             function petFunctions(){
                 var editPet = $('.edit-pet');
                 var deletePet = $('.delete-pet');
+                var viewWellness = $('.view-wellness');
+
+                viewWellness.on('click', function(){
+                    globalPetId = $(this).val();
+                    wellnessRecordTable.children().remove();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getPetWellnessRecords.php',
+                        data: {
+                            pet_id: globalPetId,
+                        },
+                        success: function(response){
+
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addWellnessRecordToTable(value.service, value.doctor, value.remarks, value.date, value.next_appointment, value.id);
+                            })
+
+                            wellnessRecordFunctions();
+                            
+                        }
+                    })
+                })
 
                 deletePet.on('click', function(){
                     globalPetId = $(this).val();
@@ -367,7 +481,6 @@
                                                         <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
                                                     </tr>`)
                         })
-
                         clientRowFunctions();
                     }
                 })
@@ -392,7 +505,8 @@
                         success: function(response){
 
                             var data = JSON.parse(response);
-                            $(data).each(function(index, value){
+                            viewPetsClientName.text(data.client_name);
+                            $(data.pets).each(function(index, value){
                                 addPetsToTable(value.id, value.name, value.sex, value.breed, value.species, value.age);
                             })
                             petFunctions();
@@ -576,7 +690,7 @@
     </section>
 
 
-    <div class="modal fade" id="add-doctor-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="add-doctor-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -607,7 +721,7 @@
     </div>
 
 
-    <div class="modal fade" id="add-client-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="add-client-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -647,7 +761,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit-client-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="edit-client-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -687,7 +801,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="view-pets-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="view-pets-modal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -697,7 +811,10 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
+
+                    <h5>Client Name: <span class="fw-bold" id="view-pets-client-name"></span></h5>
+                    <hr>
+                    <div class="table-responsive mt-3">
                         <table class="table table-striped">
                             <thead>
                                 <th scope="col">Name</th>
@@ -752,7 +869,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="wellness-record-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="wellness-record-modal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -770,6 +887,7 @@
                                 <th scope="col">Remarks</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Next Appointment</th>
+                                <th scope="col">Action</th>
                             </thead>
                             <tbody id="wellness-record-table">
 
@@ -781,7 +899,7 @@
                         Add Wellness Record
                     </h3>
                     <div>
-                        <input type="text" class="form-control" placeholder="Service">
+                        <input id="wellness-record-service" type="text" class="form-control" placeholder="Service">
                         <div class="invalid-feedback">
                             Please fill out this field
                         </div>
@@ -791,12 +909,34 @@
                         <ul class="dropdown-menu" id="doctors-list">
                         </ul>
                     </div>
+                    <div>
+                        <input id="wellness-record-remarks" type="text" class="form-control mt-3" placeholder="Remarks">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label mt-3">Date</label>
+                        <input id="wellness-record-date" type="date" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label mt-3">Next Appointment</label>
+                        <input id="wellness-record-next-appointment" type="date" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+
+                    <button id="confirm-add-wellness-record" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="edit-pet-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="edit-pet-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
