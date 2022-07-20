@@ -72,6 +72,42 @@
             var editWellnessRecordDate = $('#edit-wellness-record-date');
             var editWellnessRecordNextAppointment = $('#edit-wellness-record-next-appointment');
             var confirmEditWellnessRecord = $('#confirm-edit-wellness-record');
+            var searchClient = $('#search-client');
+            var confirmSearchClient = $('#confirm-search-client');
+
+
+            confirmSearchClient.on('click', function(){
+                clientsTable.children().remove();
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/searchClient.php',
+                    data:{
+                        keyword: searchClient.val(),
+                    },
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            clientsTable.append(`<tr><td>${value.name}</td>
+                                                    <td>${value.email}</td>
+                                                    <td>${value.client_code}</td>
+                                                    <td>${value.contact_no}</td>
+                                                    <td>
+                                                        <button value=${value.id} data-bs-toggle="modal" data-bs-target="#edit-client-modal" class="edit-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                                        </svg></button>
+                                                        <button value=${value.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                                                        </svg></button>
+                                                        <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
+                                                    </tr>`);
+                            
+                        })
+
+                        clientRowFunctions();
+                    }
+                })
+            })
 
             confirmEditWellnessRecord.on('click', function(){
                 
@@ -762,11 +798,17 @@
 
     <section id="client-records-section">
         <div class="container">
-            <div class="mx-auto card mt-5 col-lg-8 shadow rounded-4">
-                <div class="card-header rounded-4">
+
+            
+            <div class="mx-auto card mt-2 col-lg-8 shadow rounded-4">
+                <div class="card-header rounded-4 d-flex">
                     <h3 class="fw-bold">
                         Client Records
                     </h3>
+                    <div class="input-group ms-auto" id="searchbar">
+                        <button id="confirm-search-client" class="btn btn-outline-danger">Search</button>
+                        <input id="search-client" type="text" class="form-control col-lg-5" placeholder="Search Client Name Here">
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

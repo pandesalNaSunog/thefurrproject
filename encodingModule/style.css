@@ -32,7 +32,7 @@
         width: 30%
     }
     #searchbar{
-        width: 30%
+        width: 40%
     }
 }
 
@@ -46,7 +46,6 @@
 .btn-danger{
     width: 100%
 }
-
 
 @media(min-width: 992px){
     #insert-client-record{
