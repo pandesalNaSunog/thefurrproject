@@ -15,6 +15,9 @@
             if($row = $user->fetch_assoc()){
                 echo 'exists';
             }else{
+                if($email == ""){
+                    $email = null;
+                }
                 $query = "INSERT INTO users(`name`,`email`,`client_code`,`contact_no`,`password`,`user_type`,`created_at`,`updated_at`)VALUES('$name','$email','$code','$contact','$password','client','$today','$today')";
                 $con->query($query) or die($con->error);
 
