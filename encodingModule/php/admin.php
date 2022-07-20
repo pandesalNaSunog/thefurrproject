@@ -1,5 +1,5 @@
 <?php
-    include('encodingModule/php/connection.php');
+    include('connection.php');
     $con = connect();
     $today = getCurrentDate();
     $password = password_hash('password', PASSWORD_DEFAULT);
