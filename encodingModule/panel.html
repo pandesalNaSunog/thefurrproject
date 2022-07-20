@@ -61,6 +61,14 @@
             var wellnessRecordTable = $('#wellness-record-table');
             var wellnessRecordPetWeight = $('#wellness-record-pet-weight');
             var viewPetsClientName = $('#view-pets-client-name');
+            var addLabTechName = $('#add-lab-tech-name');
+            var addLabTechEmail = $('#add-lab-tech-email');
+            var confirmAddLabTech = $('#confirm-add-lab-tech');
+            var labTechTable = $('#lab-tech-table');
+
+            confirmAddLabTech.on('click', function(){
+                addLabTech(addLabTechName, addLabTechEmail)
+            })
 
             confirmAddClient.on('click', function(){
                 addClient(addName,addEmail,addContact,addClientCode);
@@ -133,6 +141,7 @@
                 staffSection.show();
                 doctorsTable.children().remove();
                 getDoctors();
+                getLabTechnicians();
             })
 
 
@@ -140,6 +149,67 @@
             staffSection.hide();
             getClients();
             session();
+
+            function addLabTech(name, email){
+                if(name.val() == ""){
+                    name.addClass('is-invalid');
+                }else if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addLabTech.php',
+                        data:{
+                            name: name.val(),
+                            email: email.val()
+                        },
+                        success: function(response){
+
+                            var data = JSON.parse(response);
+                            addToLabTechTable(data.id, data.name, data.email);
+                            labTechFunctions();
+
+                            addLabTechName.val('');
+                            addLabTechEmail.val('');
+                        }
+                    })
+                }
+            }
+
+            function addToLabTechTable(id, name, email){
+                labTechTable.append(`<tr>
+                                        <td>${name}</td>
+                                        <td>${email}</td>
+                                        <td>
+                                            <button value="${id}" class="edit-lab-tech btn btn-outline-danger">Edit</button>
+                                            <button value="${id}" class="delete-lab-tech btn btn-outline-danger">Delete</button>
+                                    </tr>`)
+            }
+
+            function labTechFunctions(){
+                var editLabTech = $('.edit-lab-tech');
+                var deleteLabTech = $('.delete-lab-tech');
+
+                deleteLabTech.on('click', function(){
+                    globalUserId = $(this).val();
+                    var thisDeleteLabTech = $(this);
+
+                    if(confirm('Delete this Laboratory Technician?') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteLabTech.php',
+                            data:{
+                                user_id: globalUserId,
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDeleteLabTech.parent().parent().remove();
+                                }
+                            }
+                        })
+                    }
+                })
+            }
 
             function addWellnessRecord(petWeight,petId, doctorId, service, remarks, thisdate, nextAppointment){
                 if(remarks.val() == ""){
@@ -225,6 +295,21 @@
                 attendingVet.on('click', function(){
                     globalUserId = $(this).val();
                     chooseAttendingVet.text($(this).text());
+                })
+            }
+
+            function getLabTechnicians(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getLabTechnicians.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToLabTechTable(value.id, value.name, value.email);
+                        })
+
+                        labTechFunctions();
+                    }
                 })
             }
             function getDoctors(){
@@ -564,7 +649,7 @@
             function addClient(name,email,contact,code){
 
                 if(email.val() == ""){
-                    email.val("");
+                    email.val(null);
                 }
                 if(contact.val() == ""){
                     contact.val("")
@@ -585,27 +670,28 @@
                             code: code.val(),
                         },
                         success: function(response){
-                            alert('Client has been successfully added.')
-                            name.val('');
-                            email.val('');
-                            contact.val('');
-                            code.val('');
-                            var data = JSON.parse(response);
-                            clientsTable.append(`<tr><td>${data.name}</td>
-                                                    <td>${data.email}</td>
-                                                    <td>${data.client_code}</td>
-                                                    <td>${data.contact_no}</td>
-                                                    <td>
-                                                        <button value=${data.id} data-bs-toggle="modal" data-bs-target="#edit-client-modal" class="edit-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                                                        </svg></button>
-                                                        <button value=${data.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                                                        </svg></button>
-                                                        <button value=${data.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
-                                                    </tr>`);
-                            clientRowFunctions();
+                            console.log(response);
+                            // alert('Client has been successfully added.')
+                            // name.val('');
+                            // email.val('');
+                            // contact.val('');
+                            // code.val('');
+                            // var data = JSON.parse(response);
+                            // clientsTable.append(`<tr><td>${data.name}</td>
+                            //                         <td>${data.email}</td>
+                            //                         <td>${data.client_code}</td>
+                            //                         <td>${data.contact_no}</td>
+                            //                         <td>
+                            //                             <button value=${data.id} data-bs-toggle="modal" data-bs-target="#edit-client-modal" class="edit-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            //                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            //                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                            //                             </svg></button>
+                            //                             <button value=${data.id} class="delete-client btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            //                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            //                             </svg></button>
+                            //                             <button value=${data.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
+                            //                         </tr>`);
+                            // clientRowFunctions();
                         }
                     })
                 }
@@ -700,6 +786,31 @@
                     <button class="btn btn-danger px-5 rounded-pill" data-bs-target="#add-doctor-modal" data-bs-toggle="modal">Add Doctor</button>
                 </div>
             </div>
+
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Laboratory Technicians
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="lab-tech-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger rounded-pill px-5" data-bs-target="#add-lab-technician-modal" data-bs-toggle="modal">Add Lab Technicians</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -729,6 +840,36 @@
                     </div>
                     
                     <button id="confirm-add-doctor" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="add-lab-technician-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="add-lab-tech-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <input id="add-lab-tech-email" type="email" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-add-lab-tech" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
