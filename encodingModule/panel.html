@@ -142,10 +142,11 @@
             session();
 
             function addWellnessRecord(petWeight,petId, doctorId, service, remarks, thisdate, nextAppointment){
+                if(remarks.val() == ""){
+                    remarks.val("");
+                }
                 if(service.val() == ""){
                     service.addClass('is-invalid');
-                }else if(remarks.val() == ""){
-                    remarks.addClass('is-invalid')
                 }else if(thisdate.val() == ""){
                     thisdate.addClass('is-invalid')
                 }else if(nextAppointment.val() == ""){
@@ -568,7 +569,7 @@
                 if(contact.val() == ""){
                     contact.val("")
                 }
-                
+
                 if(name.val() == ""){
                     name.addClass('is-invalid');
                 }else if(code.val() == ""){
