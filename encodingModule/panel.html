@@ -561,10 +561,12 @@
                 })
             }
             function addClient(name,email,contact,code){
+
+                if(email.val() == ""){
+                    email.val("");
+                }
                 if(name.val() == ""){
                     name.addClass('is-invalid');
-                }else if(email.val() == ""){
-                    email.addClass('is-invalid');
                 }else if(contact.val() == ""){
                     contact.addClass('is-invalid');
                 }else if(code.val() == ""){
