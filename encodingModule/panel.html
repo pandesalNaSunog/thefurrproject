@@ -565,10 +565,12 @@
                 if(email.val() == ""){
                     email.val("");
                 }
+                if(contact.val() == ""){
+                    contact.val("")
+                }
+                
                 if(name.val() == ""){
                     name.addClass('is-invalid');
-                }else if(contact.val() == ""){
-                    contact.addClass('is-invalid');
                 }else if(code.val() == ""){
                     code.addClass('is-invalid');
                 }else{
