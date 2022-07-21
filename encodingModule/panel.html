@@ -63,6 +63,9 @@
             var addLabTechName = $('#add-lab-tech-name');
             var addLabTechEmail = $('#add-lab-tech-email');
             var confirmAddLabTech = $('#confirm-add-lab-tech');
+            var editLabTechName = $('#edit-lab-tech-name');
+            var editLabTechEmail = $('#edit-lab-tech-email');
+            var confirmEditLabTech = $('#confirm-edit-lab-tech');
             var labTechTable = $('#lab-tech-table');
             var editWellnessRecordService = $('#edit-wellness-record-service');
             var editWellnessRecordPetWeight = $('#edit-wellness-record-pet-weight');
@@ -74,6 +77,32 @@
             var confirmEditWellnessRecord = $('#confirm-edit-wellness-record');
             var searchClient = $('#search-client');
             var confirmSearchClient = $('#confirm-search-client');
+
+
+
+
+            confirmEditLabTech.on('click', function(){
+                if(editLabTechName.val() == ""){
+                    editLabTechName.addClass('is-invalid');
+                }else if(editLabTechEmail.val() == ""){
+                    editLabTechEmail.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/updateLabTech.php',
+                        data:{
+                            name: editLabTechName.val(),
+                            email: editLabTechEmail.val(),
+                            labtech_id: globalUserId,
+                        },
+                        success: function(response){
+                            if(response == "ok"){
+                                alert('Lab Technician has been successfully updated.');
+                            }
+                        }
+                    })
+                }
+            })
 
 
             confirmSearchClient.on('click', function(){
@@ -277,7 +306,7 @@
                                         <td>${name}</td>
                                         <td>${email}</td>
                                         <td>
-                                            <button value="${id}" class="edit-lab-tech btn btn-outline-danger">Edit</button>
+                                            <button value="${id}" class="edit-lab-tech btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#edit-lab-tech-modal">Edit</button>
                                             <button value="${id}" class="delete-lab-tech btn btn-outline-danger">Delete</button>
                                     </tr>`)
             }
@@ -285,6 +314,10 @@
             function labTechFunctions(){
                 var editLabTech = $('.edit-lab-tech');
                 var deleteLabTech = $('.delete-lab-tech');
+
+                editLabTech.on('click', function(){
+                    globalUserId = $(this).val();
+                })
 
                 deleteLabTech.on('click', function(){
                     globalUserId = $(this).val();
@@ -998,6 +1031,36 @@
                     </div>
                     
                     <button id="confirm-add-lab-tech" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="edit-lab-tech-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="edit-lab-tech-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <input id="edit-lab-tech-email" type="email" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-edit-lab-tech" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
