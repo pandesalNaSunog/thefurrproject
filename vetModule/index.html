@@ -15,29 +15,34 @@
 
     <script>
         $(document).ready(function(){
-        var email = $('#email');
-        var password = $('#password');
-        var login = $('#log-in');
+            var email = $('#email');
+            var password = $('$password');
+            var login = $('#log-in');
 
-        login.on('click', function(){
-            if(email.val() != "" && password.val() != ""){
-                $.ajax({
-                    type: 'POST',
-                    url: '../vetModule/php/vetLogin.php',
-                    data: {
-                        email: email.val(),
-                        password: password.val()
-                    },
-                    success: function(response){
-                        console.log(response);
-                        if(response != 'nothing'){
-                            window.location.replace(response);
-                        }   
-                    }
-                })
-            }
+            login.on('click', function(){
+                if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else if(password.val() == ""){
+                    password.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/login.php',
+                        data:{
+                            email: email.val(),
+                            password: password.val()
+                        },
+                        success: function(response){
+                            if(response = 'invalid'){
+                                alert('Invalid Credentials.');
+                            }else{
+                                window.location.response(response);
+                            }
+                        }
+                    })
+                }
+            })
         })
-    })
     </script>
 
 

@@ -1,15 +1,18 @@
 <?php
-     function connect(){
-        $hostname = "localhost";
-        $username = "u568496919_thefurr";
-        $password = "Thefurrpassword11";
-        $database = "u568496919_thefurr_db";
-        $con = new mysqli($hostname,$username,$password,$database);
-        return $con;
+    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+        function connect(){
+            return new mysqli("localhost","root","","thrfurr_db");
+
+            // return new mysqli("localhost","u568496919_thefurr","Thefurrpassword11","u568496919_thefurr_db");
+        }
+
+        function getCurrentDate(){
+            date_default_timezone_set('Asia/Manila');
+            $today = date('Y-m-d H:i:s');
+            return $today;
+        }
+    }else{
+        echo header('HTTP/1.1 403 Forbidden');
     }
-    function getCurrentDate(){
-        date_default_timezone_set('Asia/Manila');
-        $date = date('Y-m-d H:i:s');
-        return $date;
-    }
+
 ?>
