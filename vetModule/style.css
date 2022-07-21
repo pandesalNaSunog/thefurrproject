@@ -19,3 +19,19 @@
 .bg{
     background-color: darkblue;
 }
+
+.rounded-button{
+    font-weight: bold;
+    color:white;
+    background-color: darkblue;
+    border-radius: 50px;
+    border:none;
+    transition-duration: .3s;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.rounded-button:hover{
+    background-color: blue;
+}

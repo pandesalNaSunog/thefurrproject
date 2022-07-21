@@ -16,7 +16,7 @@
     <script>
         $(document).ready(function(){
             var email = $('#email');
-            var password = $('$password');
+            var password = $('#password');
             var login = $('#log-in');
 
             login.on('click', function(){
@@ -33,10 +33,10 @@
                             password: password.val()
                         },
                         success: function(response){
-                            if(response = 'invalid'){
+                            if(response == 'invalid'){
                                 alert('Invalid Credentials.');
                             }else{
-                                window.location.response(response);
+                                window.location.replace(response);
                             }
                         }
                     })
