@@ -14,65 +14,7 @@
 
 
     <script>
-        $(document).ready(function(){
-            var email = $('#email');
-            var password = $('#password');
-            var login = $('#login');
-            var signUp = $('#signup');
-            var invalidEmail = $('#invalid-email');
-            var invalidPassword = $('#invalid-password');
-
-            //hide validation notifications
-            invalidEmail.hide();
-            invalidPassword.hide();
-
-
-            $.ajax({
-                type: 'GET',
-                url: 'php/sessionCheck.php',
-                success: function(response){
-                    if(response == 'clientDashboard.html'){
-                        window.location.replace(response);
-                    }
-                }
-            })
-            login.on('click',function(e){
-                e.preventDefault();
-                if(email.val() != "" && password.val() != ""){
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/login.php',
-                        data: {
-                            email: email.val(),
-                            password: password.val()
-                        },
-                        success: function(response){
-                            if(response == 'ok'){
-                                window.location.replace('clientDashboard.html');
-                            }else if(response == 'invalid email'){
-                                email.addClass('is-invalid');
-                                invalidEmail.show();
-                                password.removeClass('is-invalid')
-                                invalidPassword.hide();
-                            }else if(response == 'invalid password'){
-                                password.addClass('is-invalid');
-                                email.removeClass('is-invalid');
-                                invalidPassword.show();
-                            }
-                        }
-                    })
-                }else if(email.val() == ""){
-                    email.addClass('is-invalid');
-                    invalidEmail.show();
-                    password.removeClass('is-invalid')
-                    invalidPassword.hide();
-                }else if(password.val() == ""){
-                    password.addClass('is-invalid');
-                    email.removeClass('is-invalid');
-                    invalidPassword.show();
-                }
-            })
-        })
+        
     </script>
 
 
