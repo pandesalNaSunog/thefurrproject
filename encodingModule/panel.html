@@ -110,7 +110,38 @@
             })
 
             confirmEditWellnessRecord.on('click', function(){
-                
+                if(editWellnessRecordService.val() == ""){
+                    editWellnessRecordService.addClass('is-invalid');
+                }else if(editWellnessRecordPetWeight.val() == ""){
+                    editWellnessRecordPetWeight.addClass('is-invalid');
+                }else if(editWellnessRecordRemarks.val() == ""){
+                    editWellnessRecordRemarks.addClass('is-invalid');
+                }else if(editWellnessRecordDate.val() == ""){
+                    editWellnessRecordDate.addClass('is-invalid');
+                }else if(editWellnessRecordNextAppointment.val() == ""){
+                    editWellnessRecordNextAppointment.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/updateWellnessRecord.php',
+                        data:{
+                            wellness_id: globalWellnessRecordId,
+                            pet_id: globalPetId,
+                            doctor_id: globalUserId,
+                            service: editWellnessRecordService.val(),
+                            remarks: editWellnessRecordRemarks.val(),
+                            date: editWellnessRecordDate.val(),
+                            next_appointment: editWellnessRecordNextAppointment.val(),
+                            pet_weight: editWellnessRecordPetWeight.val(), 
+                        },
+                        success: function(response){
+                            if(response == 'ok'){
+                                alert('Wellness Record Successfully Updated.');
+                            }
+
+                        }
+                    })
+                }
             })
 
             confirmAddLabTech.on('click', function(){
@@ -154,6 +185,24 @@
                         })
                         
                         attendingVetFunction();
+                        
+                    }
+                })
+            })
+            
+            editChooseAttendingVet.on('click', function(){
+                editDoctorsList.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getDoctors.php',
+                    success: function(response){
+                        
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            editDoctorsList.append(`<li><button value="${value.id}" class="attending-vet dropdown-item">${value.name}</button></li>`);
+                        })
+                        
+                        editAttendingVetFunction();
                         
                     }
                 })
@@ -329,7 +378,7 @@
                             var data = JSON.parse(response);
                             editWellnessRecordService.val(data.service);
                             editWellnessRecordPetWeight.val(data.pet_weight);
-                            
+                            globalUserId = data.doctor_id;
                             editWellnessRecordRemarks.val(data.remarks);
                             editWellnessRecordDate.val(data.date);
                             editWellnessRecordNextAppointment.val(data.next_appointment);
@@ -366,7 +415,16 @@
                 })
             }
 
+            function editAttendingVetFunction(){
+                var attendingVet = $('.attending-vet');
+                attendingVet.on('click', function(){
+                    globalUserId = $(this).val();
+                    editChooseAttendingVet.text($(this).text());
+                })
+            }
+
             function getLabTechnicians(){
+                labTechTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getLabTechnicians.php',

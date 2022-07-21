@@ -28,6 +28,7 @@
                 'id' => $row['id'],
                 'service' => $row['service'],
                 'doctor' => $doctorName,
+                'doctor_id' => $doctorRow['id'],
                 'remarks' => $remarks,
                 'date' => $date,
                 'next_appointment' => $nextAppointment,

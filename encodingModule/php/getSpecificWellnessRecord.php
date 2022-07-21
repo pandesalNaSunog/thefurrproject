@@ -25,6 +25,7 @@
             'service' => $service,
             'pet_weight' => $petWeight,
             'doctor' => $doctorName,
+            'doctor_id' => $doctorId,
             'remarks' => $remarks,
             'date' => $date,
             'next_appointment' => $nextAppointment
