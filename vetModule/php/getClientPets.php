@@ -11,16 +11,21 @@
             $pets = array();
             $pet = $con->query($query) or die($con->error);
             while($row = $pet->fetch_assoc()){
+                if($row['birth_date'] == '0000-00-00'){
+                    $age = "N/A";
+                }else{
+                    $todayObject = date_create($today);
+                    $birthDateObject = date_create($row['birth_date']);
+    
+                    $dateDiff = date_diff($todayObject, $birthDateObject);
+                    $age = $dateDiff->format("%y Year(s) %m Month(s)");
+                }
                 $name = $row['name'];
                 $breed = $row['breed'];
                 $species = $row['species'];
                 $sex = $row['sex'];
 
-                $todayObject = date_create($today);
-                $birthDateObject = date_create($row['birth_date']);
-
-                $dateDiff = date_diff($todayObject, $birthDateObject);
-                $age = $dateDiff->format("%y Year(s) %m Month(s)");
+                
 
                 $pets[] = array(
                     'name' => $name,
