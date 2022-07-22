@@ -73,3 +73,13 @@
     color: white;
     background-color: darkblue;
 }
+
+.input-group{
+    width: 60%;
+}
+
+@media (min-width: 768px){
+    .input-group{
+        width: 50%;
+    }
+}

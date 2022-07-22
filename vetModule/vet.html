@@ -24,6 +24,30 @@
             var logout = $('#logout');
             var clientsTable = $('#clients-table')
             var petsTable = $('#pets-table');
+            var searchClient = $('#search-client');
+            var searchClientText = $('#search-client-text');
+
+
+
+            searchClient.on('click', function(){
+                clientsTable.children().remove();
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/searchClient.php',
+                    data:{
+                        keyword: searchClientText.val(),
+                    },
+                    success: function(response){
+                        if(response != 'invalid session'){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToClientsTable(value.name, value.client_code, value.id);
+                            })
+                            clientFunctions();
+                        }
+                    }
+                })
+            })
             getClients();
             function getClients(){
                 clientsTable.children().remove();
@@ -160,10 +184,16 @@
     <section id="clients-section">
         <div class="container">
             <div class="card shadow rounded-4 col-lg-6 mx-auto mt-5">
-                <div class="card-header rounded-4">
+                <div class="card-header rounded-4 d-flex justify-content-between">
                     <h3 class="fw-bold">
                         Clients
                     </h3>
+                    <div class="input-group">
+                        <button id="search-client" class="btn btn-outline-primary">
+                            Search
+                        </button>
+                        <input id="search-client-text" type="text" class="form-control" placeholder="Search">
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
