@@ -117,7 +117,17 @@
                                     <td>${sex}</td>
                                     <td>${age}</td>
                                     <td>
-                                        <button value="${petId}" class="pet-medical-records normal-outline-button">View Medical Records</button>
+                                        <div class="dropdown">
+                                            <button value="${petId}" class="pet-medical-records normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a value="${petId}" href="#" class="dropdown-item">View Initial Checkup</a>
+                                                </li>
+                                                <li>
+                                                    <a value="${petId}" href="#" class="dropdown-item">View Follow-up Checkups</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>`);
             }
@@ -232,6 +242,7 @@
                                 <th scope="col">Species</th>
                                 <th scope="col">Sex</th>
                                 <th scope="col">Age</th>
+                                <th scope="col">Action</th>
                             </thead>
                             <tbody id="pets-table">
                                 
