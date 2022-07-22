@@ -16,6 +16,7 @@
 
     <script>
         $(document).ready(function(){
+            var globalPetId = 0;
             var globalUserId = 0;
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
@@ -73,26 +74,34 @@
                                 var data = JSON.parse(response);
 
                                 $(data).each(function(index, value){
-                                    addToPetsTable(value.name, value.breed, value.species, value.sex, value.age)
-                                    console.log(index);
+                                    addToPetsTable(value.pet_id, value.name, value.breed, value.species, value.sex, value.age)
                                 })
+                                petFunctions();
                             }else{
                                 alert('Invalid Session.');
                             }
-
                         }
                     })
                 })
             }
 
-            function addToPetsTable(name, breed, species, sex, age){
+            function addToPetsTable(petId, name, breed, species, sex, age){
                 petsTable.append(`<tr>
                                     <td>${name}</td>
                                     <td>${breed}</td>
                                     <td>${species}</td>
                                     <td>${sex}</td>
                                     <td>${age}</td>
+                                    <td>
+                                        <button value="${petId}" class="pet-medical-records normal-outline-button">View Medical Records</button>
+                                    </td>
                                 </tr>`);
+            }
+            function petFunctions(){
+                var petMedicalRecords = $('.pet-medical-records');
+                petMedicalRecords.on('click', function(){
+                    globalPetId = $(this).val();
+                })
             }
             logout.on('click', function(){
                 $.ajax({
