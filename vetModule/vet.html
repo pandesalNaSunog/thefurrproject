@@ -16,12 +16,13 @@
 
     <script>
         $(document).ready(function(){
+            var globalUserId = 0;
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
             var clientSection = $('#clients-section');
             var logout = $('#logout');
             var clientsTable = $('#clients-table')
-
+            var petsTable = $('#pets-table');
             getClients();
             function getClients(){
                 clientsTable.children().remove();
@@ -32,25 +33,66 @@
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToClientsTable(value.name, value.client_code);
+                                addToClientsTable(value.name, value.client_code, value.id);
                             })
+                            clientFunctions();
                         }else{
                             alert('Invalid Session. Please log in to continue.');
                             window.location.replace('index.html');
-                        }
-                        
+                        } 
                     }
                 })
             }
 
-            function addToClientsTable(name, code){
+            function addToClientsTable(name, code, clientId){
                 clientsTable.append(`<tr>
                                         <td>${name}</td>
                                         <td>${code}</td>
                                         <td>
-                                            <button class="normal-outline-button">View Pets</button>
+                                            <button value="${clientId}" class="view-pets normal-outline-button" data-bs-toggle="modal" data-bs-target="#pets-modal">View Pets</button>
                                         </td>
                                     </tr>`)
+            }
+
+
+            function clientFunctions(){
+                var viewPets = $('.view-pets');
+                
+                viewPets.on('click', function(){
+                    globalUserId = $(this).val();
+                    petsTable.children().remove();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getClientPets.php',
+                        data:{
+                            client_id: globalUserId,
+                        },
+                        success: function(response){
+                            if(response != 'invalid session'){
+                                var data = JSON.parse(response);
+
+                                $(data).each(function(index, value){
+                                    addToPetsTable(value.name, value.breed, value.species, value.sex, value.age)
+                                    console.log(index);
+                                })
+                            }else{
+                                alert('Invalid Session.');
+                            }
+
+                        }
+                    })
+                })
+            }
+
+            function addToPetsTable(name, breed, species, sex, age){
+                petsTable.append(`<tr>
+                                    <td>${name}</td>
+                                    <td>${breed}</td>
+                                    <td>${species}</td>
+                                    <td>${sex}</td>
+                                    <td>${age}</td>
+                                </tr>`);
             }
             logout.on('click', function(){
                 $.ajax({
@@ -132,6 +174,34 @@
         </div>
     </section>
     
-    
+    <div class="modal fade" id="pets-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Breed</th>
+                                <th scope="col">Species</th>
+                                <th scope="col">Sex</th>
+                                <th scope="col">Age</th>
+                            </thead>
+                            <tbody id="pets-table">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
