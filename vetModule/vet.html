@@ -16,11 +16,62 @@
 
     <script>
         $(document).ready(function(){
-            var navLink = $('.nav-link');
+            var navLink = $('.navigation');
+            var clientLink = $('#client-link');
+            var clientSection = $('#clients-section');
+            var logout = $('#logout');
+            var clientsTable = $('#clients-table')
 
+            getClients();
+            function getClients(){
+                clientsTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getClients.php',
+                    success: function(response){
+                        if(response != 'invalid session'){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToClientsTable(value.name, value.client_code);
+                            })
+                        }else{
+                            alert('Invalid Session. Please log in to continue.');
+                            window.location.replace('index.html');
+                        }
+                        
+                    }
+                })
+            }
+
+            function addToClientsTable(name, code){
+                clientsTable.append(`<tr>
+                                        <td>${name}</td>
+                                        <td>${code}</td>
+                                        <td>
+                                            <button class="normal-outline-button">View Pets</button>
+                                        </td>
+                                    </tr>`)
+            }
+            logout.on('click', function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/logout.php',
+                    success: function(response){
+                        if(response == 'index.html'){
+                            window.location.replace(response);
+                        }
+                    }
+                })
+            })
             navLink.on('click', function(){
                 navLink.removeClass('active');
                 $(this).addClass('active');
+                $('body').children('section').hide();
+            })
+
+            clientLink.on('click', function(){
+                clientSection.show();
+                getClients();
             })
         })
     </script>
@@ -35,25 +86,52 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto fw-bold">
                     <li>
-                        <a class="nav-link active" href="#">Client Records</a>
+                        <a id="client-link" class="navigation nav-link active" href="#">Client Records</a>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Account</a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#" class="dropdown-item">Update Profile</a>
+                                </li><li>
+                                    <a id="logout" href="#" class="dropdown-item">Log Out</a>
+                                </li>
+                            </ul>
+                        </div>
+                        
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="card shadow rounded-4 col-lg-6 mx-auto mt-5">
-            <div class="card-header rounded-4">
-                <h3 class="fw-bold">
-                    Clients
-                </h3>
-            </div>
-            <div class="card-body">
+    <section id="clients-section">
+        <div class="container">
+            <div class="card shadow rounded-4 col-lg-6 mx-auto mt-5">
+                <div class="card-header rounded-4">
+                    <h3 class="fw-bold">
+                        Clients
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Client Code</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="clients-table">
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+    
     
 </body>
 </html>
