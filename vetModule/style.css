@@ -57,10 +57,9 @@
 
 
 .normal-outline-button{
-    font-weight: bold;
     color:darkblue;
     border-radius: 10px;
-    border-width: 2px;
+    border-width: 1px;
     border-color: darkblue;
     transition-duration: .3s;
     width: 100%;
