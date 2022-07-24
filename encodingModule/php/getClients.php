@@ -6,7 +6,13 @@
         $user = $con->query($query) or die($con->error);
         $users = array();
         while($row = $user->fetch_assoc()){
-            $users[] = $row;
+            $users[] = array(
+                'name' => $row['name'],
+                'email' => $row['email'],
+                'client_code' => $row['client_code'],
+                'contact_no' => $row['contact_no'],
+                'id' => $row['id'],
+            );
         }
         echo json_encode($users);
     }else{
