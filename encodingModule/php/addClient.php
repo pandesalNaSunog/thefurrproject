@@ -1,9 +1,10 @@
 <?php
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         include('connection.php');
+        session_start();
         $con = connect();
         $today = getCurrentDate();
-        if(isset($_POST)){
+        if(isset($_POST) && isset($_SESSION['admin_id'])){
             $name = htmlspecialchars($_POST['name']);
             $email = htmlspecialchars($_POST['email']);
             $code = htmlspecialchars($_POST['code']);
@@ -27,6 +28,8 @@
 
                 echo json_encode($userRow);
             }
+        }else{
+            echo 'invalid';
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
