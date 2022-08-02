@@ -12,6 +12,7 @@
                 'client_code' => $row['client_code'],
                 'contact_no' => $row['contact_no'],
                 'id' => $row['id'],
+                'banned' => $row['banned'],
             );
         }
         echo json_encode($users);

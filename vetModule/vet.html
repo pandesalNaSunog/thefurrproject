@@ -27,7 +27,7 @@
             var searchClient = $('#search-client');
             var searchClientText = $('#search-client-text');
             var profileName = $('#profile-name');
-
+            var initialCheckupsTable = $('#initial-check-ups-table');
             var medicalHistory = $('#medical-history');
             var wellness = $('#wellness');
             var weight = $('#weight');
@@ -193,11 +193,47 @@
                                     </td>
                                 </tr>`);
             }
+
+            function addToInitialCheckupsTable(id, medicalHistory, wellness, weight, temp, hr, rr, physicalExam, cchx, dxtools, tdx,treatment, inPatient, surgery, outPatient, takeHomeMeds){
+                initialCheckupsTable.append(`<tr>
+                                                <td>${medicalHistory}</td>
+                                                <td>${wellness}</td>
+                                                <td>${weight}</td>
+                                                <td>${temp}</td>
+                                                <td>${hr}</td>
+                                                <td>${rr}</td>
+                                                <td>${physicalExam}</td>
+                                                <td>${cchx}</td>
+                                                <td>${dxtools}</td>
+                                                <td>${tdx}</td>
+                                                <td>${treatment}</td>
+                                                <td>${inPatient}</td>
+                                                <td>${surgery}</td>
+                                                <td>${outPatient}</td>
+                                                <td>${takeHomeMeds}</td>
+                                            </tr>`)
+            }
+
+
             function petFunctions(){
                 var viewInitalCheckup = $('.view-initial-checkup');
                 viewInitalCheckup.on('click', function(){
                     globalPetId = $(this).val();
                     $('#initial-checkups-modal').find('input').val('');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getInitialCheckup.php',
+                        data:{
+                            pet_id: globalPetId,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds)
+                            })
+                        }
+                    })
                 })
                 var petMedicalRecords = $('.pet-medical-records');
                 petMedicalRecords.on('click', function(){
@@ -338,15 +374,8 @@
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
-                                <th scope="col">Patient's Name</th>
-                                <th scope="col">Contact Number</th>
-                                <th scope="col">Client Code</th>
                                 <th scope="col">Medical History</th>
-                                <th scope="col">Wellness Behavior</th>
-                                <th scope="col">Date of Birt</th>
-                                <th scope="col">Species</th>
-                                <th scope="col">Breed</th>
-                                <th scope="col">Sex</th>
+                                <th scope="col">Wellness/Behavior</th>
                                 <th scope="col">Weight</th>
                                 <th scope="col">Temp</th>
                                 <th scope="col">HR</th>
@@ -361,6 +390,9 @@
                                 <th scope="col">Out-Patient</th>
                                 <th scope="col">Take Home Meds/Rx</th>
                             </thead>
+                            <tbody id="initial-check-ups-table">
+
+                            </tbody>
                         </table>
                     </div>
                     <div class="col-lg-7 mx-auto">

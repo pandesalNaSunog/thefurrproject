@@ -188,10 +188,13 @@
                                                         </svg></button>
                                                         <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
                                                     </tr>`);
-                            
+                            if(value.banned == 1){
+                                clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
+                            }
+                            clientRowFunctions(index);
                         })
 
-                        clientRowFunctions();
+                        
                     }
                 })
             })
@@ -789,19 +792,46 @@
                                                         <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                                         </svg></button>
                                                         <button value=${value.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
+                                                        <button value=${value.id} class="ban-client btn btn-outline-danger">Ban</button>
                                                     </tr>`)
+
+                            if(value.banned == 1){
+                                clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
+                            }
+                            clientRowFunctions(index);
                         })
-                        clientRowFunctions();
+                        
                     }
                 })
             }
 
 
-            function clientRowFunctions(){
-                var editClient = $('.edit-client');
-                var deleteClient = $('.delete-client');
-                var viewPets = $('.view-pets');
+            function clientRowFunctions(index){
+                var editClient = clientsTable.children().eq(index).find('.edit-client');
+                var deleteClient = clientsTable.children().eq(index).find('.delete-client');
+                var viewPets = clientsTable.children().eq(index).find('.view-pets');
+                var banClient = clientsTable.children().eq(index).find('.ban-client');
 
+                banClient.on('click', function(){
+                    var clientId = $(this).val();
+                    var thisBanClient = $(this);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/banClient.php',
+                        data:{
+                            client_id: clientId
+                        },
+                        success: function(response){
+                            if(response == 'banned'){
+                                thisBanClient.parent().parent().attr("style","background-color: #fccccc");
+                            }else{
+                                thisBanClient.parent().parent().removeAttr("style")
+                            }
+                           
+                        }
+                    })
+                    
+                })
 
                 viewPets.on('click', function(){
                     petsTable.children().remove();
@@ -905,8 +935,9 @@
                                                             <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                                                             </svg></button>
                                                             <button value=${data.id} class="view-pets btn btn-outline-danger" data-bs-target="#view-pets-modal" data-bs-toggle="modal">View Pets</button>
+                                                            <button value=${data.id} class="ban-client btn btn-outline-danger">Ban</button>
                                                         </tr>`);
-                                clientRowFunctions();
+                                clientRowFunctions(clientsTable.children().length - 1);
                             }else{
                                 window.location.replace('index.html');
                             }
