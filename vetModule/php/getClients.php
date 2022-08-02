@@ -33,6 +33,7 @@
                         'client_code' => $userRow['client_code'],
                         'contact_no' => $userRow['contact_no'],
                         'id' => $userRow['id'],
+                        'banned' => $userRow['banned']
                     );
                     $currentUserId = $userIdItem;
                 }

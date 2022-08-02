@@ -110,6 +110,9 @@
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
                                 addToClientsTable(value.name, value.client_code, value.id);
+                                if(value.banned == 1){
+                                    clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
+                                }
                             })
                             clientFunctions();
                         }else{
