@@ -27,7 +27,13 @@
                     $query = "SELECT * FROM users WHERE id = '$userIdItem'";
                     $userQuery = $con->query($query) or die($con->error);
                     $userRow = $userQuery->fetch_assoc();
-                    $users[] = $userRow;
+                    $users[] = array(
+                        'name' => $userRow['name'],
+                        'email' => $userRow['email'],
+                        'client_code' => $userRow['client_code'],
+                        'contact_no' => $userRow['contact_no'],
+                        'id' => $userRow['id'],
+                    );
                     $currentUserId = $userIdItem;
                 }
             }
