@@ -27,15 +27,18 @@
                 if($userIdItem != $currentUserId){
                     $query = "SELECT * FROM users WHERE id = '$userIdItem' AND user_type ='client' AND name LIKE '%$keyword%' OR client_code LIKE '%$keyword%'";
                     $userQuery = $con->query($query) or die($con->error);
-                    $userRow = $userQuery->fetch_assoc();
-                    $users[] = array(
-                        'name' => $userRow['name'],
-                        'email' => $userRow['email'],
-                        'client_code' => $userRow['client_code'],
-                        'contact_no' => $userRow['contact_no'],
-                        'id' => $userRow['id'],
-                    );
-                    $currentUserId = $userIdItem;
+                    
+                    if($userRow = $userQuery->fetch_assoc()){
+                        $users[] = array(
+                            'name' => $userRow['name'],
+                            'email' => $userRow['email'],
+                            'client_code' => $userRow['client_code'],
+                            'contact_no' => $userRow['contact_no'],
+                            'id' => $userRow['id'],
+                        );
+                        $currentUserId = $userIdItem;
+                    }
+                    
                 }
             }
 
