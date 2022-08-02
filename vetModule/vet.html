@@ -240,10 +240,11 @@
                             pet_id: globalPetId,
                         },
                         success: function(response){
-                            var data = JSON.parse(response);
-                            $(data).each(function(index, value){
-                                addToWellnessRecordTable(value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
-                            })
+                            console.log(response);
+                            // var data = JSON.parse(response);
+                            // $(data).each(function(index, value){
+                            //     addToWellnessRecordTable(value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
+                            // })
                         }
                     })
                 })
@@ -451,7 +452,7 @@
     </div>
 
     <div class="modal fade" id="wellness-record-modal" data-bs-backdrop="static">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="modal-title">
