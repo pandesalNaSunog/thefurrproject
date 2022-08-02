@@ -41,7 +41,6 @@
                     
                 }
             }
-            sort($users);
             echo json_encode($users);
         }else{
             echo 'invalid session';
