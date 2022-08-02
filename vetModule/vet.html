@@ -254,8 +254,16 @@
             }
 
             function addToWellnessRecordTable(id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
-
+                wellnessRecordTable.append(`<tr>
+                                                <td>${service}</td>
+                                                <td>${petWeight}</td>
+                                                <td>${doctor}</td>
+                                                <td>${remarks}</td>
+                                                <td>${date}</td>
+                                                <td>${nextAppointment}</td>
+                                            </tr>`)
             }
+        
             logout.on('click', function(){
                 $.ajax({
                     type: 'GET',
@@ -467,8 +475,7 @@
                             <th scope="col">Attending Vet</th>
                             <th scope="col">Remarks</th>
                             <th scope="col">Date</th>
-                            <th scope="col">Next Appointment</th>
-                            <th scope="col">Action</th>							
+                            <th scope="col">Next Appointment</th>						
                         </thead>
                     </table>
                     <table id="wellness-record-table">
