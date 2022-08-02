@@ -44,6 +44,7 @@
             var outPatient = $('#out-patient');
             var takeHomeMeds = $('#take-home-meds');
             var confirmInsertMedicalRecord = $('#confirm-insert-medical-record');
+            var checkupDate = $('#check-up-date');
 
 
             confirmInsertMedicalRecord.on('click', function(){
@@ -69,10 +70,11 @@
                         surgery: surgery.val(),
                         out_patient: outPatient.val(),
                         take_home_meds: takeHomeMeds.val(),
+                        date: checkupDate.val()
                     },
                     success: function(response){
                         var value = JSON.parse(response);
-                        addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds)
+                        addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds,value.date)
                     }
                 })
             })
@@ -187,7 +189,7 @@
                                             <button value="${petId}" class="pet-medical-records normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#initial-checkups-modal">View Initial Checkup</button>
+                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#initial-checkups-modal">View Wellness Records</button>
                                                 </li>
                                                 <li>
                                                     <button value="${petId}" class="dropdown-item">View Follow-up Checkups</button>
@@ -198,7 +200,7 @@
                                 </tr>`);
             }
 
-            function addToInitialCheckupsTable(id, medicalHistory, wellness, weight, temp, hr, rr, physicalExam, cchx, dxtools, tdx,treatment, inPatient, surgery, outPatient, takeHomeMeds){
+            function addToInitialCheckupsTable(id, medicalHistory, wellness, weight, temp, hr, rr, physicalExam, cchx, dxtools, tdx,treatment, inPatient, surgery, outPatient, takeHomeMeds, date){
                 initialCheckupsTable.append(`<tr>
                                                 <td>${medicalHistory}</td>
                                                 <td>${wellness}</td>
@@ -215,6 +217,7 @@
                                                 <td>${surgery}</td>
                                                 <td>${outPatient}</td>
                                                 <td>${takeHomeMeds}</td>
+                                                <td>${date}</td>
                                             </tr>`)
             }
 
@@ -223,7 +226,8 @@
                 var viewInitalCheckup = $('.view-initial-checkup');
                 viewInitalCheckup.on('click', function(){
                     globalPetId = $(this).val();
-                    $('#initial-checkups-modal').find('input').val('');
+                    $('#initial-checkups-modal').find('input').val('')
+                    $('#initial-checkups-modal').find('textarea').val('');
 
                     $.ajax({
                         type: 'POST',
@@ -234,7 +238,7 @@
                         success: function(response){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds)
+                                addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds, value.date)
                             })
                         }
                     })
@@ -390,9 +394,10 @@
                                 <th scope="col">TDX/DX/CASE</th>
                                 <th scope="col">Treatment</th>
                                 <th scope="col">In-Patient</th>
-                                <th scope="col">Surgery</th>
+                                <th scope="col">Surgery</th>s
                                 <th scope="col">Out-Patient</th>
                                 <th scope="col">Take Home Meds/Rx</th>
+                                <th scope="col">Date</th>
                             </thead>
                             <tbody id="initial-check-ups-table">
 
@@ -401,6 +406,8 @@
                     </div>
                     <div class="col-lg-7 mx-auto">
                         <h3 class="fw-bold mt-5">Add Initial Checkup Record</h3>
+                        <label>Date</label>
+                        <input id="checkup-date" type="date" class="form-control">
                         <input id="medical-history" type="text" class="form-control mt-3" placeholder="Medical History">
                         <input id="wellness" type="text" class="form-control mt-3" placeholder="Wellness/Behavior">
                         <input id="weight" type="text" class="form-control mt-3" placeholder="Weight">
