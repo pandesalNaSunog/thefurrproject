@@ -71,7 +71,8 @@
                         take_home_meds: takeHomeMeds.val(),
                     },
                     success: function(response){
-                        console.log(response);
+                        var value = JSON.parse(response);
+                        addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds)
                     }
                 })
             })
