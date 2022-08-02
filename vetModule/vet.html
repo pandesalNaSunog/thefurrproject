@@ -193,7 +193,7 @@
                                             <button value="${petId}" class="pet-medical-records normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Wellness Records</button>
+                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Previous Records</button>
                                                 </li>
                                                 <li>
                                                     <button value="${petId}" class="dropdown-item">View Follow-up Checkups</button>
@@ -232,7 +232,7 @@
                     globalPetId = $(this).val();
                     $('#initial-checkups-modal').find('input').val('')
                     $('#initial-checkups-modal').find('textarea').val('');
-
+                    wellnessRecordTable.children().remove();
                     $.ajax({
                         type: 'POST',
                         url: 'php/getPetWellnessRecords.php',
