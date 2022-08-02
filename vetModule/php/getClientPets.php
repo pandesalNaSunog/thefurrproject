@@ -28,6 +28,7 @@
                 
 
                 $pets[] = array(
+                    'pet_id' => $row['id'],
                     'name' => $name,
                     'breed' => $breed,
                     'species' => $species,

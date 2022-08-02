@@ -36,6 +36,7 @@
                             password: password.val()
                         },
                         success: function(response){
+                            console.log(response);
                             if(response == 'dashboard.html'){
                                 window.location.replace(response);
                             }else{

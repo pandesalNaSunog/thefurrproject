@@ -27,6 +27,55 @@
             var searchClient = $('#search-client');
             var searchClientText = $('#search-client-text');
 
+            var medicalHistory = $('#medical-history');
+            var wellness = $('#wellness');
+            var weight = $('#weight');
+            var temp = $('#temp');
+            var hr = $('#hr');
+            var rr = $('#rr');
+            var physicalExam = $('#physical-exam');
+            var ccHx = $('#cc-hx');
+            var dxTools = $('#dx-tools');
+            var tdx = $('#tdx');
+            var treatment = $('#treatment');
+            var inPatient = $('#in-patient');
+            var surgery = $('#surgery');
+            var outPatient = $('#out-patient');
+            var takeHomeMeds = $('#take-home-meds');
+            var confirmInsertMedicalRecord = $('#confirm-insert-medical-record');
+
+
+            confirmInsertMedicalRecord.on('click', function(){
+                
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/insertMedicalRecord.php',
+                    data:{
+                        pet_id: globalPetId,
+                        client_id: globalUserId,
+                        medical_history: medicalHistory.val(),
+                        wellness_behavior: wellness.val(),
+                        weight: weight.val(),
+                        temp: temp.val(),
+                        hr: hr.val(),
+                        rr: rr.val(),
+                        physical_exam: physicalExam.val(),
+                        cc_hx: ccHx.val(),
+                        dx_tools: dxTools.val(),
+                        tdx_dx_case: tdx.val(),
+                        treatment: treatment.val(),
+                        in_patient: inPatient.val(),
+                        surgery: surgery.val(),
+                        out_patient: outPatient.val(),
+                        take_home_meds: takeHomeMeds.val(),
+                    },
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            })
+
+
 
 
             searchClient.on('click', function(){
@@ -121,10 +170,10 @@
                                             <button value="${petId}" class="pet-medical-records normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a value="${petId}" href="#" class="dropdown-item">View Initial Checkup</a>
+                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#initial-checkups-modal">View Initial Checkup</button>
                                                 </li>
                                                 <li>
-                                                    <a value="${petId}" href="#" class="dropdown-item">View Follow-up Checkups</a>
+                                                    <button value="${petId}" class="dropdown-item">View Follow-up Checkups</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -132,6 +181,11 @@
                                 </tr>`);
             }
             function petFunctions(){
+                var viewInitalCheckup = $('.view-initial-checkup');
+                viewInitalCheckup.on('click', function(){
+                    globalPetId = $(this).val();
+                    $('#initial-checkups-modal').find('input').val('');
+                })
                 var petMedicalRecords = $('.pet-medical-records');
                 petMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
@@ -248,6 +302,80 @@
                                 
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="initial-checkups-modal" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Patient's Name</th>
+                                <th scope="col">Contact Number</th>
+                                <th scope="col">Client Code</th>
+                                <th scope="col">Medical History</th>
+                                <th scope="col">Wellness Behavior</th>
+                                <th scope="col">Date of Birt</th>
+                                <th scope="col">Species</th>
+                                <th scope="col">Breed</th>
+                                <th scope="col">Sex</th>
+                                <th scope="col">Weight</th>
+                                <th scope="col">Temp</th>
+                                <th scope="col">HR</th>
+                                <th scope="col">RR</th>
+                                <th scope="col">Physical Exam</th>
+                                <th scope="col">CC/HX</th>
+                                <th scope="col">Dx Tools</th>
+                                <th scope="col">TDX/DX/CASE</th>
+                                <th scope="col">Treatment</th>
+                                <th scope="col">In-Patient</th>
+                                <th scope="col">Surgery</th>
+                                <th scope="col">Out-Patient</th>
+                                <th scope="col">Take Home Meds/Rx</th>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="col-lg-7 mx-auto">
+                        <h3 class="fw-bold mt-5">Add Initial Checkup Record</h3>
+                        <input id="medical-history" type="text" class="form-control mt-3" placeholder="Medical History">
+                        <input id="wellness" type="text" class="form-control mt-3" placeholder="Wellness/Behavior">
+                        <input id="weight" type="text" class="form-control mt-3" placeholder="Weight">
+                        <input id="temp" type="text" class="form-control mt-3" placeholder="Temp">
+                        <input id="hr" type="text" class="form-control mt-3" placeholder="HR">
+                        <input id="rr" type="text" class="form-control mt-3" placeholder="RR">
+                        <input id="physical-exam" type="text" class="form-control mt-3" placeholder="Physical Exam">
+                        <input id="cc-hx" type="text" class="form-control mt-3" placeholder="CC/Hx">
+                        <input id="dx-tools" type="text" class="form-control mt-3" placeholder="Dx Tools">
+                        <input id="tdx" type="text" class="form-control mt-3" placeholder="TDX/DX/Case">
+                        <input id="treatment" type="text" class="form-control mt-3" placeholder="Treatment">
+                        <label>In-Patient</label>
+                        <select id="in-patient" class="form-select">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label for="">Surgery</label>
+                        <select id="surgery" class="form-select">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <label for="">Out-Patient</label>
+                        <select id="out-patient" class="form-select">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                        <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
+                        <button id="confirm-insert-medical-record" class="rounded-outline-button mt-3">Confirm</button>
                     </div>
                 </div>
             </div>
