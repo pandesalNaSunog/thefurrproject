@@ -21,6 +21,7 @@
                     $userIds[] = $petRow['user_id'];
                 }
             }
+            sort($userIds);
             $currentUserId = 0;
             foreach($userIds as $userIdItem){
                 if($userIdItem != $currentUserId){

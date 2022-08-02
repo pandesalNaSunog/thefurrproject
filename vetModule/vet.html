@@ -45,6 +45,7 @@
             var takeHomeMeds = $('#take-home-meds');
             var confirmInsertMedicalRecord = $('#confirm-insert-medical-record');
             var checkupDate = $('#check-up-date');
+            var wellnessRecordTable = $('#wellness-record-table');
 
 
             confirmInsertMedicalRecord.on('click', function(){
@@ -231,14 +232,14 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: 'php/getInitialCheckup.php',
+                        url: 'php/getPetWellnessRecords.php',
                         data:{
                             pet_id: globalPetId,
                         },
                         success: function(response){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToInitialCheckupsTable(value.id, value.medical_history, value.wellness_behavior, value.pet_weight, value.temp, value.hr, value.rr, value.physical_exam, value.cc_hx,value.dx_tools,value.tdx_dx_case,value.treatment, value.in_patient, value.surgery, value.out_patient, value.take_home_meds, value.date)
+                                addToWellnessRecordTable(value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
                             })
                         }
                     })
@@ -247,6 +248,10 @@
                 petMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
                 })
+            }
+
+            function addToWellnessRecordTable(id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
+
             }
             logout.on('click', function(){
                 $.ajax({
@@ -437,6 +442,35 @@
                         <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
                         <button id="confirm-insert-medical-record" class="rounded-outline-button mt-3">Confirm</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="wellness-record-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-toggle="modal" data-bs-target="#pets-modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <th scope="col">Service</th>
+                            <th scope="col">Pet Weight</th>
+                            <th scope="col">Attending Vet</th>
+                            <th scope="col">Remarks</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Next Appointment</th>
+                            <th scope="col">Action</th>							
+                        </thead>
+                    </table>
+                    <table id="wellness-record-table">
+
+                    </table>
                 </div>
             </div>
         </div>
