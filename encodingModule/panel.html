@@ -608,6 +608,8 @@
                 editDoctor.on('click', function(){
                     globalUserId = $(this).val();
                     editStaffModal.find('input').val('');
+                    editStaffName.val($(this).parent().parent().children().eq(0).text())
+                    editStaffEmail.val($(this).parent().parent().children().eq(1).text())
                 })
             }
 
