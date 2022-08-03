@@ -50,7 +50,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            appointmentsList.append(`<div class="card shadow rounded-4">
+                            appointmentsList.append(`<div class="card shadow rounded-4 mb-3">
                                                         <div class="card-body">
                                                             <h3 class="fw-bold">Next Appointment</h3>
                                                             <p>Pet: ${value.pet_name}</p>
