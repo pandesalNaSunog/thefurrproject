@@ -19,6 +19,8 @@
             var logout = $('#logout');
             var name = $('#name');
             var email = $('#email');
+            var viewPetRecordModal = $('#view-pet-record-modal');
+            var petRecordsTable = $('#pet-records-table');
             logout.on('click', function(){
                 $.ajax({
                     type: 'POST',
@@ -76,7 +78,7 @@
                                             <p>Species: <span class="fw-bold">${species}</span></p>
                                             <p>Sex: <span class="fw-bold">${sex}</span></p>
                                             <p>Age: <span class="fw-bold">${age}</span></p>
-                                            <button value="${id}" class="rounded-outline-button view-history">View History</button>
+                                            <button value="${id}" class="rounded-outline-button view-history" data-bs-toggle="modal" data-bs-target="#view-pet-record-modal">View History</button>
                                         </div>
                                     </div>
                                 </div>`)
@@ -85,7 +87,7 @@
 
                 viewHistory.on('click', function(){
                     var petId = $(this).val();
-
+                    petRecordsTable.children().remove();
                     $.ajax({
                         type: 'POST',
                         url: 'php/petRecords.php',
@@ -93,7 +95,10 @@
                             pet_id: petId,
                         },
                         success: function(response){
-                            console.log(response);
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                petRecordsTable.append(`<tr><td>${value.doctor}</td><td>${value.service}</td><td>${value.date}</td></tr>`);
+                            })
                         }
                     })
                 })
@@ -177,5 +182,32 @@
             </div>
         </div>
     </section>
+
+    <div class="modal fade" id="view-pet-record-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Attending Vet</th>
+                                <th scope="col">Service</th>
+                                <th scope="col">Date</th>
+                            </thead>
+                            <tbody id="pet-records-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
