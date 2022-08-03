@@ -21,11 +21,18 @@
                 $doctor = $con->query($query) or die($con->error);
                 $doctorRow = $doctor->fetch_assoc();
                 $doctorName = $doctorRow['name'];
-                $nextAppointments[] = array(
-                    'pet_name' => $petRow['name'],
-                    'date' => date_format(date_create($wellnessRow['next_appointment']),"M d, Y"),
-                    'doctor' => $doctorName
-                );
+
+                $todayObject = date_create($today);
+                $nextAppointmentObject = date_create($wellnessRow['next_appointment']);
+                $dateDiff = date_diff($todayObject, $nextAppointmentObject);
+                $integer = $dateDiff->format("%R");
+                if($integer == '-'){
+                    $nextAppointments[] = array(
+                        'pet_name' => $petRow['name'],
+                        'date' => date_format(date_create($wellnessRow['next_appointment']),"M d, Y"),
+                        'doctor' => $doctorName
+                    );
+                }
             }
 
             echo json_encode($nextAppointments);
