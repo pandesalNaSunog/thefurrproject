@@ -22,6 +22,7 @@
             var viewPetRecordModal = $('#view-pet-record-modal');
             var petRecordsTable = $('#pet-records-table');
             var petName = $('#pet-name');
+            var appointmentsList = $('#appointments-list');
             logout.on('click', function(){
                 $.ajax({
                     type: 'POST',
@@ -47,7 +48,15 @@
                     type: 'GET',
                     url: 'php/getNextAppointment.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            appointmentsList.append(`<div class="card shadow rounded-4">
+                                                        <h3 class="fw-bold">Next Appointment</h3>
+                                                        <p>Pet: ${pet_name}</p>
+                                                        <p>Date: ${value.date}</p>
+                                                        <p>Attending Vet: ${value.doctor}</p>
+                                                    </div>`)
+                        })
                     }
                 })
             }
@@ -197,11 +206,7 @@
                         </div>
                         <div class="card-body">
                             <div id="appointments-list">
-                                <div class="card shadow rounded-4">
-                                    <h3 class="fw-bold">Next Appointment</h3>
-                                    <p>Date:</p>
-                                    <p>Attending Vet: </p>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
