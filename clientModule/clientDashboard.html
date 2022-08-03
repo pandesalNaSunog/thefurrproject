@@ -97,7 +97,7 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            petName.text(data.pet_name);
+                            petName.text(data.pet_name + "\'s History");
                             $(data.records).each(function(index, value){
                                 petRecordsTable.append(`<tr><td>${value.doctor}</td><td>${value.service}</td><td>${value.date}</td></tr>`);
                             })
