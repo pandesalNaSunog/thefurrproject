@@ -30,11 +30,10 @@
 
             confirmBook.on('click', function(){
                 choosePets.children().each(function(index, value){
-                    console.log(value);
-                    // if(value.find('input').prop('checked')){
-                    //     console.log('checked');
-                    // }
-            }   )
+                    if(value.children().children().find('input').prop("checked") == true){
+                        console.log('checked');
+                    }
+                })
             })
             bookAnAppointment.on('click', function(){
                 choosePets.children().remove();
