@@ -26,7 +26,7 @@
                 $nextAppointmentObject = date_create($wellnessRow['next_appointment']);
                 $dateDiff = date_diff($todayObject, $nextAppointmentObject);
                 $integer = $dateDiff->format("%R");
-                if($integer == '-'){
+                if($integer == '+'){
                     $nextAppointments[] = array(
                         'pet_name' => $petRow['name'],
                         'date' => date_format(date_create($wellnessRow['next_appointment']),"M d, Y"),
