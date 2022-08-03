@@ -29,10 +29,9 @@
             var confirmBook = $('#confirm-book');
 
             confirmBook.on('click', function(){
-                choosePets.children().each(function(index, element){
-                    console.log(element);
-                })
+                console.log(choosePets.children().find('input'));
             })
+
             bookAnAppointment.on('click', function(){
                 choosePets.children().remove();
                 petIds = [];
