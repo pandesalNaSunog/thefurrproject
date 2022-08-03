@@ -20,7 +20,15 @@
                     'date' => date_format(date_create($wellnessRow['date']), "M d, Y")
                 );
             }
-            echo json_encode($wellnessRecords);
+
+            $query = "SELECT * FROM pets WHERE id = '$petId'";
+            $pet = $con->query($query) or die($con->error);
+            $petRow = $pet->fetch_assoc();
+            $petName = $petRow['name'];
+            echo json_encode(array(
+                'records' => $wellnessRecords,
+                'pet_name' => $petName
+            ));
         }else{
             echo 0;
         }

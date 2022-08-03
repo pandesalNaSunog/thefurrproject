@@ -21,6 +21,7 @@
             var email = $('#email');
             var viewPetRecordModal = $('#view-pet-record-modal');
             var petRecordsTable = $('#pet-records-table');
+            var petName = $('#pet-name');
             logout.on('click', function(){
                 $.ajax({
                     type: 'POST',
@@ -96,7 +97,8 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            $(data).each(function(index, value){
+                            petName.text(data.pet_name);
+                            $(data.records).each(function(index, value){
                                 petRecordsTable.append(`<tr><td>${value.doctor}</td><td>${value.service}</td><td>${value.date}</td></tr>`);
                             })
                         }
@@ -193,6 +195,9 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <h3 class="fw-bold" id="pet-name">
+
+                    </h3>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
