@@ -99,7 +99,7 @@
                             var data = JSON.parse(response);
                             petName.text(data.pet_name + "\'s History");
                             $(data.records).each(function(index, value){
-                                petRecordsTable.append(`<tr><td>${value.doctor}</td><td>${value.service}</td><td>${value.date}</td></tr>`);
+                                petRecordsTable.append(`<tr><td>${value.doctor}</td><td>${value.service}</td><td>${value.date}</td><td>${value.next_appointment}</td></tr>`);
                             })
                         }
                     })
@@ -204,6 +204,7 @@
                                 <th scope="col">Attending Vet</th>
                                 <th scope="col">Service</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Next Appointment</th>
                             </thead>
                             <tbody id="pet-records-table">
 

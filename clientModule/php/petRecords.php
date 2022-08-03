@@ -17,7 +17,8 @@
                 $wellnessRecords[] = array(
                     'doctor' => $doctor,
                     'service' => $wellnessRow['service'],
-                    'date' => date_format(date_create($wellnessRow['date']), "M d, Y")
+                    'date' => date_format(date_create($wellnessRow['date']), "M d, Y"),
+                    'next_appointment' => date_format(date_create($wellnessRow['next_appointment']), "M d, Y")
                 );
             }
 
