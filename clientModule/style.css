@@ -45,3 +45,29 @@ h1{
     background-color: darkblue;
     color: white;
 }
+
+
+.navigation-links{
+    border-radius: 10px;
+    text-decoration: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    transition: .3s;
+    font-weight: bold;
+    color: black;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.active-nav-link{
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+
+.navigation-links:hover{
+    color:white;
+    background-color: darkblue;
+}

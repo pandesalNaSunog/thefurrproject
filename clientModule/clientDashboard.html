@@ -11,9 +11,106 @@
     <script src="../js/jquery.js">
         
     </script>
+
+    <script>
+        $(document).ready(function(){
+            var navLinks = $('.navigation-links');
+            var petsTable = $('#pets-table');
+            navLinks.on('click', function(){
+                navLinks.removeClass('active-nav-link');
+                $(this).addClass('active-nav-link');
+            })
+            session();
+            getMyPets();
+            function getMyPets(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/myPets.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
+            function session(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/asdf.php',
+                    success: function(response){
+                        if(response == 'invalid'){
+                            window.location.replace('index.html');
+                        }
+                    }
+                })
+            }
+        })
+    </script>
     <title>The Furr Project</title>
 </head>
 <body class="bg-light">
-    
+    <nav class="navbar navbar-expand-lg navbar-light shadow py-3">
+        <div class="container">
+            <div class="navbar-brand">
+                <img src="../images/thefurrproject.PNG" style="width: 200px; height: auto" class="shadow rounded-3 img-fluid">
+            </div>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu"><span class="navbar-toggler-icon"></span></button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mt-lg-0 mt-4">
+                        <a href="#" class="navigation-links"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                          </svg><span class="ms-2">Appointments</span></a>
+                    </li>
+                    <li class="nav-item mt-lg-0 mt-4">
+                        <a href="#" class="navigation-links"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                          </svg><span class="ms-2">My Profile</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <section id="my-profile-section" class="mt-5">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-lg-2 g-3">
+                <div class="col col-lg-3">
+                    <div class="card rounded-4 shadow">
+                        
+                        <div class="card-body">
+                            <img src="../images/thefurrproject.PNG" style="width: 100%; height: auto;" alt="" class="card-img-top img-fluid">
+                            <hr>
+                            <h3 class="fw-bold">Lorem ipsum dolor sit amet.</h3>
+                            <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam obcaecati repellendus vitae atque aperiam aliquam dolorem esse at quis in?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-lg-9">
+                    <div class="card rounded-4 shadow">
+                        <div class="card-header">
+                            <h3 class="fw-bold">My Pets</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row row-cols-1 row-cols-lg-2 g-3" id="pets-table">
+                                <div class="col">
+                                    <div class="card shadow rounded-4">
+                                        <div class="card-body">
+                                            <p>Name: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
+                                            <p>Breed: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
+                                            <p>Species: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
+                                            <p>Sex: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
+                                            <p>Age: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
