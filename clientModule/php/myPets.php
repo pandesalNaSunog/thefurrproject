@@ -18,6 +18,7 @@
 
                 $age = $dateDiff->format("%y Year(s) %m Month(s)");
                 $response[] = array(
+                    'id' => $petRow['id'],
                     'name' => $petRow['name'],
                     'breed' => $petRow['breed'],
                     'species' => $petRow['species'],
