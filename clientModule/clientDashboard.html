@@ -61,7 +61,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToPetsTable(index, value.name, value.breed, value.species, value.sex, value.age);
+                            addToPetsTable(index, value.id, value.name, value.breed, value.species, value.sex, value.age);
                         })
                     }
                 })
