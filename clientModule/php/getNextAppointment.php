@@ -3,7 +3,7 @@
         session_start();
         include('connection.php');
         $con = connect();
-        $today = getCurrentDate();
+        $today = date('Y-m-d');
         if(isset($_SESSION['client_id'])){
             $clientId = $_SESSION['client_id'];
             $query = "SELECT * FROM pets WHERE user_id = '$clientId'";
