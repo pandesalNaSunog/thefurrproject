@@ -31,7 +31,9 @@
             confirmBook.on('click', function(){
                 
                 choosePets.children().find('input').each(function(){
-                    console.log($(this));
+                    if($(this).prop("checked" == true)){
+                        console.log('checked');
+                    }
                 })
                     
             })
