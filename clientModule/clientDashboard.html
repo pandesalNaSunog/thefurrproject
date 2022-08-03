@@ -29,9 +29,11 @@
             var confirmBook = $('#confirm-book');
 
             confirmBook.on('click', function(){
-                $('input[type="checkbox"]').click(function() {
-                    console.log('click');
-                })
+                choosePets.children().each(function(index, value){
+                    if(value.prop('checked')){
+                        console.log('checked');
+                    }
+            }   )
             })
             bookAnAppointment.on('click', function(){
                 choosePets.children().remove();
