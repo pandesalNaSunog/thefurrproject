@@ -29,7 +29,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToPetsTable(value.name, value.breed, value.species, value.sex, value.birth_date);
+                            addToPetsTable(value.name, value.breed, value.species, value.sex, value.age);
                         })
                     }
                 })
