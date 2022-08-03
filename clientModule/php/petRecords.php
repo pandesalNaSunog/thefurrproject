@@ -2,6 +2,7 @@
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         session_start();
         include('connection.php');
+        $con = connect();
         if(isset($_POST) && isset($_SESSION['client_id'])){
             $petId = $_POST['pet_id'];
             $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
