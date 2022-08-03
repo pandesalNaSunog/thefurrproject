@@ -17,6 +17,8 @@
             var navLinks = $('.navigation-links');
             var petsTable = $('#pets-table');
             var logout = $('#logout');
+            var name = $('#name');
+            var email = $('#email');
             logout.on('click', function(){
                 $.ajax({
                     type: 'POST',
@@ -34,6 +36,19 @@
             })
             session();
             getMyPets();
+            getMyProfile();
+
+            function getMyProfile(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/profile.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        name.text(data.name);
+                        email.text(data.email);
+                    }
+                })
+            }
             function getMyPets(){
                 $.ajax({
                     type: 'GET',
@@ -108,11 +123,11 @@
                 <div class="col col-lg-3">
                     <div class="card rounded-4 shadow">
                         
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <img src="../images/thefurrproject.PNG" style="width: 100%; height: auto;" alt="" class="card-img-top img-fluid">
                             <hr>
-                            <h3 class="fw-bold">Lorem ipsum dolor sit amet.</h3>
-                            <p class="lead">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quam obcaecati repellendus vitae atque aperiam aliquam dolorem esse at quis in?</p>
+                            <h3 class="fw-bold" id="name"></h3>
+                            <p class="lead"><em id="email"></em></p>
                         </div>
                         <div class="card-footer">
                             <button id="logout" class="solid-blue-btn">
