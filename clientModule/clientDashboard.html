@@ -31,7 +31,19 @@
                     type: 'POST',
                     url: 'php/myPets.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            choosePets.append(`<div class="card shadow">
+                                                    <div class="card-body">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" value="${value.id}">
+                                                            <label class="form-check-label">
+                                                                ${value.name}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>`)
+                        })
                     }
                 })
             })
