@@ -30,7 +30,7 @@
 
             confirmBook.on('click', function(){
                 choosePets.children().each(function(index, value){
-                    if(value.prop('checked')){
+                    if(value.find('input').prop('checked')){
                         console.log('checked');
                     }
             }   )
