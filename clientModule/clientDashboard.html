@@ -40,6 +40,17 @@
             session();
             getMyPets();
             getMyProfile();
+            getNextAppointment();
+
+            function getNextAppointment(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getNextAppointment.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
 
             function getMyProfile(){
                 $.ajax({
@@ -131,7 +142,7 @@
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mt-lg-0 mt-4">
-                        <a href="#" class="navigation-links"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                        <a href="#appointments-card" class="navigation-links"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
                           </svg><span class="ms-2">Appointments</span></a>
                     </li>
@@ -170,13 +181,27 @@
                     </div>
                 </div>
                 <div class="col col-lg-9">
-                    <div class="card rounded-4 shadow">
+                    <div class="card rounded-4 shadow" id="pets-card">
                         <div class="card-header">
                             <h3 class="fw-bold">My Pets</h3>
                         </div>
                         <div class="card-body">
                             <div class="row row-cols-1 row-cols-lg-2 g-3" id="pets-table">
                                 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card rounded-4 shadow mt-4" id="appointments-card">
+                        <div class="card-header">
+                            <h3 class="fw-bold">Appointments</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="appointments-list">
+                                <div class="card shadow rounded-4">
+                                    <h3 class="fw-bold">Next Appointment</h3>
+                                    <p>Date:</p>
+                                    <p>Attending Vet: </p>
+                                </div>
                             </div>
                         </div>
                     </div>
