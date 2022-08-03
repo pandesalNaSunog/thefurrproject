@@ -23,6 +23,18 @@
             var petRecordsTable = $('#pet-records-table');
             var petName = $('#pet-name');
             var appointmentsList = $('#appointments-list');
+            var choosePets = $('#choose-pets');
+            var bookAnAppointment = $('#book-an-appointment');
+
+            bookAnAppointment.on('click', function(){
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/myPets.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            })
             logout.on('click', function(){
                 $.ajax({
                     type: 'POST',
@@ -213,6 +225,9 @@
                                 <p class="lead p-5 text-center">No Appointments</p>
                             </div>
                         </div>
+                        <div class="card-footer">
+                            <button id="book-an-appointment" class="rounded-outline-button" data-bs-toggle="modal" data-bs-target="#book-appointment-modal">Book An Appointment</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -249,5 +264,24 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="book-appointment-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="choose-pets">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
