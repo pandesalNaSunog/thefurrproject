@@ -31,9 +31,7 @@
 
 
             login.on('click', function(){
-                if(email.val() == ""){
-                    email.addClass('is-invalid');
-                }else if(password.val() == ""){
+                if(password.val() == ""){
                     password.addClass('is-invalid');
                 }else{
                     $.ajax({
