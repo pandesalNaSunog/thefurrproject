@@ -45,7 +45,12 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         name.text(data.name);
-                        email.text(data.email);
+                        if(data.email != ""){
+                            email.text(data.email);
+                        }else{
+                            email.text('(no email)');
+                        }
+                        
                     }
                 })
             }
