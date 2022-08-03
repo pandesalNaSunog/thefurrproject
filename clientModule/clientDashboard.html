@@ -50,6 +50,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
+                            appointmentsList.find('p').remove();
                             appointmentsList.append(`<div class="card shadow rounded-4 mb-3">
                                                         <div class="card-body">
                                                             <h3 class="fw-bold">Next Appointment</h3>
@@ -208,6 +209,7 @@
                             <h3 class="fw-bold">Appointments</h3>
                         </div>
                         <div class="card-body">
+                            <p class="lead p-5">No Appointments</p>
                             <div id="appointments-list">
                                 
                             </div>
