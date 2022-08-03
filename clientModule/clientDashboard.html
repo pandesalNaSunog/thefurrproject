@@ -27,9 +27,26 @@
                     type: 'GET',
                     url: 'php/myPets.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToPetsTable(value.name, value.breed, value.species, value.sex, value.birth_date);
+                        })
                     }
                 })
+            }
+
+            function addToPetsTable(name, breed, species, sex, age){
+                petsTable.append(`<div class="col">
+                                    <div class="card shadow rounded-4">
+                                        <div class="card-body">
+                                            <p>Name: <span class="fw-bold">${name}</span></p>
+                                            <p>Breed: <span class="fw-bold">${breed}</span></p>
+                                            <p>Species: <span class="fw-bold">${species}</span></p>
+                                            <p>Sex: <span class="fw-bold">${sex}</span></p>
+                                            <p>Age: <span class="fw-bold">${age}</span></p>
+                                        </div>
+                                    </div>
+                                </div>`)
             }
             function session(){
                 $.ajax({
@@ -94,17 +111,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row row-cols-1 row-cols-lg-2 g-3" id="pets-table">
-                                <div class="col">
-                                    <div class="card shadow rounded-4">
-                                        <div class="card-body">
-                                            <p>Name: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
-                                            <p>Breed: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
-                                            <p>Species: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
-                                            <p>Sex: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
-                                            <p>Age: <span class="fw-bold">Lorem, ipsum dolor.</span></p>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
