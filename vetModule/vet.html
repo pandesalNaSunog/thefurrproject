@@ -46,10 +46,45 @@
             var confirmInsertMedicalRecord = $('#confirm-insert-medical-record');
             var checkupDate = $('#check-up-date');
             var wellnessRecordTable = $('#wellness-record-table');
+            var appointmentsList = $('#appointment-list');
+            var appointmentSection = $('#appointments-section');
+            var clientsSection = $('#clients-section');
+            var appointmentLink = $('#appointment-link');
+            var clientLink = $('#client-link');
+            var navigation = $('.navigation');
 
+            navigation.on('click', function(){
+                navigation.removeClass('active');
+                $(this).addClass('active');
+            })
+
+
+            clientLink.on('click', function(){
+                appointmentSection.hide();
+                clientSection.show();
+                getClients();
+                getProfile();
+            })
+
+            appointmentLink.on('click', function(){
+                appointmentSection.show();
+                clientSection.hide();
+                getAppointments();
+            })
+
+
+            
+            function getAppointments(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAppointments.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
 
             confirmInsertMedicalRecord.on('click', function(){
-                
                 $.ajax({
                     type: 'POST',
                     url: 'php/insertMedicalRecord.php',
@@ -302,6 +337,9 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto fw-bold">
                     <li>
+                        <a id="appointment-link" class="navigation nav-link active" href="#">Appointments</a>
+                    </li>
+                    <li>
                         <a id="client-link" class="navigation nav-link active" href="#">Client Records</a>
                     </li>
                     <li>
@@ -348,6 +386,25 @@
 
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="appointments-section">
+        <div class="container">
+            <div class="card shadow rounded-4 col-lg-6 mx-auto mt-5">
+                <div class="card-header rounded-4 d-flex justify-content-between">
+                    <h3 class="fw-bold">
+                        Appointments
+                    </h3>
+                </div>
+                <div class="card-body" id="appointment-list">
+                    <div class="card shadow rounded-4 mt-3">
+                        <div class="card-body">
+                            
+                        </div>
                     </div>
                 </div>
             </div>
