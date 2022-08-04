@@ -56,20 +56,22 @@
             navigation.on('click', function(){
                 navigation.removeClass('active');
                 $(this).addClass('active');
+                clientLink.on('click', function(){
+                    appointmentSection.hide()
+                    clientSection.show();
+                    getClients();
+                    getProfile();
+                })
+
+                appointmentLink.on('click', function(){
+                    clientSection.hide();
+                    appointmentSection.show();
+                    getAppointments();
+                })
             })
 
 
-            clientLink.on('click', function(){
-                clientSection.show();
-                getClients();
-                getProfile();
-            })
-
-            appointmentLink.on('click', function(){
-                clientSection.hide();
-                appointmentSection.show();
-                getAppointments();
-            })
+            
 
 
             
