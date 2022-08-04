@@ -8,7 +8,12 @@
             $query = "SELECT * FROM users WHERE id = '$clientId'";
             $user = $con->query($query) or die($con->error);
             $userRow = $user->fetch_assoc();
-            echo json_encode($userRow);
+
+            
+            echo json_encode(array(
+                'name' => $userRow['name'],
+                'email' => $userRow['contact_no']
+            ));
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
