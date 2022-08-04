@@ -44,6 +44,8 @@
                         $wellness = $con->query($query) or die($con->error);
                         if($wellnessRow = $wellness->fetch_assoc()){
                             $doctorId = $wellnessRow['doctor_id'];
+                        }else{
+                            $doctorId = rand(1,4);
                         }
 
                         $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%' AND time = '$timeSchedule' AND date = '$date'";
