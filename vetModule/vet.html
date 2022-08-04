@@ -58,6 +58,7 @@
 
             
             function getAppointments(){
+                appointmentsList.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getAppointments.php',
