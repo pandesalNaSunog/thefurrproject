@@ -32,6 +32,7 @@
             var appointmentConcern = $('#appointment-concern');
             var bookAppointmentModal = $('#book-appointment-modal');
             appointmentDate.on('change', function(){
+                timeSchedules.children().remove();
                 $.ajax({
                     type: 'POST',
                     url: 'php/getTimeSchedules.php',
