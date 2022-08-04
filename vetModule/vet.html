@@ -53,21 +53,18 @@
             var clientLink = $('#client-link');
             var navigation = $('.navigation');
 
-            navigation.on('click', function(){
-                navigation.removeClass('active');
-                $(this).addClass('active');
-                clientLink.on('click', function(){
-                    appointmentSection.hide()
-                    clientSection.show();
-                    getClients();
-                    getProfile();
-                })
+            
+            clientLink.on('click', function(){
+                appointmentSection.hide()
+                clientSection.show();
+                getClients();
+                getProfile();
+            })
 
-                appointmentLink.on('click', function(){
-                    clientSection.hide();
-                    appointmentSection.show();
-                    getAppointments();
-                })
+            appointmentLink.on('click', function(){
+                clientSection.hide();
+                appointmentSection.show();
+                getAppointments();
             })
 
 
