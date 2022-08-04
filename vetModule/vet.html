@@ -64,7 +64,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToAppointmentsList(index, value.client_name, value.date, value.time, value.pets);
+                            addToAppointmentsList(index, value.client_name, value.date, value.time, value.pets,value.concern);
                         })
                     }
                 })
@@ -72,26 +72,22 @@
 
 
 
-            function addToAppointmentsList(index, clientName, date, time, pets){
+            function addToAppointmentsList(index, clientName, date, time, pets,concern){
+                var thisConcern = "";
+                if(concern == ""){
+                    thisConcern = "not indicated"
+                }else{
+                    thisConcern = concern;
+                }
                 appointmentsList.append(`<div class="card shadow rounded-4 mt-3">
                                             <div class="card-header">
                                                 <h3 class="fw-bold">${clientName}</h3>
                                                 <p><em>${date} ${time}</em></p>
+                                                <p><em>Concern: ${thisConcern}</em></p>
                                             </div>
                                             <div class="card-body">
                                                 <div class="pets-list">
-                                                    <!-- <div class="card shadow rounded-4 mt-3">
-                                                        <div class="card-body">
-                                                            <h4 class="fw-bold">Lorem, ipsum.</h4>
-                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, expedita.</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card shadow rounded-4 mt-3">
-                                                        <div class="card-body">
-                                                            <h4 class="fw-bold">Lorem, ipsum.</h4>
-                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi, expedita.</p>
-                                                        </div>
-                                                    </div> -->
+                                                    
                                                 </div>
                                             </div>
                                         </div>`)
@@ -99,7 +95,7 @@
                 $(pets).each(function(index, value){
                     petsList.append(`<div class="card shadow rounded-4">
                                     <div class="card-body">
-                                        <h3 class="fw-bold">${value.name}</h3>
+                                        <h5 class="fw-bold">${value.name}</h5>
                                     </div>
                                 </div>`)
                 })
