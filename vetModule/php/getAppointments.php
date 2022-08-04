@@ -16,9 +16,10 @@
                 foreach($doctorIdArray as $key => $doctorIdItem){
                     if($doctorIdItem == $doctorId){
                         $petIdArray = $appointmentRow['pet_ids'];
-                        $petId = explode("**",$petIdArray,$key);
-
-                        $query = "SELECT * FROM pets WHERE id = '$petId'";
+                        $petId = explode("**",$petIdArray);
+                        
+                        $petIdInt = $petId[$key];
+                        $query = "SELECT * FROM pets WHERE id = '$petIdInt'";
                         $pet = $con->query($query) or die($con->error);
                         $petRow = $pet->fetch_assoc();
                         $pets[] = $petRow;
