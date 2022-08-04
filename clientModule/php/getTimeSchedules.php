@@ -6,7 +6,7 @@
         $con = connect();
         if(isset($_SESSION['client_id'])){
             $date = $_POST['date'];
-
+            $clientId = $_SESSION['client_id'];
             $todayObject = date_create($today);
             $postedDate = date_create($date);
             $dateDiff = date_diff($postedDate, $todayObject);
@@ -30,23 +30,29 @@
                     "6:15 p.m. - 7:00 p.m",
                 );
                 $response = array();
+                $availability = 1;
                 foreach($timeSchedules as $timeSchedule){
-                    $query = "SELECT * FROM users WHERE user_type = 'doctor'";
-                    $doctor = $con->query($query) or die($con->error);
-                    $availableDoctors = array();
-                    while($doctorRow = $doctor->fetch_assoc()){
+                    $petIds = array();
+                    $query = "SELECT * FROM pets WHERE user_id = '$clientId'";
+                    $pet = $con->query($query) or die($con->error);
+                    while($petRow = $pet->fetch_assoc()){
+                        $petIds[] = $petRow['id'];
+                    }
 
-                        $doctorId = $doctorRow['id'];
+                    foreach($petIds as $petId){
+                        $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
+                        $wellness = $con->query($query) or die($con->error);
+                        if($wellnessRow = $wellness->fetch_assoc()){
+                            $doctorId = $wellnessRow['doctor_id'];
+                        }
+
                         $query = "SELECT * FROM appointments WHERE doctor_id = '$doctorId' AND time = '$timeSchedule' AND date = '$date'";
                         $appointment = $con->query($query) or die($con->error);
-                        if(!($appointmentRow = $appointment->fetch_assoc())){
-                            $availableDoctors[] = $doctorRow;
+                        if($appointmentRow = $appointment->fetch_assoc()){
+                            $availability = 0;
+                        }else{
+                            $availability = 1;
                         }
-                    }
-                    if(count($availableDoctors) > 0){
-                        $availability = 1;
-                    }else{
-                        $availability = 0;
                     }
 
                     $response[] = array(
