@@ -34,7 +34,7 @@
                 $response[] = array(
                     'client_name' => $clientName,
                     'concern' => $appointmentRow['concern'],
-                    'date' => date_format(date_create($appointment['date']), "M d, Y"),
+                    'date' => date_format(date_create($appointmentRow['date']), "M d, Y"),
                     'time' => $appointmentRow['time'],
                     'arrival_status' => $appointmentRow['arrival_status'],
                     'pets' => $pets
