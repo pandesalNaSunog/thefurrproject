@@ -73,7 +73,7 @@
             })
 
 
-            appointmentSection.hide();
+            
             function getAppointments(){
                 $.ajax({
                     type: 'GET',
@@ -145,6 +145,8 @@
             })
             getClients();
             getProfile()
+            appointmentSection.hide();
+            
             function getClients(){
                 clientsTable.children().remove();
                 $.ajax({
