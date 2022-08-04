@@ -8,11 +8,11 @@
             $doctorId = $_SESSION['doctor_id'];
             $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%' ORDER BY date DESC";
             $appointment = $con->query($query) or die($con->error);
-            $pets = array();
+            
             $response = array();
             while($appointmentRow = $appointment->fetch_assoc()){
                 $doctorIdArray = explode("**", $appointmentRow['doctor_id']);
-
+                $pets = array();
                 foreach($doctorIdArray as $key => $doctorIdItem){
                     if($doctorIdItem == $doctorId){
                         $petIdArray = $appointmentRow['pet_ids'];
@@ -39,6 +39,8 @@
                     'arrival_status' => $appointmentRow['arrival_status'],
                     'pets' => $pets
                 );
+
+
             }
             echo json_encode($response);
         }
