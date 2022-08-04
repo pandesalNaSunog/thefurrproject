@@ -14,6 +14,7 @@
             $status = "Pending";
             $petIdString = "";
             $doctorIdString = "";
+            $doctorIds = array();
             foreach($petIds as $key => $petId){
 
                 $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
@@ -21,6 +22,16 @@
                 $doctorId = 0;
                 if($wellnessRow = $wellness->fetch_assoc()){
                     $doctorId = $wellnessRow['doctor_id'];
+                }else{
+                    $query = "SELECT * FROM users WHERE user_type ='doctor'";
+                    $doctor = $con->query($query) or die($con->error);
+                    while($doctorRow = $doctor->fetch_assoc()){
+                        $doctorIds[] = $doctorRow['id'];
+                    }
+
+                    $doctorIndex = rand(0,3);
+
+                    $doctorId = $doctorIds[$doctorIndex];
                 }
                 if($key == 0){
                     $petIdString .= $petId;
