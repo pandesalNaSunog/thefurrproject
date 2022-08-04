@@ -64,7 +64,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToAppointmentsList(value.client_name);
+                            addToAppointmentsList(value.client_name, value.date, value.time);
                         })
                     }
                 })
@@ -72,10 +72,11 @@
 
 
 
-            function addToAppointmentsList(clientName){
+            function addToAppointmentsList(clientName, date, time,){
                 appointmentsList.append(`<div class="card shadow rounded-4 mt-3">
                                             <div class="card-header">
                                                 <h3 class="fw-bold">${clientName}</h3>
+                                                <p><em>${date} ${time}</em></p>
                                             </div>
                                             <div class="card-body">
                                                 <div id="pets-list">
