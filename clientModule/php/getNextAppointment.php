@@ -14,24 +14,26 @@
                 $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId' ORDER BY id DESC";
                 $wellness = $con->query($query) or die($con->error);
                 
-                $wellnessRow = $wellness->fetch_assoc();
-                $doctorId = $wellnessRow['doctor_id'];
+                if($wellnessRow = $wellness->fetch_assoc()){
 
-                $query = "SELECT * FROM users WHERE id = '$doctorId'";
-                $doctor = $con->query($query) or die($con->error);
-                $doctorRow = $doctor->fetch_assoc();
-                $doctorName = $doctorRow['name'];
+                    $doctorId = $wellnessRow['doctor_id'];
 
-                $todayObject = date_create($today);
-                $nextAppointmentObject = date_create($wellnessRow['next_appointment']);
-                $dateDiff = date_diff($todayObject, $nextAppointmentObject);
-                $integer = $dateDiff->format("%R");
-                if($integer == '+'){
-                    $nextAppointments[] = array(
-                        'pet_name' => $petRow['name'],
-                        'date' => date_format(date_create($wellnessRow['next_appointment']),"M d, Y"),
-                        'doctor' => $doctorName
-                    );
+                    $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                    $doctor = $con->query($query) or die($con->error);
+                    $doctorRow = $doctor->fetch_assoc();
+                    $doctorName = $doctorRow['name'];
+
+                    $todayObject = date_create($today);
+                    $nextAppointmentObject = date_create($wellnessRow['next_appointment']);
+                    $dateDiff = date_diff($todayObject, $nextAppointmentObject);
+                    $integer = $dateDiff->format("%R");
+                    if($integer == '+'){
+                        $nextAppointments[] = array(
+                            'pet_name' => $petRow['name'],
+                            'date' => date_format(date_create($wellnessRow['next_appointment']),"M d, Y"),
+                            'doctor' => $doctorName
+                        );
+                    }
                 }
             }
 

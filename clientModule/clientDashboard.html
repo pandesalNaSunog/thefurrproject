@@ -27,39 +27,144 @@
             var bookAnAppointment = $('#book-an-appointment');
             var petIds = [];
             var confirmBook = $('#confirm-book');
-
-            confirmBook.on('click', function(){
-                
-                choosePets.children().find('input').each(function(){
-                    if($(this).prop("checked") == true){
-                        console.log('checked');
-                    }
-                })
-                    
-            })
-
-            bookAnAppointment.on('click', function(){
-                choosePets.children().remove();
-                petIds = [];
+            var appointmentDate = $('#appointment-date');
+            var timeSchedules = $('#time-schedules');
+            var appointmentConcern = $('#appointment-concern');
+            var bookAppointmentModal = $('#book-appointment-modal');
+            appointmentDate.on('change', function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'php/myPets.php',
+                    url: 'php/getTimeSchedules.php',
+                    data:{
+                        date: appointmentDate.val()
+                    },
                     success: function(response){
-                        var data = JSON.parse(response);
-                        $(data).each(function(index, value){
-                            choosePets.append(`<div class="card shadow mb-3">
-                                                    <div class="card-body">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="checkbox" value="${value.id}">
-                                                            <label class="form-check-label">
-                                                                ${value.name}
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>`)
+                        console.log(response);
+                        if(response == 0){
+                            alert('Invalid Date.');
+                        }else{
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToTimeSchedulesTable(index, appointmentDate.val(), value.time, value.availability);
+                            })
+                        }
+                        
+                    }
+                })
+            })
+
+            function addToTimeSchedulesTable(index, date, time, availability){
+                var buttonText = "";
+                if(availability == 1){
+                    timeSchedules.append(`<tr>
+                                        <td>${time}</td>
+                                        <td>
+                                            <button value=${time} class="dropdown-toggle confirm-book rounded-outline-button" data-bs-toggle="dropdown">Choose Vet</button>
+                                            <ul class="dropdown-menu available-doctors">
+                                                
+                                            </ul>
+                                        </td>
+                                    </tr>`)
+
+                    var confirmBook = timeSchedules.children().eq(index).find('.confirm-book');
+                    var availableDoctors = timeSchedules.children().eq(index).find('.available-doctors');
+                    confirmBook.on('click', function(){
+                        availableDoctors.children().remove();
+                        petIds = [];
+                        choosePets.children().find('input').each(function(){
+                            if($(this).prop("checked") == true){
+                                petIds.push($(this).val());
+                            }
+                        })
+                        if(petIds.length < 1){
+                            alert('Please choose a pet.');
+                        }else if(appointmentConcern.val() == ""){
+                            appointmentConcern.addClass('is-invalid');
+                        }else{
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/getAvailableDoctors.php',
+                                data:{
+                                    time: time,
+                                    date: date,
+                                },
+                                success: function(response){
+                                    var data = JSON.parse(response);
+                                    $(data).each(function(index, value){
+                                        
+                                        addToAvailableDoctorsList(availableDoctors, time, date, index, value.id, value.doctor);
+                                        
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }else{
+                    timeSchedules.append(`<tr>
+                                        <td>${time}</td>
+                                        <td>
+                                            <p class="text-danger">Fully Booked</p>
+                                        </td>
+                                    </tr>`)
+                }
+            }
+
+            function addToAvailableDoctorsList(availableDoctors, time, date, index, id, doctor){
+                availableDoctors.append(`<li><button value=${id} class="choose-doctor dropdown-item">${doctor}</button></li>`)
+                var chooseDoctor = availableDoctors.children().eq(index).find('.choose-doctor');
+                chooseDoctor.on('click', function(){
+                    if(confirm("Review Details Here") == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/bookAppointment.php',
+                            data:{
+                                time: time,
+                                date: date,
+                                doctor_id: chooseDoctor.val(),
+                                concern: appointmentConcern.val(),
+                                pet_ids: petIds,
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
                         })
                     }
                 })
+            }
+
+            
+
+            bookAnAppointment.on('click', function(){
+                if(petsTable.children().length < 1){
+                    alert('Please register your pet(s) first.');
+                }else{
+                    choosePets.children().remove();
+                    timeSchedules.children().remove();
+                    appointmentConcern.removeClass('is-invalid');
+                    appointmentConcern.val('');
+                    appointmentDate.val('');
+                    petIds = [];
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/myPetsAndAvailableDoctors.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                choosePets.append(`<div class="card shadow mb-3">
+                                                        <div class="card-body">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" value="${value.id}">
+                                                                <label class="form-check-label">
+                                                                    ${value.name}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>`)
+                            })
+                        }
+                    })
+                }
+                
             })
             logout.on('click', function(){
                 $.ajax({
@@ -86,6 +191,7 @@
                     type: 'GET',
                     url: 'php/getNextAppointment.php',
                     success: function(response){
+                        console.log(response);
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             appointmentsList.find('p').remove();
@@ -301,11 +407,34 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <h4 class="fw-bold">
+                        My Pets
+                    </h4>
+                    <hr>
                     <div id="choose-pets">
 
                     </div>
-                    <input type="text" class="form-control" placeholder="Concern">
-                    <button id="confirm-book" class="solid-blue-btn mt-3">Book</button>
+                    <div>
+                        <input id="appointment-concern" type="text" class="form-control" placeholder="Concern">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <label class="form-label mt-3">Choose Date:</label>
+                    <input id="appointment-date" type="date" class="form-control mb-5">
+                    <h3 class="fw-bold">Time Schedules</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Time</th>
+                                <th scope="col">Availability</th>
+                            </thead>
+                            <tbody id="time-schedules">
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
