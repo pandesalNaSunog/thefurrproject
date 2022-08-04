@@ -46,7 +46,7 @@
                             $doctorId = $wellnessRow['doctor_id'];
                         }
 
-                        $query = "SELECT * FROM appointments WHERE doctor_id = '$doctorId' AND time = '$timeSchedule' AND date = '$date'";
+                        $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%' AND time = '$timeSchedule' AND date = '$date'";
                         $appointment = $con->query($query) or die($con->error);
                         if($appointmentRow = $appointment->fetch_assoc()){
                             $availability = 0;
