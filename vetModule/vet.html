@@ -64,7 +64,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToAppointmentsList(value.client_name, value.date, value.time);
+                            addToAppointmentsList(index, value.client_name, value.date, value.time, value.pets);
                         })
                     }
                 })
@@ -72,14 +72,14 @@
 
 
 
-            function addToAppointmentsList(clientName, date, time,){
+            function addToAppointmentsList(index, clientName, date, time, pets){
                 appointmentsList.append(`<div class="card shadow rounded-4 mt-3">
                                             <div class="card-header">
                                                 <h3 class="fw-bold">${clientName}</h3>
                                                 <p><em>${date} ${time}</em></p>
                                             </div>
                                             <div class="card-body">
-                                                <div id="pets-list">
+                                                <div class="pets-list">
                                                     <!-- <div class="card shadow rounded-4 mt-3">
                                                         <div class="card-body">
                                                             <h4 class="fw-bold">Lorem, ipsum.</h4>
@@ -95,6 +95,19 @@
                                                 </div>
                                             </div>
                                         </div>`)
+                var petsList = appointmentsList.children().eq(index).find('.pets-list');
+                $(pets).each(function(index, value){
+                    addToPetsList(value.name)
+                })
+
+            }
+
+            function addToPetsList(name){
+                petsList.append(`<div class="card shadow rounded-4">
+                                    <div class="card-body">
+                                        <h3 class="fw-bold">${name}</h3>
+                                    </div>
+                                </div>`)
             }
 
             confirmInsertMedicalRecord.on('click', function(){
