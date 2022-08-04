@@ -67,8 +67,9 @@
             })
 
             appointmentLink.on('click', function(){
-                appointmentSection.show();
                 clientSection.hide();
+                appointmentSection.show();
+                
                 getAppointments();
             })
 
@@ -79,7 +80,10 @@
                     type: 'GET',
                     url: 'php/getAppointments.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+
+                        })
                     }
                 })
             }
