@@ -6,7 +6,7 @@
 
         if(isset($_SESSION['doctor_id'])){
             $doctorId = $_SESSION['doctor_id'];
-            $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%'";
+            $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%' ORDER BY date DESC";
             $appointment = $con->query($query) or die($con->error);
             $pets = array();
             $response = array();
