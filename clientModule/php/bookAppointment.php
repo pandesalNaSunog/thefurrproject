@@ -7,23 +7,32 @@
 
         if(isset($_POST) && isset($_SESSION['client_id'])){
             $clientId = $_SESSION['client_id'];
-            $doctorId = $_POST['doctor_id'];
             $concern = htmlspecialchars($_POST['concern']);
             $date = $_POST['date'];
             $time = $_POST['time'];
             $petIds = $_POST['pet_ids'];
             $status = "Pending";
             $petIdString = "";
+            $doctorIdString = "";
             foreach($petIds as $key => $petId){
+
+                $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
+                $wellness = $con->query($query) or die($con->error);
+                $doctorId = 0;
+                if($wellnessRow = $wellness->fetch_assoc()){
+                    $doctorId = $wellnessRow['doctor_id'];
+                }
                 if($key == 0){
                     $petIdString .= $petId;
+                    $doctorIdString .= $doctorId;
                 }else{
                     $petIdString .= "**".$petId;
+                    $doctorIdString .= "**".$doctorId;
                 }
             }
 
             $query = $con->prepare("INSERT INTO appointments(user_id,doctor_id,concern,date,time,arrival_status,pet_ids,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?)");
-            $query->bind_param("iisssssss", $clientId, $doctorId, $concern, $date, $time, $status, $petIdString, $today, $today);
+            $query->bind_param("issssssss", $clientId, $doctorIdString, $concern, $date, $time, $status, $petIdString, $today, $today);
             $query->execute();
 
             echo 'ok';

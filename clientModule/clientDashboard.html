@@ -59,17 +59,12 @@
                     timeSchedules.append(`<tr>
                                         <td>${time}</td>
                                         <td>
-                                            <button value=${time} class="dropdown-toggle confirm-book rounded-outline-button" data-bs-toggle="dropdown">Choose Vet</button>
-                                            <ul class="dropdown-menu available-doctors">
-                                                
-                                            </ul>
+                                            <button value=${time} class="dropdown-toggle confirm-book rounded-outline-button" data-bs-toggle="dropdown">Confirm</button>
                                         </td>
                                     </tr>`)
 
                     var confirmBook = timeSchedules.children().eq(index).find('.confirm-book');
-                    var availableDoctors = timeSchedules.children().eq(index).find('.available-doctors');
                     confirmBook.on('click', function(){
-                        availableDoctors.children().remove();
                         petIds = [];
                         choosePets.children().find('input').each(function(){
                             if($(this).prop("checked") == true){
@@ -78,23 +73,17 @@
                         })
                         if(petIds.length < 1){
                             alert('Please choose a pet.');
-                        }else if(appointmentConcern.val() == ""){
-                            appointmentConcern.addClass('is-invalid');
                         }else{
                             $.ajax({
                                 type: 'POST',
-                                url: 'php/getAvailableDoctors.php',
+                                url: 'php/bookAppointment.php',
                                 data:{
                                     time: time,
                                     date: date,
+                                    pet_ids: petIds,
                                 },
                                 success: function(response){
-                                    var data = JSON.parse(response);
-                                    $(data).each(function(index, value){
-                                        
-                                        addToAvailableDoctorsList(availableDoctors, time, date, index, value.id, value.doctor);
-                                        
-                                    })
+                                    console.log(response);
                                 }
                             })
                         }
@@ -107,29 +96,6 @@
                                         </td>
                                     </tr>`)
                 }
-            }
-
-            function addToAvailableDoctorsList(availableDoctors, time, date, index, id, doctor){
-                availableDoctors.append(`<li><button value=${id} class="choose-doctor dropdown-item">${doctor}</button></li>`)
-                var chooseDoctor = availableDoctors.children().eq(index).find('.choose-doctor');
-                chooseDoctor.on('click', function(){
-                    if(confirm("Review Details Here") == true){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/bookAppointment.php',
-                            data:{
-                                time: time,
-                                date: date,
-                                doctor_id: chooseDoctor.val(),
-                                concern: appointmentConcern.val(),
-                                pet_ids: petIds,
-                            },
-                            success: function(response){
-                                console.log(response);
-                            }
-                        })
-                    }
-                })
             }
 
             
