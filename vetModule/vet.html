@@ -69,12 +69,11 @@
             appointmentLink.on('click', function(){
                 clientSection.hide();
                 appointmentSection.show();
-                
                 getAppointments();
             })
 
 
-            
+            appointmentSection.hide();
             function getAppointments(){
                 $.ajax({
                     type: 'GET',
