@@ -64,7 +64,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            chooseVetAssistant.append(`<option value="${data.name}">${data.name}</option>`)
+                            chooseVetAssistant.append(`<option value="${value.name}">${value.name}</option>`)
                         })
                         
                     }
