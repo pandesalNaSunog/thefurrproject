@@ -92,6 +92,7 @@
                             service: medicalRecordService.val()
                         },
                         success: function(response){
+                            console.log(response);
                             if(response == 'ok'){
                                 alert('Medical Record has been successfully added.')
                                 $('#create-patient-records-modal').find('input').val('');
