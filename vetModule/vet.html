@@ -48,6 +48,10 @@
             var appointmentLink = $('#appointment-link');
             var clientLink = $('#client-link');
             var navigation = $('.navigation');
+            var noAppointments = $('#no-appointments');
+
+
+
 
             
             
@@ -65,6 +69,7 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
+                            noAppointments.hide();
                             addToAppointmentsList(index, value.client_name, value.date, value.time, value.pets,value.concern);
                         })
                     }
@@ -438,8 +443,13 @@
                         Appointments
                     </h3>
                 </div>
-                <div class="card-body" id="appointment-list">
-                    
+                <div class="card-body">
+                    <div id="appointment-list">
+
+                    </div>
+                    <p id="no-appointments" class="p-5 text-center">
+                        No Appointments
+                    </p>
                 </div>
             </div>
         </div>
