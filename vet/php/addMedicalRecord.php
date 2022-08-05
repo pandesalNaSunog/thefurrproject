@@ -18,7 +18,7 @@
             $nexAppointment = $_POST['next_appointment'];
             $vetNurse = $_POST['ver_nurse'];
 
-            $query = $con->prepare("INSERT INTO medical_records(user_id,pet_id,pet_weight,temp,hr,rr,tests,procedure,medication,case_closed,created_at,updated_at)VALUES(????????????)");
+            $query = $con->prepare("INSERT INTO medical_records(user_id,pet_id,pet_weight,temp,hr,rr,tests,procedure,medication,case_closed,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
             $query->bind_param("iissssssssss", $clientId, $petId, $weight, $temp, $hr, $rr, $temp, $procedures,$medication, $caseClosed, $today, $today);
             $query->execute();
 
