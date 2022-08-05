@@ -7,6 +7,11 @@
         if(isset($_SESSION['doctor_id'])){
             $clientId = $_POST['client_id'];
 
+
+            $query = "SELECT * FROM users WHERE id = '$clientId'";
+            $client = $con->query($query) or die($con->error);
+            $clientRow = $client->fetch_assoc();
+            $clientName = $clientRow['name'];
             $query = "SELECT * FROM pets WHERE user_id = '$clientId'";
             $pets = array();
             $pet = $con->query($query) or die($con->error);
@@ -37,7 +42,12 @@
                 );
             }
 
-            echo json_encode($pets);
+            echo json_encode(
+                array(
+                    'pets' => $pets,
+                    'client_name' => $clientName
+                )
+            );
            
         }else{
             echo 'invalid';

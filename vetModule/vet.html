@@ -49,6 +49,7 @@
             var clientLink = $('#client-link');
             var navigation = $('.navigation');
             var noAppointments = $('#no-appointments');
+            var petsClientName = $('#client-name');
 
 
 
@@ -232,8 +233,8 @@
                         success: function(response){
                             if(response != 'invalid session'){
                                 var data = JSON.parse(response);
-
-                                $(data).each(function(index, value){
+                                petsClientName.text("Client Name: " + data.client_name)
+                                $(data.pets).each(function(index, value){
                                     addToPetsTable(value.pet_id, value.name, value.breed, value.species, value.sex, value.age)
                                 })
                                 petFunctions();
@@ -466,6 +467,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <h3 class="fw-bold" id="client-name"></h3>
+                    <hr>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
