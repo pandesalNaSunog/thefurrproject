@@ -53,6 +53,9 @@
             var recordsPetName = $('#records-pet-name');
             var recordsClientName = $('#records-client-name');
             var chooseVetAssistant = $('#choose-vet-assistant');
+            var patientOwnerName = $('#patient-owner-name');
+            var patientName = $('#patient-name');
+            var clientCode = $('#client-code');
 
 
 
@@ -66,7 +69,6 @@
                         $(data).each(function(index, value){
                             chooseVetAssistant.append(`<option value="${value.name}">${value.name}</option>`)
                         })
-                        
                     }
                 })
             })
@@ -125,9 +127,28 @@
                     petsList.append(`<div class="card shadow rounded-4 mb-3">
                                     <div class="card-body d-flex justify-content-between">
                                         <h5 class="fw-bold align-self-center">${value.name}</h5>
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
+                                        <button value="${value.id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
                                     </div>
                                 </div>`)
+
+                    var services = petsList.children().eq(index).find('.services');
+
+                    services.on('click', function(){
+                        var thisPetId = $(this).val();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getPetOwner.php',
+                            data:{
+                                pet_id: thisPetId,
+                            },
+                            success: function(response){
+                                var data = JSON.parse(response);
+                                patientOwnerName.text("Client Name: " + data.name);
+                                patientName.text("Patient Name: " + data.pet_name);
+                                clientCode.text("Client Code: " + data.client_code);
+                            }
+                        })
+                    })
                 })
 
             }
@@ -631,8 +652,9 @@
                 <div class="modal-body">
                     <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
 
-                    <p>Patient's Name: Lorem, ipsum.</p>
-                    <p>Client Code: </p>
+                    <p id="patient-name"></p>
+                    <p id="patient-owner-name"></p>
+                    <p id="client-code">Client Code: </p>
                     <input type="text" placeholder="Weight" class="form-control">
                     <input type="text" placeholder="Temp" class="form-control mt-3">
                     <input type="text" placeholder="HR" class="form-control mt-3">
