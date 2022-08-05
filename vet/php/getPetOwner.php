@@ -1,5 +1,5 @@
 <?php
-    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && isset($_SERVER['HTTP_X_REQUESED_WITH']) == 'XMLHttpRequest'){
+    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESED_WITH'] == 'XMLHttpRequest'){
         include('connection.php');
         $con = connect();
 
