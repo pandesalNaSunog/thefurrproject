@@ -173,7 +173,7 @@
                             type: 'POST',
                             url: 'php/getPetOwner.php',
                             data:{
-                                pet_id: thisPetId,
+                                pet_id: globalPetId,
                             },
                             success: function(response){
                                 var data = JSON.parse(response);
