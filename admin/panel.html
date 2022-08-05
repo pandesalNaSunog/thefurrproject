@@ -93,6 +93,9 @@
             var addNurseName = $('#add-nurse-name');
             var confirmAddNurse = $('#confirm-add-nurse');
             var addVetNurses = $('#add-vet-nurses');
+            var nurseTable = $('#nurse-table');
+
+
             addVetNurses.on('click', function(){
                 addNurseEmail.val('');
                 addNurseName.val('');
@@ -386,6 +389,7 @@
                 doctorsTable.children().remove();
                 getDoctors();
                 getLabTechnicians();
+                getVetNurses();
             })
 
 
@@ -393,6 +397,26 @@
             staffSection.hide();
             getClients();
             session();
+
+            function getVetNurses(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetNurses.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToVetNurseTable(index, value.id, value.name, value.email)
+                        })
+                    }
+                })
+            }
+
+            function addToVetNurseTable(index, id, name, email){
+                nurseTable.append(`<tr>
+                                        <td>${name}</td>
+                                        <td>${email}</tr>
+                                    </tr>`)
+            }
 
             function addLabTech(name, email){
                 if(name.val() == ""){
