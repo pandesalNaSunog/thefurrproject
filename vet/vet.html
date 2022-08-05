@@ -57,7 +57,18 @@
 
 
             chooseVetAssistant.on('click', function(){
-                console.log($(this).children());
+                $(this).children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetNurses.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            chooseVetAssistant.append(`<option value="${data.name}">${data.name}</option>`)
+                        })
+                        
+                    }s
+                })
             })
 
 
