@@ -9,6 +9,11 @@
 
         $data = array();
 
+        $query = "SELECT * FROM pets WHERE id = '$petId'";
+        $pet = $con->query($query) or die($con->error);
+        $petRow = $pet->fetch_assoc();
+        $petName = $petRow['name'];
+
         while($row = $wellness->fetch_assoc()){
             $doctorId = $row['doctor_id'];
             $query = "SELECT * FROM users WHERE id = '$doctorId'";
@@ -35,7 +40,12 @@
                 'pet_weight' => $row['pet_weight']
             );
         }
-        echo json_encode($data);
+        echo json_encode(
+            array(
+                'records' => $data,
+                'pet_name' => $petName
+            )
+        );
     }else{
         echo header('HTTP/1.0 403 Forbidden');
     }
