@@ -12,8 +12,13 @@
         $query = "SELECT * FROM pets WHERE id = '$petId'";
         $pet = $con->query($query) or die($con->error);
         $petRow = $pet->fetch_assoc();
-        $petName = $petRow['name'];
 
+        $petName = $petRow['name'];
+        $clientId = $petRow['user_id'];
+        $query = "SELECT * FROM users WHERE id = '$clientId'";
+        $client = $con->query($query) or die($con->error);
+        $clientRow = $client->fetch_assoc();
+        $clientName = $clientRow['name'];
         while($row = $wellness->fetch_assoc()){
             $doctorId = $row['doctor_id'];
             $query = "SELECT * FROM users WHERE id = '$doctorId'";
@@ -43,7 +48,8 @@
         echo json_encode(
             array(
                 'records' => $data,
-                'pet_name' => $petName
+                'pet_name' => $petName,
+                'client_name' => $clientName
             )
         );
     }else{

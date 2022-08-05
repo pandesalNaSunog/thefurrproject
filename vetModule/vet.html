@@ -51,6 +51,7 @@
             var noAppointments = $('#no-appointments');
             var petsClientName = $('#client-name');
             var recordsPetName = $('#records-pet-name');
+            var recordsClientName = $('#records-client-name');
 
 
 
@@ -307,7 +308,8 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            recordsPetName.text(data.pet_name + "'s Records");
+                            recordsPetName.text(data.pet_name);
+                            recordsClientName.text(data.client_name);
                             $(data.records).each(function(index, value){
                                 addToWellnessRecordTable(value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
                             })
@@ -574,7 +576,8 @@
                     <button class="btn-close" data-bs-toggle="modal" data-bs-target="#pets-modal"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="fw-bold" id="records-pet-name"></h3>
+                    <h4>Client's Name: <span class="fw-bold" id="records-client-name"></span></h4>
+                    <h4>Pet's Name<span class="fw-bold" id="record-pet-name"></span></h4>
                     <table class="table table-striped">
                         <thead>
                             <th scope="col">Service</th>
