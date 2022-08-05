@@ -89,6 +89,30 @@
             var editStaffEmail = $('#edit-staff-email');
             var editStaffName = $('#edit-staff-name');
             var confirmStaffEmail = $('#confirm-staff-email');
+            var addNurseEmail = $('#add-nurse-email');
+            var addNurseName = $('#add-nurse-name');
+            var confirmAddNurse = $('#confirm-add-nurse');
+
+
+            confirmAddNurse.on('click', function(){
+                if(addNurseEmail.val() == ""){
+                    addNurseEmail.addClass('is-invalid');
+                }else if(addNurseName.val() == ""){
+                    addNurseName.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addVetNurse.php',
+                        data:{
+                            name: addNurseName.val(),
+                            email: addNurseEmail.val(),
+                        },
+                        success: function(response){
+                            console.log(response);
+                        }
+                    })
+                }
+            })
 
             confirmStaffEmail.on('click', function(){
                 if(editStaffName.val() == ""){
@@ -1114,6 +1138,31 @@
                     <button class="btn btn-danger rounded-pill px-5" data-bs-target="#add-lab-technician-modal" data-bs-toggle="modal">Add Lab Technicians</button>
                 </div>
             </div>
+
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Vet Nurses
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="nurse-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-danger rounded-pill px-5" data-bs-target="#add-nurse-modal" data-bs-toggle="modal">Add Vet Nurses</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1173,6 +1222,36 @@
                     </div>
                     
                     <button id="confirm-add-lab-tech" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="add-nurse-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="add-nurse-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <input id="add-nurse-email" type="email" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-add-nurse" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
