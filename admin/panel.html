@@ -117,7 +117,9 @@
                             email: addNurseEmail.val(),
                         },
                         success: function(response){
-                            console.log(response);
+                            var data = JSON.parse(response);
+
+                            addToVetNurseTable(nurseTable.children().length - 1, data.id, data.name, data.email);
                         }
                     })
                 }
