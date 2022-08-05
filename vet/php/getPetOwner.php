@@ -17,6 +17,7 @@
             $name = $userRow['name'];
             $code = $userRow['client_code'];
             $response = array(
+                'client_id' => $clientId,
                 'name' => $name,
                 'pet_name' => $petName,
                 'client_code' => $code,

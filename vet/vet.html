@@ -56,7 +56,41 @@
             var patientOwnerName = $('#patient-owner-name');
             var patientName = $('#patient-name');
             var clientCode = $('#client-code');
+            var medicalRecordWeight = $('#medical-record-weight');
+            var medicalRecordTemp = $('#medical-record-temp');
+            var medicalRecordHr = $('#medical-record-hr');
+            var medicalRecordRR = $('#medical-record-rr');
+            var medicalRecordTests = $('#medical-record-tests');
+            var medicalRecordProcedures = $('#medical-record-procedures');
+            var medicalRecordMedication = $('#medical-record-medication');
+            var medicalRecordCaseClosed = $('#medical-record-case-closed');
+            var medicalRecordNextAppointment = $('#medical-record-next-appointment');
+            var medicalRecordConfirm = $('#medical-record-confirm');
 
+
+            medicalRecordConfirm.on('click', function(){
+                $.ajax({
+                    type:'POST',
+                    url: 'php/addMedicalRecord.php',
+                    data:{
+                        pet_id: globalPetId,
+                        client_id: globalUserId,
+                        weight: medicalRecordWeight.val(),
+                        temp: medicalRecordTemp.val(),
+                        hr: medicalRecordHr.val(),
+                        rr: medicalRecordRR.val(),
+                        tests: medicalRecordTests.val(),
+                        procedures: medicalRecordProcedures.val(),
+                        medication: medicalRecordMedication.val(),
+                        case_closed: medicalRecordCaseClosed.val(),
+                        next_appointment: medicalRecordNextAppointment.val(),
+                        vet_nurse: chooseVetAssistant.val(),
+                    },
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            })
 
 
             chooseVetAssistant.on('focus', function(){
@@ -134,7 +168,7 @@
                     var services = petsList.children().eq(index).find('.services');
 
                     services.on('click', function(){
-                        var thisPetId = $(this).val();
+                        globalPetId = $(this).val();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getPetOwner.php',
@@ -143,6 +177,7 @@
                             },
                             success: function(response){
                                 var data = JSON.parse(response);
+                                globalUserId = data.client_id;
                                 patientOwnerName.text("Client Name: " + data.name);
                                 patientName.text("Patient Name: " + data.pet_name);
                                 clientCode.text("Client Code: " + data.client_code);
@@ -656,21 +691,21 @@
                     <p id="patient-name"></p>
                     <p id="patient-owner-name"></p>
                     <p id="client-code">Client Code: </p>
-                    <input type="text" placeholder="Weight" class="form-control">
-                    <input type="text" placeholder="Temp" class="form-control mt-3">
-                    <input type="text" placeholder="HR" class="form-control mt-3">
-                    <input type="text" placeholder="RR" class="form-control mt-3">
-                    <textarea class="form-control mt-3" placeholder="Tests"></textarea>
-                    <textarea class="form-control mt-3" placeholder="Procedures"></textarea>
-                    <textarea class="form-control mt-3" placeholder="Medication/RX"></textarea>
+                    <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control">
+                    <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
+                    <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
+                    <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
+                    <textarea id="medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
+                    <textarea id="medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
+                    <textarea id="medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
 
                     <label class="mt-3">Case Closed</label>
-                    <select class="form-select mt-3">
+                    <select id="medical-record-case-closed" class="form-select mt-3">
                         <option value="Yes">Yes</option>
                         <option value="Yes">No</option>
                     </select>
                     <label class="mt-3">Next Appointment:</label>
-                    <input type="date" class="form-control">
+                    <input id="medical-record-next-appointment" type="date" class="form-control">
 
                     <label class="mt-3">Attending Vet Nurse:</label>
                     <select class="form-select" id="choose-vet-assistant">
@@ -679,7 +714,7 @@
                         <option value="Yes">Vet Nurse</option>
                         <option value="Yes">Vet Nurse</option>
                     </select>
-                    <button class="rounded-button mt-3">Confirm</button>
+                    <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
                 </div>
             </div>
         </div>
