@@ -92,6 +92,12 @@
             var addNurseEmail = $('#add-nurse-email');
             var addNurseName = $('#add-nurse-name');
             var confirmAddNurse = $('#confirm-add-nurse');
+            var addVetNurses = $('#add-vet-nurses');
+            addVetNurses.on('click', function(){
+                addNurseEmail.val('');
+                addNurseName.val('');
+            })
+            
 
 
             confirmAddNurse.on('click', function(){
@@ -1160,7 +1166,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-danger rounded-pill px-5" data-bs-target="#add-nurse-modal" data-bs-toggle="modal">Add Vet Nurses</button>
+                    <button id="add-vet-nurses" class="btn btn-danger rounded-pill px-5" data-bs-target="#add-nurse-modal" data-bs-toggle="modal">Add Vet Nurses</button>
                 </div>
             </div>
         </div>
