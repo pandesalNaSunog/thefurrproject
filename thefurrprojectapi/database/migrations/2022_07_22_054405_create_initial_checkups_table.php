@@ -13,25 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('initial_checkups', function (Blueprint $table) {
+        Schema::create('medical_records', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id')->nullable();
-            $table->string('medical_history')->nullable();
-            $table->string('wellness_behavior')->nullable();
-            $table->string('pet_id')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('pet_id')->nullable();
             $table->string('pet_weight')->nullable();
             $table->string('temp')->nullable();
             $table->string('hr')->nullable();
             $table->string('rr')->nullable();
-            $table->string('physical_exam')->nullable();
-            $table->string('cc_hx')->nullable();
-            $table->string('dx_tools')->nullable();
-            $table->string('tdx_dx_case')->nullable();
-            $table->string('treatment')->nullable();
-            $table->string('in_patient')->nullable();
-            $table->string('surgery')->nullable();
-            $table->string('out_patient')->nullable();
-            $table->string('take_home_meds')->nullable();
+            $table->string('tests')->nullable();
+            $table->string('procedure')->nullable();
+            $table->string('medication')->nullable();
+            $table->string('case_closed')->nullable();
             $table->timestamps();
         });
     }
