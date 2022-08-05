@@ -69,27 +69,31 @@
 
 
             medicalRecordConfirm.on('click', function(){
-                $.ajax({
-                    type:'POST',
-                    url: 'php/addMedicalRecord.php',
-                    data:{
-                        pet_id: globalPetId,
-                        client_id: globalUserId,
-                        weight: medicalRecordWeight.val(),
-                        temp: medicalRecordTemp.val(),
-                        hr: medicalRecordHr.val(),
-                        rr: medicalRecordRR.val(),
-                        tests: medicalRecordTests.val(),
-                        procedures: medicalRecordProcedures.val(),
-                        medication: medicalRecordMedication.val(),
-                        case_closed: medicalRecordCaseClosed.val(),
-                        next_appointment: medicalRecordNextAppointment.val(),
-                        vet_nurse: chooseVetAssistant.val(),
-                    },
-                    success: function(response){
-                        console.log(response);
-                    }
-                })
+                if(confirm('Save Medical Record?') == true){
+                    $.ajax({
+                        type:'POST',
+                        url: 'php/addMedicalRecord.php',
+                        data:{
+                            pet_id: globalPetId,
+                            client_id: globalUserId,
+                            weight: medicalRecordWeight.val(),
+                            temp: medicalRecordTemp.val(),
+                            hr: medicalRecordHr.val(),
+                            rr: medicalRecordRR.val(),
+                            tests: medicalRecordTests.val(),
+                            procedures: medicalRecordProcedures.val(),
+                            medication: medicalRecordMedication.val(),
+                            case_closed: medicalRecordCaseClosed.val(),
+                            next_appointment: medicalRecordNextAppointment.val(),
+                            vet_nurse: chooseVetAssistant.val(),
+                        },
+                        success: function(response){
+                            if(response == 'ok'){
+                                alert('Medical Record has been successfully added.')
+                            }
+                        }
+                    })
+                }
             })
 
 
