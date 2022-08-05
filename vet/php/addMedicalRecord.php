@@ -4,7 +4,9 @@
         include('connection.php');
         $con = connect();
         $today = getCurrentDate();
+        $date = date('Y-m-d');
         if(isset($_POST) && isset($_SESSION['doctor_id'])){
+            $doctorId = $_SESSION['doctor_id'];
             $clientId = $_POST['client_id'];
             $petId = $_POST['pet_id'];
             $weight = htmlspecialchars($_POST['weight']);
@@ -17,9 +19,14 @@
             $caseClosed = $_POST['case_closed'];
             $nexAppointment = $_POST['next_appointment'];
             $vetNurse = $_POST['vet_nurse'];
-
-            $query = $con->prepare("INSERT INTO medical_records(user_id,pet_id,pet_weight,temp,hr,rr,tests,`procedure`,medication,case_closed,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+            $remarks = htmlspecialchars($_POST['remarks']);
+            $service = htmlspecialchars($_POST['service']);
+            $query = $con->prepare("INSERT INTO medical_records(user_id,doctor_id,pet_id,pet_weight,temp,hr,rr,tests,`procedure`,medication,case_closed,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
             $query->bind_param("iissssssssss", $clientId, $petId, $weight, $temp, $hr, $rr, $temp, $procedures,$medication, $caseClosed, $today, $today);
+            $query->execute();
+
+            $query = $con->prepare("INSERT INTO wellness_records(pet_id,doctor_id,service,remarks,date, next_appointment, created_at, updated_at,pet_weight)VALUES(?,?,?,?,?,?,?,?,?)");
+            $query->bind_param("iisssssss", $petId, $doctorId, $service, $remarks, $date, $nextAppointment,$today, $today, $weight);
             $query->execute();
 
             echo 'ok';

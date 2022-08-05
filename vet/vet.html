@@ -66,6 +66,8 @@
             var medicalRecordCaseClosed = $('#medical-record-case-closed');
             var medicalRecordNextAppointment = $('#medical-record-next-appointment');
             var medicalRecordConfirm = $('#medical-record-confirm');
+            var medicalRecordRemarks = $('#medical-record-remarks');
+            var medicalRecordService = $('#medical-record-service');
 
 
             medicalRecordConfirm.on('click', function(){
@@ -86,6 +88,8 @@
                             case_closed: medicalRecordCaseClosed.val(),
                             next_appointment: medicalRecordNextAppointment.val(),
                             vet_nurse: chooseVetAssistant.val(),
+                            remarks: medicalRecordRemarks.val(),
+                            service: medicalRecordService.val()
                         },
                         success: function(response){
                             if(response == 'ok'){
@@ -721,6 +725,9 @@
                         <option value="Yes">Vet Nurse</option>
                         <option value="Yes">Vet Nurse</option>
                     </select>
+
+                    <input type="text" id="medical-record-service" placeholder="Service">
+                    <textarea id="medical-record-remarks" placeholder="Remarks"></textarea>
                     <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
                 </div>
             </div>
