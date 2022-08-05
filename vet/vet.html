@@ -52,6 +52,13 @@
             var petsClientName = $('#client-name');
             var recordsPetName = $('#records-pet-name');
             var recordsClientName = $('#records-client-name');
+            var chooseVetAssistant = $('#choose-vet-assistant');
+
+
+
+            chooseVetAssistant.on('click', function(){
+                console.log($(this).children());
+            })
 
 
 
@@ -631,7 +638,7 @@
                     <input type="date" class="form-control">
 
                     <label class="mt-3">Attending Vet:</label>
-                    <select class="form-select">
+                    <select class="form-select" id="choose-vet-assistant">
                         <option value="Yes">Vet Nurse</option>
                         <option value="Yes">Vet Nurse</option>
                         <option value="Yes">Vet Nurse</option>
