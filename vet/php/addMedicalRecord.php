@@ -20,6 +20,10 @@
             $nexAppointment = $_POST['next_appointment'];
             $vetNurse = $_POST['vet_nurse'];
 
+            if($nexAppointment == ""){
+                $nexAppointment = $date;
+            }
+
 
             $remarks = htmlspecialchars($_POST['remarks']);
             $service = htmlspecialchars($_POST['service']);
