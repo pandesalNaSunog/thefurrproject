@@ -89,13 +89,17 @@
                             request: labRequest.val()
                         },
                         success: function(response){
-                            if(response == 'ok'){
+                            if(response != 0){
                                 alert('Lab Request has been submitted.');
                                 labRequest.val('')
+                                var data = JSON.parse(response);
+                                labRequestTable.append(`<tr>
+                                                            <td>${data.request}</td>
+                                                            <td>${data.lab_tech}</td>
+                                                        </tr>`)
                             }else{
                                 alert('Session Expired. Please Log in to continue.');
                             }
-                            
                         }
                     })
                 }

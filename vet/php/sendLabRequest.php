@@ -19,7 +19,25 @@
             $query->bind_param("iiiisss",$clientId, $petId, $doctorId, $labTechId, $request, $today, $today);
             $query->execute();
 
-            echo 'ok';
+            $query = "SELECT * FROM lab_requests WHERE id = LAST_INSERT_ID()";
+            $labRequest = $con->query($query) or die($con->error);
+            $labRequestRow = $labRequest->fetch_assoc();
+
+            if($labRequestRow['lab_tech_id'] == 0){
+                $attendingLabTech = "Pending";
+            }else{
+                $attendingLabTechId = $labRequestRow['lab_tech_id'];
+                $query = "SELECT * FROM users WHERE id = '$attendingLabTechId'";
+                $labTech = $con->query($query) or die($con->error);
+                $labTechRow = $labTech->fetch_assoc();
+                $attendingLabTech = $labTechRow['name'];
+            }
+            
+            $response = array(
+                'request' => $labRequestRow['request'],
+                'lab_tech' => $attendingLabTech
+            );
+            echo json_encode($response);
         }else{
             echo 0;
         }
