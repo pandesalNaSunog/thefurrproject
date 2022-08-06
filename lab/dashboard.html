@@ -55,7 +55,7 @@
 
                         formData.append("result", result[0].files[0]);
                         formData.append("lab_request_id", labRequestId);
-                        
+
                         $.ajax({
                             type: 'POST',
                             url: 'php/submitLabResult.php',
@@ -63,7 +63,12 @@
                             contentType: false,
                             processData: false,
                             success: function(response){
-                                console.log(response);
+                                if(response == 'invalid file'){
+                                    alert('Please upload image files only')
+                                }else{
+                                    var data = JSON.parse(response);
+                                    console.log(data);
+                                }
                             }
                         })
                     }
