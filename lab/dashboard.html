@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            
+        })
+    </script>
+    <title>The Furr Project</title>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:darkblue">
+        <div class="container">
+            <div class="navbar-brand">
+                <h5>Lab Technician Module</h5>
+            </div>
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto fw-bold">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            Requests
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout" href="#" class="nav-link">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+                    
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Lab Requests Section -->
+    <section id="lab-request-section">
+        <div class="container">
+            <div class="card mt-5 shadow">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Laboratory Requests
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="fw-bold">With Results</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <th scope="col">Patient Name</th>
+                                    <th scope="col">Laboratory Request</th>
+                                    <th scope="col">Result</th>
+                                    <th scope="col">Upload Result</th>
+                                </thead>
+                                <tbody id="lab-request-table-with-results">
+        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h4 class="fw-bold">Without Results</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Patient Name</th>
+                                        <th scope="col">Laboratory Request</th>
+                                        <th scope="col">Result</th>
+                                        <th scope="col">Upload Result</th>
+                                    </thead>
+                                    <tbody id="lab-request-table-without-results">
+            
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>
