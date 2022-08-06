@@ -17,7 +17,7 @@
                     $labTechId = $requestRow['lab_tech_id'];
                     $query = "SELECT * users WHERE id = '$labTechId'";
                     $labTechquery = $con->query($query) or die($con->error);
-                    $labTechRow = $labTechQuery->fetch_assoc();
+                    $labTechRow = $labTechquery->fetch_assoc();
                     $labTech = $labTechRow['name'];
                 }
                 $query = "SELECT * FROM users WHERE id = '$doctorId'";
