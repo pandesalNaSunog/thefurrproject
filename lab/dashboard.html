@@ -38,7 +38,7 @@
                                                         <td>${result}</td>
                                                         <td>
                                                             <div class="input-group">
-                                                                <button class="upload btn btn-primary">Upload</button>
+                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
                                                                 <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
@@ -47,13 +47,15 @@
                 var upload = labRequestTableWithoutResults.children().eq(index).find('.upload')
                 
                 upload.on('click', function(){
+                    var labRequestId = $(this).val();
                     if(result.val() == ""){
                         result.addClass('is-invalid');
                     }else{
                         var formData = new FormData();
 
                         formData.append("result", result[0].files[0]);
-
+                        formData.append("lab_request_id", labRequestId);
+                        
                         $.ajax({
                             type: 'POST',
                             url: 'php/submitLabResult.php',
