@@ -66,6 +66,7 @@
                 var upload = labRequestTableWithoutResults.children().eq(index).find('.upload')
                 
                 upload.on('click', function(){
+                    var thisUpload = $(this);
                     var labRequestId = $(this).val();
                     if(result.val() == ""){
                         result.addClass('is-invalid');
@@ -85,7 +86,7 @@
                                 if(response == 'invalid file'){
                                     alert('Please upload image files only')
                                 }else{
-                                    var data = JSON.parse(response);
+                                    location.reload();
                                 }
                             }
                         })
