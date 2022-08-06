@@ -13,7 +13,7 @@
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
             $petName = $petRow['name'];
-            if($labRequest['has_result'] == 'No'){
+            if($labRequestRow['has_result'] == 'No'){
                 $result = "pending";
             }else{
                 $result = "has result";
