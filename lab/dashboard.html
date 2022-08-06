@@ -31,7 +31,8 @@
             }
 
             function addToLabRequestTableWithResults(index, id, name, result, doctor, request){
-                labRequestTableWithoutResults.append(`<tr>
+                if(result == 'pending'){
+                    labRequestTableWithoutResults.append(`<tr>
                                                         <td>${name}</td>
                                                         <td>${request}</td>
                                                         <td>${doctor}</td>
@@ -43,6 +44,23 @@
                                                             </div>
                                                         </td>
                                                     </tr>`)
+                }else{
+                    labRequestTableWithoutResults.append(`<tr>
+                                                        <td>${name}</td>
+                                                        <td>
+                                                            <img src="php/${request}" class="img-fluid" style="width: 300px; height: auto">
+                                                        </td>
+                                                        <td>${doctor}</td>
+                                                        <td>${result}</td>
+                                                        <td>
+                                                            <div class="input-group">
+                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
+                                                                <input class="result form-control" type="file">
+                                                            </div>
+                                                        </td>
+                                                    </tr>`)
+                }
+                
                 var result = labRequestTableWithoutResults.children().eq(index).find('.result');
                 var upload = labRequestTableWithoutResults.children().eq(index).find('.upload')
                 
@@ -67,7 +85,6 @@
                                     alert('Please upload image files only')
                                 }else{
                                     var data = JSON.parse(response);
-                                    console.log(data);
                                 }
                             }
                         })
