@@ -24,7 +24,7 @@
                 $query = "SELECT * FROM lab_results WHERE id = LAST_INSERT_ID()";
                 $labResultQuery = $con->query($query) or die($con->error);
                 $labResultRow = $labResultQuery->fetch_assoc();
-                
+                echo json_encode($labResultRow);
             }else{
                 echo 'invalid file';
             }
