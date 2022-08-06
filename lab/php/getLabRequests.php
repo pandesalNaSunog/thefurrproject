@@ -5,6 +5,7 @@
 
         $query = "SELECT * FROM lab_requests";
         $labRequest = $con->query($query) or die($con->error);
+        $response = array();
         while($labRequestRow = $labRequest->fetch_assoc()){
             $petId = $labRequestRow['pet_id'];
 
