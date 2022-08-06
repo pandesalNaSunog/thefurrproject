@@ -68,6 +68,10 @@
             var medicalRecordConfirm = $('#medical-record-confirm');
             var medicalRecordRemarks = $('#medical-record-remarks');
             var medicalRecordService = $('#medical-record-service');
+            var medicalRecordClientName = $('#medical-record-client-name');
+            var medicalRecordClientCode = $('#medical-record-client-code');
+            var medicalRecordPetName = $('#medical-record-pet-name');
+            var medicalRecordsTable = $('#medical-records-table');
 
 
             medicalRecordConfirm.on('click', function(){
@@ -349,7 +353,7 @@
                                                     <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Previous Records</button>
                                                 </li>
                                                 <li>
-                                                    <button value="${petId}" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">View Patient Medical Records</button>
+                                                    <button value="${petId}" class="view-medical-records dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">View Patient Medical Records</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -381,6 +385,52 @@
 
             function petFunctions(){
                 var viewInitalCheckup = $('.view-initial-checkup');
+                var viewMedicalRecords = $('.view-medical-records');
+
+                viewMedicalRecords.on('click', function(){
+                    globalPetId = $(this).val();
+
+                    medicalRecordsTable.children().remove();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getMedicalRecords.php',
+                        data:{
+                            pet_id: globalPetId,
+                        },
+                        success: function(response){
+                            if(response != 0){
+                                console.log(response)
+                                var data = JSON.parse(response);
+                                $(data).each(function(index, value){
+                                    medicalRecordClientName.text("Client Name: " + value.client_name);
+                                    medicalRecordClientCode.text("Client Code: " + value.client_code);
+                                    medicalRecordPetName.text("Patient Name: " + value.pet_name)
+                                    
+                                    $(value.records).each(function(index, values){
+                                        console.log(medicalRecordsTable);
+                                        medicalRecordsTable.append(`<tr>
+                                                                        <td>${values.pet_weight}</td>
+                                                                        <td>${values.temp}</td>
+                                                                        <td>${values.hr}</td>
+                                                                        <td>${values.rr}</td>
+                                                                        <td>${values.tests}</td>
+                                                                        <td>${values.procedure}</td>
+                                                                        <td>${values.medication}</td>
+                                                                        <td>${values.case_closed}</td>
+                                                                        <td>${values.doctor_id}</td>
+                                                                        <td>${values.vet_nurse}</td>
+                                                                    </tr>`);
+                                    })
+                                })
+                                
+                            }else{
+                                alert('Invalid Session. Please log in to continue');
+                            }
+                            
+                        }
+                    })
+                })
                 viewInitalCheckup.on('click', function(){
                     globalPetId = $(this).val();
                     $('#initial-checkups-modal').find('input').val('')
@@ -696,7 +746,10 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
+                    <h3 id="medical-record-client-name"></h3>
+                    <h3 id="medical-record-client-code"></h3>
+                    <h3 id="medical-record-pet-name"></h3>
+                    <div id="table-responsive">
                         <table class="table talbe-striped">
                             <thead>
                                 <th scope="col">Weight</th>
@@ -708,8 +761,13 @@
                                 <th scope="col">Medication</th>
                                 <th scope="col">Case Closed</th>
                                 <th scope="col">Attending Vet</th>
+                                <th scope="col">Attending Vet Nurse</th>
                             </thead>
+                            <tbody id="medical-records-table">
+
+                            </tbody>
                         </table>
+                        
                     </div>
                 </div>
             </div>
