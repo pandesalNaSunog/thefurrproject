@@ -96,6 +96,7 @@
                                 labRequestTable.append(`<tr>
                                                             <td>${data.request}</td>
                                                             <td>${data.lab_tech}</td>
+                                                            <td>${data.doctor}</td>
                                                         </tr>`)
                             }else{
                                 alert('Session Expired. Please Log in to continue.');
@@ -246,6 +247,7 @@
                                         labRequestTable.append(`<tr>
                                                                     <td>${value.request}</td>
                                                                     <td>${value.lab_tech}</td>
+                                                                    <td>${value.doctor}</td>
                                                                 </tr>`)
                                     })
                                 }
@@ -880,6 +882,7 @@
                             <thead>
                                 <th scope="col">Request</th>
                                 <th scope="col">Attending Vet Tech</th>
+                                <th scope="col">Attending Vet</th>
                             </thead>
                             <tbody id="lab-request-table">
 

@@ -23,6 +23,11 @@
             $labRequest = $con->query($query) or die($con->error);
             $labRequestRow = $labRequest->fetch_assoc();
 
+            $query = "SELECT * FROM users WHERE id = '$doctorId'";
+            $doctorQuery = $con->query($query) or die($con->error);
+            $doctorRow = $doctorQuery->fetch_assoc();
+            $doctor = $doctorRow['name'];
+
             if($labRequestRow['lab_tech_id'] == 0){
                 $attendingLabTech = "Pending";
             }else{
@@ -35,7 +40,8 @@
             
             $response = array(
                 'request' => $labRequestRow['request'],
-                'lab_tech' => $attendingLabTech
+                'lab_tech' => $attendingLabTech,
+                'doctor' => $doctor
             );
             echo json_encode($response);
         }else{
