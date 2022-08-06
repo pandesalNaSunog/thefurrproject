@@ -38,11 +38,34 @@
                                                         <td>${result}</td>
                                                         <td>
                                                             <div class="input-group">
-                                                                <button class="btn btn-primary">Upload</button>
-                                                                <input class="form-control" type="file">
+                                                                <button class="upload btn btn-primary">Upload</button>
+                                                                <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
                                                     </tr>`)
+                var result = labRequestTableWithoutResults.children().eq(index).find('.result');
+                var upload = labRequestTableWithoutResults.children().eq(index).find('.upload')
+                
+                upload.on('click', function(){
+                    if(result.val() == ""){
+                        result.addClass('is-invalid');
+                    }else{
+                        var formData = new FormData();
+
+                        formData.append("result", result[0].files[0]);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/submitLabResult.php',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    }
+                })
             }
             
         })
