@@ -5,11 +5,11 @@
         $con = connect();
         if(isset($_POST)){
             $email = htmlspecialchars($_POST['email']);
-            $password = htmlspecialchars($_PIST['password']);
+            $password = htmlspecialchars($_POST['password']);
             $query = "SELECT * FROM users WHERE user_type = 'lab_tech' AND email = '$email'";
             $labTech = $con->query($query) or die($con->error);
             if($labTechRow = $labTech->fetch_assoc()){
-                if(password_verify($passowrd, $labTechRow['password'])){
+                if(password_verify($password, $labTechRow['password'])){
                     $_SESSION['lab_tech_id'] = $labTechRow['id'];
                     echo 'dashboard.html';
                 }else{
