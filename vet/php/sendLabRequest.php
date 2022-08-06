@@ -15,7 +15,7 @@
             $hasResult = "No";
             $clientId = $petRow['user_id'];
             $labTechId = 0;
-            $query = $con->prepare("INSERT INTO lab_requests(has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at)VALUES(?,?,?,?,?,?,?)");
+            $query = $con->prepare("INSERT INTO lab_requests(has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?)");
             $query->bind_param("siiiisss",$hasResult, $clientId, $petId, $doctorId, $labTechId, $request, $today, $today);
             $query->execute();
 
