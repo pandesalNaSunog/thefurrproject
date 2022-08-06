@@ -18,10 +18,13 @@
                 $query = "INSERT INTO lab_results(`lab_request_id`,`result`,`created_at`,`updated_at`)VALUES('$labRequestId','$filepath','$today','$today')";
                 $con->query($query) or die($con->error);
 
+                $query = "UPDATE lab_requests SET has_result = 'Yes' WHERE id = '$labRequestId'";
+                $con->query($query) or die($con->error);
+
                 $query = "SELECT * FROM lab_results WHERE id = LAST_INSERT_ID()";
                 $labResultQuery = $con->query($query) or die($con->error);
                 $labResultRow = $labResultQuery->fetch_assoc();
-                echo json_encode($labResultRow);
+                
             }else{
                 echo 'invalid file';
             }
