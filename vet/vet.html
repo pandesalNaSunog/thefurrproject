@@ -259,15 +259,32 @@
                         if(response != 0){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                labRequestTable.append(`<tr>
-                                                            <td>${value.request}</td>
-                                                            <td>${value.lab_tech}</td>
-                                                            <td>${value.doctor}</td>
-                                                        </tr>`)
+                                addToLabRequestTable(index, value.id, value.request, value.lab_tech, value.doctor, value.result);
                             })
                         }
                     }
                 })
+            }
+
+            function addToLabRequestTable(index,id, request, lab_tech, doctor, result){
+                if(result == "Pending"){
+                    labRequestTable.append(`<tr>
+                                            <td>${value.request}</td>
+                                            <td>${value.lab_tech}</td>
+                                            <td>${value.doctor}</td>
+                                            <td>${value.result}</td>
+                                        </tr>`)
+                }else{
+                    labRequestTable.append(`<tr>
+                                            <td>${value.request}</td>
+                                            <td>${value.lab_tech}</td>
+                                            <td>${value.doctor}</td>
+                                            <td>
+                                                <button value="${id}" class="btn btn-primary">Results</button>
+                                            </td>
+                                        </tr>`)
+                }
+                
             }
 
             confirmInsertMedicalRecord.on('click', function(){
@@ -898,6 +915,7 @@
                                 <th scope="col">Request</th>
                                 <th scope="col">Attending Vet Tech</th>
                                 <th scope="col">Attending Vet</th>
+                                <th scope="col">Result</th>
                             </thead>
                             <tbody id="lab-request-table">
 

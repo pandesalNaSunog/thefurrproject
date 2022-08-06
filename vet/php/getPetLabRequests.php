@@ -25,10 +25,26 @@
                 $doctorRow = $doctorQuery->fetch_assoc();
                 $doctor = $doctorRow['name'];
 
+                $labRequestId = $requestRow['id'];
+                $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
+                $labResultQuery = $con->query($query) or die($con->error);
+                $labResults = array();
+                while($labResultRow = $labResultQuery->fetch_assoc()){
+                    $labResults[] = $labResultRow;
+                }
+
+                if(count($labResults) == 0){
+                    $result = "Pending";
+                }else{
+                    $result = $labResults;
+                }
+
                 $requests[] = array(
+                    'id' => $requestRow['id'],
                     'request' => $requestRow['request'],
                     'lab_tech' => $labTech,
-                    'doctor' => $doctor
+                    'doctor' => $doctor,
+                    'result' => $result
                 );
             }
 
