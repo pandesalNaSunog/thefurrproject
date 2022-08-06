@@ -50,7 +50,7 @@
                                                         <td>${request}</td>
                                                         <td>${doctor}</td>
                                                         <td>
-                                                            <img src="php/${result}" class="img-fluid" style="width: 300px; height: auto">
+                                                            <button value="${id}" class="view-results btn btn-primary"></button>
                                                         </td>
                                                         <td>
                                                             <div class="input-group">
@@ -59,6 +59,7 @@
                                                             </div>
                                                         </td>
                                                     </tr>`)
+                    var viewResults = labRequestTableWithoutResults.children().eq(index).find('.view-results');
                 }
                 
                 var result = labRequestTableWithoutResults.children().eq(index).find('.result');
