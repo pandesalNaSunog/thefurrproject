@@ -24,16 +24,17 @@
                         var data = JSON.parse(response);
 
                         $(data).each(function(index, value){
-                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.request);
+                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.doctor, value.request);
                         })
                     }
                 })
             }
 
-            function addToLabRequestTableWithResults(index, id, name, result, request){
+            function addToLabRequestTableWithResults(index, id, name, result, doctor, request){
                 labRequestTableWithoutResults.append(`<tr>
                                                         <td>${name}</td>
                                                         <td>${request}</td>
+                                                        <td>${doctor}</td>
                                                         <td>${result}</td>
                                                         <td>
                                                             <div class="input-group">
@@ -97,6 +98,7 @@
                                 <thead>
                                     <th scope="col">Patient Name</th>
                                     <th scope="col">Laboratory Request</th>
+                                    <th scope="col">Attending Vet</th>
                                     <th scope="col">Result</th>
                                     <th scope="col">Upload Result</th>
                                 </thead>

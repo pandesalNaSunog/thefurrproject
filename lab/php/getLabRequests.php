@@ -8,7 +8,12 @@
         $response = array();
         while($labRequestRow = $labRequest->fetch_assoc()){
             $petId = $labRequestRow['pet_id'];
+            $doctorId = $labRequestRow['doctor_id'];
+            $query = "SELECT * FROM users WHERE id = '$doctorId'";
+            $doctorquery = $con->query($query) or die($con->error);
 
+            $doctorRow = $doctorquery->fetch_assoc();
+            $doctor = $doctorRow['name'];
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
@@ -23,8 +28,8 @@
                 'patient_name' => $petName,
                 'request' => $labRequestRow['request'],
                 'result' => $result,
+                'doctor' => $doctor,
             );
-
             
         }
         echo json_encode($response);
