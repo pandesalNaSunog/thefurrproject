@@ -10,7 +10,7 @@
             $allowedExtensions = array("jpg","jpeg","png");
 
             if(in_array($filExtension, $allowedExtensions)){
-                $filepath = "images/".uniqid().$filExtension;
+                $filepath = "images/".uniqid().".".$filExtension;
                 move_uploaded_file($tmpName, $filepath);
             }else{
                 echo 'invalid file';
