@@ -349,7 +349,7 @@
                                                     <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Previous Records</button>
                                                 </li>
                                                 <li>
-                                                    <button value="${petId}" class="dropdown-item">View Follow-up Checkups</button>
+                                                    <button value="${petId}" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">View Patient Medical Records</button>
                                                 </li>
                                             </ul>
                                         </div>
@@ -685,6 +685,37 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="view-medical-records-modal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table talbe-striped">
+                            <thead>
+                                <th scope="col">Weight</th>
+                                <th scope="col">Temp</th>
+                                <th scope="col">HR</th>
+                                <th scope="col">RR</th>
+                                <th scope="col">Tests</th>
+                                <th scope="col">Procedure</th>
+                                <th scope="col">Medication</th>
+                                <th scope="col">Case Closed</th>
+                                <th scope="col">Attending Vet</th>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <div class="modal fade" id="create-patient-records-modal" data-bs-backdrop="static">

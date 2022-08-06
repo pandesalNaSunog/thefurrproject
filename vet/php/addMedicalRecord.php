@@ -25,8 +25,8 @@
             $service = htmlspecialchars($_POST['service']);
 
 
-            $query = $con->prepare("INSERT INTO medical_records(user_id,doctor_id,pet_id,pet_weight,temp,hr,rr,tests,`procedure`,medication,case_closed,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)");
-            $query->bind_param("iiissssssssss", $clientId, $doctorId, $petId, $weight, $temp, $hr, $rr, $temp, $procedures,$medication, $caseClosed, $today, $today);
+            $query = $con->prepare("INSERT INTO medical_records(user_id,doctor_id,pet_id,pet_weight,temp,hr,rr,tests,`procedure`,medication,case_closed,created_at,updated_at,vet_nurse)VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            $query->bind_param("iiisssssssssss", $clientId, $doctorId, $petId, $weight, $temp, $hr, $rr, $temp, $procedures,$medication, $caseClosed, $today, $today,$vetNurse);
             $query->execute();
 
             $newquery = $con->prepare("INSERT INTO wellness_records(pet_id,doctor_id,`service`,remarks,`date`,next_appointment,created_at,updated_at,pet_weight)VALUES(?,?,?,?,?,?,?,?,?)");
