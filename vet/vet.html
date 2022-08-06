@@ -269,16 +269,16 @@
             function addToLabRequestTable(index,id, request, lab_tech, doctor, result){
                 if(result == "Pending"){
                     labRequestTable.append(`<tr>
-                                            <td>${value.request}</td>
-                                            <td>${value.lab_tech}</td>
-                                            <td>${value.doctor}</td>
-                                            <td>${value.result}</td>
+                                            <td>${request}</td>
+                                            <td>${lab_tech}</td>
+                                            <td>${doctor}</td>
+                                            <td>${result}</td>
                                         </tr>`)
                 }else{
                     labRequestTable.append(`<tr>
-                                            <td>${value.request}</td>
-                                            <td>${value.lab_tech}</td>
-                                            <td>${value.doctor}</td>
+                                            <td>${request}</td>
+                                            <td>${lab_tech}</td>
+                                            <td>${doctor}</td>
                                             <td>
                                                 <button value="${id}" class="btn btn-primary">Results</button>
                                             </td>
