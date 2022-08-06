@@ -12,7 +12,13 @@
     <script>
 
         $(document).ready(function(){
-
+            $.ajax({
+                type: 'GET',
+                url: 'php/getLabRequests.php',
+                success: function(response){
+                    console.log(response);
+                }
+            })
         })
     </script>
     <title>The Furr Project</title>
