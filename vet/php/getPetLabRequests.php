@@ -20,9 +20,15 @@
                     $labTechRow = $labTech->fetch_assoc();
                     $labTech = $labTechRow['name'];
                 }
+                $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                $doctorQuery = $con->query($query) or die($con->error);
+                $doctorRow = $doctorQuery->fetch_assoc();
+                $doctor = $doctorRow['name'];
+
                 $requests[] = array(
                     'request' => $requestRow['request'],
-                    'lab_tech' => $labTech
+                    'lab_tech' => $labTech,
+                    'doctor' => $doctor
                 );
             }
 
