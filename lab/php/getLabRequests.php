@@ -21,7 +21,11 @@
             if($labRequestRow['has_result'] == 'No'){
                 $result = "pending";
             }else{
-                $result = "has result";
+                $labRequestId = $labRequestRow['id'];
+                $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
+                $resultQuery = $con->query($query) or die($con->error);
+                $resultRow = $resultQuery->fetch_assoc();
+                $result = $resultRow['result'];
             }
             $response[] = array(
                 'id' => $labRequestRow['id'],
