@@ -1,0 +1,29 @@
+<?php
+    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+        session_start();
+        include('connection.php');
+        $con = connect();
+        $today = getCurrentDate();
+        if(isset($_POST) && $_SESSION['doctor_id']){
+            $doctorId = $_SESSION['doctor_id'];
+            $petId = $_POST['pet_id'];
+            $request = htmlspecialchars($_POST['request']);
+
+            $query = "SELECT * FROM pets WHERE id = '$petId'";
+            $pet = $con->query($query) or die($con->error);
+            $petRow = $pet->fetch_assoc();
+
+            $clientId = $petRow['user_id'];
+            $labTechId = 0;
+            $query = $con->prepare("INSERT INTO lab_requests(client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at)VALUES(?,?,?,?,?,?,?)");
+            $query->bind_param("iiiisss",$clientId, $petId, $doctorId, $labTechId, $request, $today, $today);
+            $query->execute();
+
+            echo 'ok';
+        }else{
+            echo 0;
+        }
+    }else{
+        echo header('HTTP/1.1 403 Forbidden');
+    }
+?>

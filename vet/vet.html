@@ -72,6 +72,34 @@
             var medicalRecordClientCode = $('#medical-record-client-code');
             var medicalRecordPetName = $('#medical-record-pet-name');
             var medicalRecordsTable = $('#medical-records-table');
+            var labRequest = $('#lab-request');
+            var confirmLabRequest = $('#confirm-lab-request');
+            var labRequestTable = $('#lab-request-table');
+
+
+            confirmLabRequest.on('click', function(){
+                if(labRequest.val() == ""){
+                    labRequest.addCLass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/sendLabRequest.php',
+                        data:{
+                            pet_id: globalPetId,
+                            request: labRequest.val()
+                        },
+                        success: function(response){
+                            if(response == 'ok'){
+                                alert('Lab Request has been submitted.');
+                                labRequest.val('')
+                            }else{
+                                alert('Session Expired. Please Log in to continue.');
+                            }
+                            
+                        }
+                    })
+                }
+            })
 
 
             medicalRecordConfirm.on('click', function(){
@@ -185,6 +213,7 @@
 
                     services.on('click', function(){
                         globalPetId = $(this).val();
+                        labRequestTable.children().remove();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getPetOwner.php',
@@ -197,6 +226,25 @@
                                 patientOwnerName.text("Client Name: " + data.name);
                                 patientName.text("Patient Name: " + data.pet_name);
                                 clientCode.text("Client Code: " + data.client_code);
+                            }
+                        })
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getPetLabRequests.php',
+                            data:{
+                                pet_id: globalPetId
+                            },
+                            success: function(response){
+                                if(response != 0){
+                                    var data = JSON.parse(response);
+                                    $(data).each(function(index, value){
+                                        labRequestTable.append(`<tr>
+                                                                    <td>${value.request}</td>
+                                                                    <td>${value.lab_tech}</td>
+                                                                </tr>`)
+                                    })
+                                }
                             }
                         })
                     })
@@ -788,11 +836,13 @@
                 <div class="modal-body">
                     
                     <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
-
-                    <p id="patient-name"></p>
-                    <p id="patient-owner-name"></p>
-                    <p id="client-code">Client Code: </p>
-                    <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control">
+                    <div id="patient-details" class="sticky-top bg-light p-3">
+                        <p id="patient-name"></p>
+                        <p id="patient-owner-name"></p>
+                        <p id="client-code">Client Code: </p>
+                    </div>
+                    
+                    <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
                     <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
                     <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
                     <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
@@ -819,6 +869,21 @@
                     <input class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service">
                     <textarea class="form-control mt-3" id="medical-record-remarks" placeholder="Remarks"></textarea>
                     <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
+
+                    <h3 class="text-center mt-5 fw-bold">LABORATORY REQUEST</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Request</th>
+                                <th scope="col">Attending Vet Tech</th>
+                            </thead>
+                            <tbody id="lab-request-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <textarea id="lab-request" class="form-control"></textarea>
+                    <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
                 </div>
             </div>
         </div>
