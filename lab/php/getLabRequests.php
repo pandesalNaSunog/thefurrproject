@@ -24,8 +24,9 @@
                 'result' => $result,
             );
 
-            echo json_encode($response);
+            
         }
+        echo json_encode($response);
     }else{
         echo header('HTTP/1.1 403 Forbidden');
     }
