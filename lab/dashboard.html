@@ -24,16 +24,17 @@
                         var data = JSON.parse(response);
 
                         $(data).each(function(index, value){
-                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.request);
+                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.request);
                         })
                     }
                 })
             }
 
-            function addToLabRequestTableWithResults(index, id, name, request){
+            function addToLabRequestTableWithResults(index, id, name, result, request){
                 labRequestTableWithoutResults.append(`<tr>
                                                         <td>${name}</td>
                                                         <td>${request}</td>
+                                                        <td>${result}</td>
                                                         <td>
                                                             <div class="input-group">
                                                                 <button class="btn btn-primary">Upload</button>
