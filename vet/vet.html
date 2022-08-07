@@ -299,6 +299,7 @@
                                 lab_request_id: thisViewResult.val(),
                             },
                             success: function(response){
+                                console.log(response);
                                 var data = JSON.parse(response)
 
                                 labResultAttendingVet.text(data.attending_vet);
