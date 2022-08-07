@@ -77,8 +77,20 @@
                                                     <div class="card-body">             
                                                         <p>Concern: <span class="fw-bold">${concern}</span></p>
                                                         <p>Appointment Date and Time: <span class="fw-bold">${date} ${time}</span></p>
+                                                        <div class="pets-with-attending-vet">
+                                                        </div>
                                                     </div>
                                                 </div>`)
+                var petsWithAttendingVet = bookedAppointmentsList.children().eq(index).find('.pets-with-attending-vet');
+
+                $(petsVet).each(function(index, value){
+                    petsWithAttendingVet.append(`<div class="card shadow rounded-4">
+                                                    <div class="card-body">
+                                                        <p>Attending Vet: <span class="fw-bold">${value.doctor}</span></p>
+                                                        <p>Patient: <span class="fw-bold">${value.pet}</span></p>
+                                                    </div>
+                                                </div>`)
+                })
             }
 
             function addToTimeSchedulesTable(index, date, time, availability){
