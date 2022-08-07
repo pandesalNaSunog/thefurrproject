@@ -9,6 +9,8 @@
             $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
             $labRequestQuery = $con->query($query) or die($con->error);
             $labResults = array();
+            $patientName = "";
+            $request = "";
             while($labRequestRow = $labRequestQuery->fetch_assoc()){
                 $labResults[] = $labRequestRow;
                 $petId = $labRequestRow['pet_id'];
