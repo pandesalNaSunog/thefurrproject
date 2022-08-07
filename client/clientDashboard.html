@@ -63,20 +63,19 @@
                     success: function(response){
                         if(response != 0){
                             var data = JSON.parse(response);
-                            // $(data).each(function(index, value){
-                            //     noBookedAppointments.hide();
-                            //     addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
-                            // })
-                            console.log(data);
+                            $(data).each(function(index, value){
+                                noBookedAppointments.hide();
+                                addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
+                            })
                         }
                     }
                 })
             }
 
-            function addToBookedAppointmentsList(index, concern, date, doctor, pets, time){
+            function addToBookedAppointmentsList(index, concern, date, petsVet, time){
                 bookedAppointmentsList.append(`<div class="card shadow rounded-4">
                                                     <div class="card-body">
-                                                        <p>Attending Vet: <span class="fw-bold">${doctor}</span></p>
+                                            
                                                         <p>Concern: <span class="fw-bold">${concern}</span></p>
                                                         <p>Appointment Date and Time: <span class="fw-bold">${date} ${time}</span></p>
                                                     </div>
