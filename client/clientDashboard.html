@@ -64,7 +64,7 @@
                         if(response != 0){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                noBookedAppointments.hide();
+                                noBookedAppointments.remove();
                                 addToBookedAppointmentsList(index, value.concern, value.date, value.pets_with_attending_vet, value.time)
                             })
                             console.log(data);
