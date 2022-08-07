@@ -7,26 +7,35 @@
         if(isset($_POST) && isset($_SESSION['lab_tech_id'])){
             $labRequestId = $_POST['lab_request_id'];
             $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
-            $labRequestQuery = $con->query($query) or die($con->error);
+            $labResultQuery = $con->query($query) or die($con->error);
             $labResults = array();
-            $patientName = "";
-            $request = "";
-            while($labRequestRow = $labRequestQuery->fetch_assoc()){
-                $labResults[] = $labRequestRow;
-                $petId = $labRequestRow['pet_id'];
-                $query = "SELECT * FROM pets WHERE id = '$petId'";
-                $pet = $con->query($query) or die($con->error);
-                $petRow = $pet->fetch_assoc();
-                $patientName = $petRow['name'];
-
-                $doctorId = $labRequestRow['doctor_id'];
-                $query = "SELECT * FROM users WHERE id = '$doctorId'";
-                $doctor = $con->query($query) or die($con->error);
-                $doctorRow = $doctor->fetch_assoc();
-                $attendingVet = $doctorRow['name'];
-
-                $request = $labRequestRow['request'];
+            while($labResultRow = $labResultQuery->fetch_assoc()){
+                $labResults[] = $labRequestRow; 
             }
+
+            $query = "SELECT * FROM lab_requests WHERE id = '$labRequestId'";
+            $labRequestQuery = $con->query($query) or die($con->error);
+
+            $labRequestRow = $labRequestQuery->fetch_assoc();
+
+
+            $petId = $labRequestRow['pet_id'];
+            $query = "SELECT * FROM pets WHERE id = '$petId'";
+            $pet = $con->query($query) or die($con->error);
+            $petRow = $pet->fetch_assoc();
+            $patientName = $petRow['name'];
+
+            $doctorId = $labRequestRow['doctor_id'];
+            $query = "SELECT * FROM users WHERE id = '$doctorId'";
+            $doctor = $con->query($query) or die($con->error);
+            $doctorRow = $doctor->fetch_assoc();
+            $attendingVet = $doctorRow['name'];
+
+            $request = $labRequestRow['request'];
+
+
+
+            
 
 
             echo json_encode(
