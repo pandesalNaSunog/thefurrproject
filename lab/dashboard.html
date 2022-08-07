@@ -14,6 +14,10 @@
         $(document).ready(function(){
             var labRequestTableWithoutResults = $('#lab-request-table-without-results');
             var labResultsList = $('#lab-results-list');
+            var labResultPatientName = $('#lab-result-patient-name');
+            var labResultLabRequest = $('#lab-result-lab-request');
+            var labResultAttendingVet = $('#lab-result-attending-vet');
+
             getLabRequests();
 
             function getLabRequests(){
@@ -70,6 +74,9 @@
                                 lab_request_id: thisViewResults.val(),
                             },
                             success: function(response){
+                                labResultPatientName.text(thisViewResults.parent().parent().children().eq(0).text())
+                                labResultLabRequest.text(thisViewResults.parent().parent().children().eq(1).text())
+                                labResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
                                     addToLabResultsList(index, value.result, value.id);
@@ -213,6 +220,11 @@
                         <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
                     </div>
                     <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="sticky-top">
+                    <h3 class="fw-bold">Patient Name: <span id="lab-result-patient-name"></span></h3>
+                    <h3 class="fw-bold">Lab Request <span id="lab-result-lab-request"></span></h3>
+                    <h3 class="fw-bold">Attending Vet: <span id="lab-result-attending-vet"></span></h3>
                 </div>
                 <div class="modal-body" id="lab-results-list">
 

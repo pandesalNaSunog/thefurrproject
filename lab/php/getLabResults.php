@@ -6,13 +6,13 @@
         $con = connect();
         if(isset($_POST) && isset($_SESSION['lab_tech_id'])){
             $labRequestId = $_POST['lab_request_id'];
-
             $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
             $labRequestQuery = $con->query($query) or die($con->error);
             $labResults = array();
             while($labRequestRow = $labRequestQuery->fetch_assoc()){
                 $labResults[] = $labRequestRow;
             }
+
 
             echo json_encode($labResults);
         }else{
