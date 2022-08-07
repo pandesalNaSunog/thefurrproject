@@ -348,30 +348,37 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card rounded-4 shadow mt-4" id="appointments-card">
-                        <div class="card-header">
-                            <h3 class="fw-bold">Next Appointment</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="appointments-list">
-                                <p class="lead p-5 text-center">No Appointments</p>
+                    <div class="row row-cols-1 row-cols-lg-2 g3">
+                        <div class="col">
+                            <div class="card rounded-4 shadow mt-4" id="appointments-card">
+                                <div class="card-header">
+                                    <h3 class="fw-bold">Next Appointment</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="appointments-list">
+                                        <p class="lead p-5 text-center">No Appointments</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                    </div>
-                    <div class="card rounded-4 shadow mt-4" id="booked-appointments-card">
-                        <div class="card-header">
-                            <h3 class="fw-bold">Booked Appointments</h3>
-                        </div>
-                        <div class="card-body">
-                            <div id="booked-appointments-list">
-                                <p class="lead p-5 text-center" id="no-booked-appointments">No Appointments</p>
+                        <div class="col">
+                            <div class="card rounded-4 shadow mt-4" id="booked-appointments-card">
+                                <div class="card-header">
+                                    <h3 class="fw-bold">Booked Appointments</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div id="booked-appointments-list">
+                                        <p class="lead p-5 text-center" id="no-booked-appointments">No Appointments</p>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button id="book-an-appointment" class="rounded-outline-button" data-bs-toggle="modal" data-bs-target="#book-appointment-modal">Book An Appointment</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <button id="book-an-appointment" class="rounded-outline-button" data-bs-toggle="modal" data-bs-target="#book-appointment-modal">Book An Appointment</button>
-                        </div>
                     </div>
+                    
+                    
                 </div>
             </div>
         </div>
