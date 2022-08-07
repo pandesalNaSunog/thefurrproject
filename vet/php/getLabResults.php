@@ -23,11 +23,7 @@
                 $doctorRow = $doctor->fetch_assoc();
                 $attendingVet = $doctorRow['name'];
 
-                $labTechId = $labRequestRow['lab_tech_id'];
-                $query = "SELECT * FROM users WHERE id = '$labTechId'";
-                $labTech = $con->query($query) or die($con->error);
-                $labTechRow = $labTech->fetch_assoc();
-                $attendingVetTech = $labTechRow['name'];
+                $request = $labRequestRow['request'];
             }
 
 
@@ -35,8 +31,7 @@
                 array(
                     'results' => $labResults,
                     'patient_name' => $patientName,
-                    'attending_vet' => $attendingVet,
-                    'attending_vet_tech' => $attendingVetTech,
+                    'request' => $request
                 )
             );
         }else{

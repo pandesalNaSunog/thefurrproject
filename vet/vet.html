@@ -300,6 +300,11 @@
                             },
                             success: function(response){
                                 var data = JSON.parse(response)
+
+                                labResultAttendingVet.text(data.attending_vet);
+                                labResultPatientName.text(data.patient_name);
+                                labResultLabRequest.text(data.request);
+                                
                                 $(data.results).each(function(index, value){
                                     addToLabResultsList(index, value.id, value.result)
                                 })
