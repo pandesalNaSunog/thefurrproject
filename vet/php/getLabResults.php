@@ -4,7 +4,7 @@
 
         include('connection.php');
         $con = connect();
-        if(isset($_POST) && isset($_SESSION['lab_tech_id'])){
+        if(isset($_POST) && isset($_SESSION['doctor_id'])){
             $labRequestId = $_POST['lab_request_id'];
             $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
             $labResultQuery = $con->query($query) or die($con->error);
