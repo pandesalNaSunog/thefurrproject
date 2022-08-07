@@ -13,7 +13,7 @@
 
         $(document).ready(function(){
             var labRequestTableWithoutResults = $('#lab-request-table-without-results');
-
+            var labResultsList = $('#lab-results-list');
             getLabRequests();
 
             function getLabRequests(){
@@ -50,7 +50,7 @@
                                                         <td>${request}</td>
                                                         <td>${doctor}</td>
                                                         <td>
-                                                            <button value="${id}" class="view-results btn btn-primary">Results</button>
+                                                            <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-lab-results-modal">Results</button>
                                                         </td>
                                                         <td>
                                                             <div class="input-group">
@@ -62,6 +62,7 @@
                     var viewResults = labRequestTableWithoutResults.children().eq(index).find('.view-results');
                     viewResults.on('click', function(){
                         var thisViewResults = $(this);
+                        labResultsList.children().remove();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getLabResults.php',
@@ -69,7 +70,10 @@
                                 lab_request_id: thisViewResults.val(),
                             },
                             success: function(response){
-                                console.log(response);
+                                var data = JSON.parse(response);
+                                $(data).each(function(index, value){
+                                    addToLabResultsList(index, value.result, value.id);
+                                })
                             }
                         })
                     })
@@ -105,6 +109,10 @@
                         })
                     }
                 })
+            }
+
+            function addToLabResultsList(index, result, id){
+                labResultsList.append(`<img style="width: 100%; height: auto" src="php/${result}" class="img-fluid">`);
             }
             
         })
@@ -195,6 +203,23 @@
             </div>
         </div>
     </section>
+
+
+    <div class="modal fade" id="view-lab-results-modal" data-bs-backdrop="static">
+        <div class="modal-dialog moda-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="lab-results-list">
+
+                </div>
+            </div>
+        </div>
+    </div>
     
 </body>
 </html>
