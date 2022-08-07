@@ -63,10 +63,11 @@
                     success: function(response){
                         if(response != 0){
                             var data = JSON.parse(response);
-                            $(data).each(function(index, value){
-                                noBookedAppointments.hide();
-                                addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
-                            })
+                            // $(data).each(function(index, value){
+                            //     noBookedAppointments.hide();
+                            //     addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
+                            // })
+                            console.log(data);
                         }
                     }
                 })

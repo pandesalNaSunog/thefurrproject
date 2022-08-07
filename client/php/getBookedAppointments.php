@@ -11,31 +11,36 @@
             $response = array();
             while($appointmentRow = $appointmentQuery->fetch_assoc()){
                 $doctorId = $appointmentRow['doctor_id'];
-                $query = "SELECT * FROM users WHERE id = '$doctorId'";
-                $doctorQuery = $con->query($query) or die($con->error);
-                $doctorRow = $doctorQuery->fetch_assoc();
-                $doctorName = $doctorRow['name'];
+                $doctorIdArray = explode("**", $doctorId);
+                $petIdArray = explode("**",$appointmentRow['pet_ids']);
+
+                $petAndAttendingVet = array();
+                foreach($doctorIdArray as $key => $doctorId){
+                    $petId = $petIdArray[$key];
+                    $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                    $doctorQuery = $con->query($query) or die($con->error);
+                    $doctorRow = $doctorQuery->fetch_assoc();
+                    $doctorName = $doctorRow['name'];
+
+                    $query = "SELECT * FROM pets WHERE id = '$petId'";
+                    $petQuery = $con->query($query) or die($con->error);
+                    $petRow = $petQuery->fetch_assoc();
+                    $petName = $petRow['name'];
+                    $petAndAttendingVet[] = array(
+                        'doctor' => $doctorName,
+                        'pet' => $petName
+                    );
+                }
+                
                 $concern = $appointmentRow['concern'];
                 $date = date_format(date_create($appointmentRow['date']), "M d, Y");
                 $time = $appointmentRow['time'];
 
-
-                $petIdArray = explode("**",$appointmentRow['pet_ids']);
-
-                $pets = array();
-
-                foreach($petIdArray as $petId){
-                    $query = "SELECT * FROM pets WHERE id = '$petId'";
-                    $petQuery = $con->query($query) or die($con->error);
-                    $petRow = $petQuery->fetch_assoc();
-                    $pets[] = $petRow;
-                }
                 $response[] = array(
-                    'doctor' => $doctorName,
                     'concern' => $concern,
                     'date' => $date,
                     'time' => $time,
-                    'pets' => $pets
+                    'pets_with_attending_vet' => $petAndAttendingVet
                 );
             }
 
