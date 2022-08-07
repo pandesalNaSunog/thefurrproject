@@ -31,6 +31,7 @@
             var timeSchedules = $('#time-schedules');
             var appointmentConcern = $('#appointment-concern');
             var bookAppointmentModal = $('#book-appointment-modal');
+            var bookedAppointmentsList = $('#booked-appointments-list');
             appointmentDate.on('change', function(){
                 timeSchedules.children().remove();
                 $.ajax({
@@ -53,6 +54,19 @@
                     }
                 })
             })
+
+            function getBookedAppointments(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getBookedAppointments.php',
+                    success: function(response){
+                        if(response != 0){
+                            var data = JSON.parse(response);
+                            console.log(data);
+                        }
+                    }
+                })
+            }
 
             function addToTimeSchedulesTable(index, date, time, availability){
                 var buttonText = "";
@@ -156,6 +170,7 @@
             getMyPets();
             getMyProfile();
             getNextAppointment();
+            getBookedAppointments();
 
             function getNextAppointment(){
                 $.ajax({
@@ -328,9 +343,7 @@
                                 <p class="lead p-5 text-center">No Appointments</p>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <button id="book-an-appointment" class="rounded-outline-button" data-bs-toggle="modal" data-bs-target="#book-appointment-modal">Book An Appointment</button>
-                        </div>
+                        
                     </div>
                     <div class="card rounded-4 shadow mt-4" id="booked-appointments-card">
                         <div class="card-header">
@@ -340,6 +353,9 @@
                             <div id="booked-appointments-list">
                                 <p class="lead p-5 text-center">No Appointments</p>
                             </div>
+                        </div>
+                        <div class="card-footer">
+                            <button id="book-an-appointment" class="rounded-outline-button" data-bs-toggle="modal" data-bs-target="#book-appointment-modal">Book An Appointment</button>
                         </div>
                     </div>
                 </div>
