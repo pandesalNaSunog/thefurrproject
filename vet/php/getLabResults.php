@@ -42,6 +42,7 @@
                 array(
                     'results' => $labResults,
                     'patient_name' => $patientName,
+                    'attending_vet' => $attendingVet,
                     'request' => $request
                 )
             );
