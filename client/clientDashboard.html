@@ -62,10 +62,22 @@
                     success: function(response){
                         if(response != 0){
                             var data = JSON.parse(response);
-                            console.log(data);
+                            $(data).each(function(index, value){
+                                addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
+                            })
                         }
                     }
                 })
+            }
+
+            function addToBookedAppointmentsList(index, concern, date, doctor, pets, time){
+                bookedAppointmentsList.append(`<div class="card shadow rounded-4">
+                                                    <div class="card-body">
+                                                        <p>Attending Vet: <span class="fw-bold">${doctor}</span></p>
+                                                        <p>Concern: <span class="fw-bold">${concern}</span></p>
+                                                        <p>Appointment Date and Time: <span class="fw-bold">${date} ${time}</span></p>
+                                                    </div>
+                                                </div>`)
             }
 
             function addToTimeSchedulesTable(index, date, time, availability){
@@ -336,7 +348,7 @@
                     </div>
                     <div class="card rounded-4 shadow mt-4" id="appointments-card">
                         <div class="card-header">
-                            <h3 class="fw-bold">Appointments</h3>
+                            <h3 class="fw-bold">Next Appointment</h3>
                         </div>
                         <div class="card-body">
                             <div id="appointments-list">
