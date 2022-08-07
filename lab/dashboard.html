@@ -60,6 +60,19 @@
                                                         </td>
                                                     </tr>`)
                     var viewResults = labRequestTableWithoutResults.children().eq(index).find('.view-results');
+                    viewResults.on('click', function(){
+                        var thisViewResults = $(this);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getLabResults.php',
+                            data:{
+                                lab_request_id: thisViewResults.val(),
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    })
                 }
                 
                 var result = labRequestTableWithoutResults.children().eq(index).find('.result');
