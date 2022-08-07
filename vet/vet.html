@@ -76,7 +76,9 @@
             var confirmLabRequest = $('#confirm-lab-request');
             var labRequestTable = $('#lab-request-table');
             var refreshLabRequests = $('#refresh-lab-requests');
-
+            var labResultPatientName = $('#lab-result-patient-name');
+            var labResultLabRequest = $('#lab-result-lab-request');
+            var labResultAttendingVet = $('#lab-result-attending-vet');
 
             refreshLabRequests.on('click', function(){
                 getPetLabRequestsFunc();
@@ -280,9 +282,25 @@
                                             <td>${lab_tech}</td>
                                             <td>${doctor}</td>
                                             <td>
-                                                <button value="${id}" class="btn btn-primary">Results</button>
+                                                <button value="${id}" class="view-results btn btn-primary">Results</button>
                                             </td>
                                         </tr>`)
+
+                    var viewResults = labRequestTable.children().eq(index).find('.view-results');
+
+                    viewResults.on('click', function(){
+                        var thisViewResult = $(this);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getLabResults.php',
+                            data:{
+                                lab_request_id: thisViewResult.val(),
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    })
                 }
                 
             }
@@ -851,6 +869,29 @@
                             </tbody>
                         </table>
                         
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="view-lab-results-modal" data-bs-backdrop="static">
+        <div class="modal-dialog moda-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="sticky-top">
+                        <p>Patient Name: <span class="fw-bold" id="lab-result-patient-name"></span></p>
+                        <p>Lab Request: <span class="fw-bold" id="lab-result-lab-request"></span></p>
+                        <p>Attending Vet: <span class="fw-bold" id="lab-result-attending-vet"></span></p>
+                    </div>
+                    <div id="lab-results-list">
+
                     </div>
                 </div>
             </div>
