@@ -17,9 +17,34 @@
             var labResultPatientName = $('#lab-result-patient-name');
             var labResultLabRequest = $('#lab-result-lab-request');
             var labResultAttendingVet = $('#lab-result-attending-vet');
+            var logout = $('#logout');
 
+
+            logout.on('click', function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/logout.php',
+                    success: function(response){
+                        if(response == 'ok'){
+                            window.location.replace('index.html');
+                        }
+                    }
+                })
+            })
             getLabRequests();
 
+            session();
+            function session(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/session.php',
+                    success: function(response){
+                        if(response == 0){
+                            window.location.replace('index.html');
+                        }
+                    }
+                })
+            }
             function getLabRequests(){
                 $.ajax({
                     type: 'GET',
@@ -154,7 +179,7 @@
                                     <a href="#" class="dropdown-item">Update Profile</a>
                                 </li>
                                 <li>
-                                    <a href="#" class="dropdown-item">Logout</a>
+                                    <a id="logout" href="#" class="dropdown-item">Logout</a>
                                 </li>
                             </ul>
                         </div>
