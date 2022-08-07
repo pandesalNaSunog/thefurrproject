@@ -65,7 +65,7 @@
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
                                 noBookedAppointments.hide();
-                                addToBookedAppointmentsList(index, value.concern, value.date, value.doctor, value.pets, value.time)
+                                addToBookedAppointmentsList(index, value.concern, value.date, value.pets_with_attending_vet, value.time)
                             })
                         }
                     }
@@ -74,8 +74,7 @@
 
             function addToBookedAppointmentsList(index, concern, date, petsVet, time){
                 bookedAppointmentsList.append(`<div class="card shadow rounded-4">
-                                                    <div class="card-body">
-                                            
+                                                    <div class="card-body">             
                                                         <p>Concern: <span class="fw-bold">${concern}</span></p>
                                                         <p>Appointment Date and Time: <span class="fw-bold">${date} ${time}</span></p>
                                                     </div>
