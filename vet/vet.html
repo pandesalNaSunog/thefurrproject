@@ -300,8 +300,8 @@
                             },
                             success: function(response){
                                 var data = JSON.parse(response)
-                                $(data).each(function(index, value){
-
+                                $(data.results).each(function(index, value){
+                                    addToLabResultsList(index, value.id, value.result)
                                 })
                             }
                         })
@@ -310,7 +310,9 @@
                 
             }
 
-            function addToLabResultsList(index, id, result)
+            function addToLabResultsList(index, id, result){
+                labResultsList.append(`<img style="width: 100%; height: auto;" class="img-fluid" src="php/${result}">`)
+            }
 
             confirmInsertMedicalRecord.on('click', function(){
                 $.ajax({
