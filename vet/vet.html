@@ -283,7 +283,7 @@
                                             <td>${lab_tech}</td>
                                             <td>${doctor}</td>
                                             <td>
-                                                <button value="${id}" class="view-results btn btn-primary">Results</button>
+                                                <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-lab-results-modal">Results</button>
                                             </td>
                                         </tr>`)
 
@@ -291,6 +291,7 @@
 
                     viewResults.on('click', function(){
                         var thisViewResult = $(this);
+                        labResultsList.children().remove();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getLabResults.php',
@@ -298,13 +299,18 @@
                                 lab_request_id: thisViewResult.val(),
                             },
                             success: function(response){
-                                
+                                var data = JSON.parse(response)
+                                $(data).each(function(index, value){
+
+                                })
                             }
                         })
                     })
                 }
                 
             }
+
+            function addToLabResultsList(index, id, result)
 
             confirmInsertMedicalRecord.on('click', function(){
                 $.ajax({
