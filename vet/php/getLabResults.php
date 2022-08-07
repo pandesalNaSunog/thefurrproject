@@ -11,10 +11,34 @@
             $labResults = array();
             while($labRequestRow = $labRequestQuery->fetch_assoc()){
                 $labResults[] = $labRequestRow;
+                $petId = $labRequestRow['pet_id'];
+                $query = "SELECT * FROM pets WHERE id = '$petId'";
+                $pet = $con->query($query) or die($con->error);
+                $petRow = $pet->fetch_assoc();
+                $patientName = $petRow['name'];
+
+                $doctorId = $labRequestRow['doctor_id'];
+                $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+                $attendingVet = $doctorRow['name'];
+
+                $labTechId = $labRequestRow['lab_tech_id'];
+                $query = "SELECT * FROM users WHERE id = '$labTechId'";
+                $labTech = $con->query($query) or die($con->error);
+                $labTechRow = $labTech->fetch_assoc();
+                $attendingVetTech = $labTechRow['name'];
             }
 
 
-            echo json_encode($labResults);
+            echo json_encode(
+                array(
+                    'results' => $labResults,
+                    'patient_name' => $patientName,
+                    'attending_vet' => $attendingVet,
+                    'attending_vet_tech' => $attendingVetTech,
+                )
+            );
         }else{
             echo 0;
         }

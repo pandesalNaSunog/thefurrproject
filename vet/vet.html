@@ -79,6 +79,7 @@
             var labResultPatientName = $('#lab-result-patient-name');
             var labResultLabRequest = $('#lab-result-lab-request');
             var labResultAttendingVet = $('#lab-result-attending-vet');
+            var labResultsList = $('#lab-results-list');
 
             refreshLabRequests.on('click', function(){
                 getPetLabRequestsFunc();
@@ -297,7 +298,7 @@
                                 lab_request_id: thisViewResult.val(),
                             },
                             success: function(response){
-                                console.log(response);
+                                
                             }
                         })
                     })
@@ -882,7 +883,7 @@
                     <div class="modal-title">
                         <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
                     </div>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <button class="btn-close" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="sticky-top">
