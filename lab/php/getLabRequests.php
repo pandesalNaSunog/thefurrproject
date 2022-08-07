@@ -33,6 +33,7 @@
                 'request' => $labRequestRow['request'],
                 'result' => $result,
                 'doctor' => $doctor,
+                'requested_at' => date_format(date_create($labRequestRow['created_at']),"M d, Y h:i A"),
             );
             
         }

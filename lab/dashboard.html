@@ -53,13 +53,13 @@
                         var data = JSON.parse(response);
 
                         $(data).each(function(index, value){
-                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.doctor, value.request);
+                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.doctor, value.request, value.requested_at);
                         })
                     }
                 })
             }
 
-            function addToLabRequestTableWithResults(index, id, name, result, doctor, request){
+            function addToLabRequestTableWithResults(index, id, name, result, doctor, request, requestedAt){
                 if(result == 'pending'){
                     labRequestTableWithoutResults.append(`<tr>
                                                         <td>${name}</td>
@@ -72,6 +72,7 @@
                                                                 <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
+                                                        <td>${requestedAt}</td>
                                                     </tr>`)
                 }else{
                     labRequestTableWithoutResults.append(`<tr>
@@ -87,6 +88,7 @@
                                                                 <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
+                                                        <td>${requestedAt}</td>
                                                     </tr>`)
                     var viewResults = labRequestTableWithoutResults.children().eq(index).find('.view-results');
                     viewResults.on('click', function(){
@@ -210,6 +212,7 @@
                                 <th scope="col">Attending Vet</th>
                                 <th scope="col">Result</th>
                                 <th scope="col">Upload Result</th>
+                                <th scope="col">Requested At</th>
                             </thead>
                             <tbody id="lab-request-table-without-results">
     
