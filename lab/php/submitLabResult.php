@@ -11,7 +11,7 @@
             $tmpName = $_FILES['result']['tmp_name'];
             $filExtension = strtolower(pathinfo($result, PATHINFO_EXTENSION));
 
-            $allowedExtensions = array("jpg","jpeg","png");
+            $allowedExtensions = array("jpg","jpeg","png","pdf");
 
             if(in_array($filExtension, $allowedExtensions)){
                 $filepath = "images/".uniqid().".".$filExtension;
