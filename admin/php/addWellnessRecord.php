@@ -12,6 +12,11 @@
             $date = htmlspecialchars($_POST['date']);
             $nextAppointment = htmlspecialchars($_POST['next_appointment']);
             $response = array();
+
+
+            if($doctorId > 4){
+                $doctorId = 0;
+            }
             $query = "INSERT INTO wellness_records(`pet_weight`,`pet_id`,`doctor_id`,`service`,`remarks`,`date`,`next_appointment`,`created_at`,`updated_at`)VALUES('$petWeight','$petId','$doctorId','$service','$remarks','$date','$nextAppointment','$today','$today')";
             $con->query($query) or die($con->error);
 
