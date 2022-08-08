@@ -1084,16 +1084,19 @@
 
             
             <div class="mx-auto card mt-5 col-lg-8 shadow rounded-4">
-                <div class="card-header rounded-4 d-flex">
-                    <h3 class="fw-bold">
-                        Client Records
-                    </h3>
-                    <div class="input-group ms-auto" id="searchbar">
-                        <button id="confirm-search-client" class="btn btn-outline-danger">Search</button>
-                        <input id="search-client" type="text" class="form-control col-lg-5" placeholder="Search Client Name Here">
+                <div class="card-header rounded-4">
+                    <div class="d-flex">
+                        <h3 class="fw-bold">
+                            Client Records
+                        </h3>
+                        <div class="input-group ms-auto" id="searchbar">
+                            <button id="confirm-search-client" class="btn btn-outline-danger">Search</button>
+                            <input id="search-client" type="text" class="form-control col-lg-5" placeholder="Search Client Name Here">
+                        </div>
                     </div>
+                    <button class="btn btn-danger rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#add-client-modal">Add Client</button>
                 </div>
-                <button class="btn btn-danger rounded-pill px-5" data-bs-toggle="modal" data-bs-target="#add-client-modal">Add Client</button>
+                
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
