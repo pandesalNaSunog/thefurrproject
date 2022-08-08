@@ -106,7 +106,7 @@
                                 labResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
-                                    addToLabResultsList(index, value.result, value.id);
+                                    addToLabResultsList(index, value.result, value.id, value.extension);
                                 })
                             }
                         })
@@ -145,8 +145,13 @@
                 })
             }
 
-            function addToLabResultsList(index, result, id){
-                labResultsList.append(`<img style="width: 100%; height: auto" src="php/${result}" class="img-fluid">`);
+            function addToLabResultsList(index, result, id, extension){
+                if(extension == 'pdf'){
+                    labResultsList.append(`<embed style="width: 100%; height: auto" src="php/${result}" class="img-fluid"/>`);
+                }else{
+                    labResultsList.append(`<img style="width: 100%; height: auto" src="php/${result}" class="img-fluid">`);
+                }
+                
             }
             
         })

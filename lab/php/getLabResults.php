@@ -10,7 +10,14 @@
             $labRequestQuery = $con->query($query) or die($con->error);
             $labResults = array();
             while($labRequestRow = $labRequestQuery->fetch_assoc()){
-                $labResults[] = $labRequestRow;
+                $extension = explode(".",$labRequestRow['result']);
+                $extension = strtolower($extension[1]);
+
+                $labResults[] = array(
+                    'result' => $labRequestRow['result'],
+                    'id' => $labRequestRow['id'],
+                    'extension' => $extension
+                );
             }
 
 
