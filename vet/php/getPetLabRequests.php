@@ -41,6 +41,7 @@
 
                 $requests[] = array(
                     'id' => $requestRow['id'],
+                    'time_limit' => $requestRow['time_limit']."min",
                     'request' => $requestRow['request'],
                     'lab_tech' => $labTech,
                     'doctor' => $doctor,
