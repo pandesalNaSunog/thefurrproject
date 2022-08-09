@@ -96,6 +96,63 @@
             var nurseTable = $('#nurse-table');
             var servicesLink = $('#services-link');
             var servicesSection = $('#services-section');
+            var serviceType = $('#service-type');
+            var serviceCategory = $('#service-category');
+            var confirmAddService = $('#confirm-add-service');
+            var addServicesModal = $('#add-services-modal');
+            var labServices = $('#lab-services');
+            var emergencyServices = $('#emergency-services');
+            var surgeryServices = $('#surgery-services')
+
+
+
+
+            function getAllServices(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllServices.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            addToServicesTable(index, value.id, value.service, value.category);
+                        })
+                    }
+                })
+            }
+            confirmAddService.on('click', function(){
+                if(serviceType.val() == ""){
+                    serviceType.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addService.php',
+                        data:{
+                            service: serviceType.val(),
+                            category: serviceCategory.val(),
+                        },
+                        success: function(response){
+                            serviceType.val('')
+                            addServicesModal.modal('hide');
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index, value){
+                                addToServicesTable(index, value.id, value.service, value.category);
+                            })
+                        }
+                    })
+                }
+            })
+
+            function addToServicesTable(index, id, service, category){
+                if(category == "surgery"){
+                    surgeryServices.append(`<tr><td>${service}</td></tr>`)
+                }else if(category == "laboratory"){
+                    labServices.append(`<tr><td>${service}</td></tr>`)
+                }else{
+                    emergencyServices.append(`<tr><td>${service}</td></tr>`)
+                }
+            }
 
 
             addVetNurses.on('click', function(){
@@ -388,6 +445,7 @@
             })
 
             servicesLink.on('click', function(){
+                getAllServices();
                 servicesSection.show();
                 clientRecordsSection.hide();
                 staffSection.hide();
@@ -1810,15 +1868,35 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-danger fw-bold rounded-4">
+                    <button class="add-services btn btn-danger fw-bold rounded-4" style="width: 100%" data-bs-toggle="modal" data-bs-target="#add-services-modal">
                         Add Service
                     </button>
                 </div>
             </div>
-        
-            
-            
         </div>
     </section>
+
+    <div class="modal fade" id="add-services-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="service-type" type="text" class="mt-3 form-control" placeholder="Service">
+                    <select id="service-category" class="mt-3 form-select">
+                        <option value="surgery">Surgery</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="laboratory">Laboratory</option>
+                    </select>
+                    <button id="confirm-add-service" class="mt-3 btn btn-danger rounded-4" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
