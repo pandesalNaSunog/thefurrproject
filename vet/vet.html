@@ -980,68 +980,84 @@
                 </div>
                 <div class="modal-body">
                     
-                    <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
+                    
                     <div id="patient-details" class="sticky-top bg-light p-3">
                         <p>Client Name: <span id="patient-name" class="fw-bold"></span></p>
                         <p>Patient Name: <span id="patient-owner-name" class="fw-bold"></span></p>
                         <p>Client Code: <span id="client-code" class="fw-bold"></span></p>
                     </div>
-                    
-                    <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
-                    <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
-                    <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
-                    <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
-                    <textarea id="medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
-                    <textarea id="medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
-                    <textarea id="medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
 
-                    <label class="mt-3">Case Closed</label>
-                    <select id="medical-record-case-closed" class="form-select mt-3">
-                        <option value="Yes">Yes</option>
-                        <option value="Yes">No</option>
-                    </select>
-                    <label class="mt-3">Next Appointment:</label>
-                    <input id="medical-record-next-appointment" type="date" class="form-control">
-
-                    <label class="mt-3">Attending Vet Nurse:</label>
-                    <select class="form-select" id="choose-vet-assistant">
-                        
-                    </select>
-
-                    <input class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service">
-                    <textarea class="form-control mt-3" id="medical-record-remarks" placeholder="Remarks"></textarea>
-                    <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
-
-                    <h3 class="text-center mt-5 fw-bold">LABORATORY REQUEST <span><button id="refresh-lab-requests" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                      </svg></span></button></h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <th scope="col">Date and Time</th>
-                                <th scope="col">Time Limit (min)</th>
-                                <th scope="col">Request</th>
-                                <th scope="col">Attending Vet Tech</th>
-                                <th scope="col">Attending Vet</th>
-                                <th scope="col">Result</th>
-                            </thead>
-                            <tbody id="lab-request-table">
-
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
+                        </div>
+                        <div class="card-body">
+                            <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
+                            <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
+                            <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
+                            <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
+                            <textarea id="medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
+                            <textarea id="medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
+                            <textarea id="medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
+        
+                            <label class="mt-3">Case Closed</label>
+                            <select id="medical-record-case-closed" class="form-select mt-3">
+                                <option value="Yes">Yes</option>
+                                <option value="Yes">No</option>
+                            </select>
+                            <label class="mt-3">Next Appointment:</label>
+                            <input id="medical-record-next-appointment" type="date" class="form-control">
+        
+                            <label class="mt-3">Attending Vet Nurse:</label>
+                            <select class="form-select" id="choose-vet-assistant">
+                                
+                            </select>
+        
+                            <input class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service">
+                            <textarea class="form-control mt-3" id="medical-record-remarks" placeholder="Remarks"></textarea>
+                            <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
+                        </div>
                     </div>
                     
-                    <div class="dropdown">
-                        <button id="choose-vet-tech" class="rounded-button dropdown-toggle" data-bs-toggle="dropdown">Choose Vet Tech</button>
-                        <ul class="dropdown-menu" id="vet-tech-list">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="text-center mt-5 fw-bold">LABORATORY REQUEST <span><button id="refresh-lab-requests" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                              </svg></span></button></h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date and Time</th>
+                                        <th scope="col">Time Limit (min)</th>
+                                        <th scope="col">Request</th>
+                                        <th scope="col">Attending Vet Tech</th>
+                                        <th scope="col">Attending Vet</th>
+                                        <th scope="col">Result</th>
+                                    </thead>
+                                    <tbody id="lab-request-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
                             
-                        </ul>
+                            <div class="dropdown">
+                                <button id="choose-vet-tech" class="rounded-button dropdown-toggle" data-bs-toggle="dropdown">Choose Vet Tech</button>
+                                <ul class="dropdown-menu" id="vet-tech-list">
+                                    
+                                </ul>
+                            </div>
+                            
+                            <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
+                            <input id="time-limit" type="number" placeholder="Set Time Limit in minutes" class="form-control mt-3">
+                            <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
+                        </div>
                     </div>
+
                     
-                    <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
-                    <input id="time-limit" type="number" placeholder="Set Time Limit in minutes" class="form-control mt-3">
-                    <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
+                    
 
 
                     
