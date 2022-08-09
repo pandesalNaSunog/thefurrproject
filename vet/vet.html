@@ -93,6 +93,7 @@
                         url: 'php/getVetTechnicians.php',
                         success: function(response){
                             var data = JSON.parse(response);
+                            vetTechList.children().remove();
                             $(data).each(function(index, value){
                                 addToChooseVetTechList(index, value.id, value.name)
                             })
