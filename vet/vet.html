@@ -84,14 +84,13 @@
             var chooseVetTechDropDownIsActive = false;
 
             chooseVetTech.on('click', function(){
+                chooseVetTechDropDownIsActive = !chooseVetTechDropDownIsActive;
                 if(chooseVetTechDropDownIsActive == false){
-                    chooseVetTechDropDownIsActive = !chooseVetTechDropDownIsActive;
                     $.ajax({
                         type: 'GET',
                         url: 'php/getVetTechnicians.php',
                         success: function(response){
-                            
-                            
+                            console.log(response);
                         }
                     })
                 }
