@@ -53,18 +53,19 @@
                         var data = JSON.parse(response);
 
                         $(data).each(function(index, value){
-                            addToLabRequestTableWithResults(index, value.id, value.patient_name, value.result, value.doctor, value.request, value.requested_at);
+                            addToLabRequestTableWithResults(index,value.time_limit, value.id, value.patient_name, value.result, value.doctor, value.request, value.requested_at);
                         })
                     }
                 })
             }
 
-            function addToLabRequestTableWithResults(index, id, name, result, doctor, request, requestedAt){
+            function addToLabRequestTableWithResults(index, timeLimit, id, name, result, doctor, request, requestedAt){
                 if(result == 'pending'){
                     labRequestTableWithoutResults.append(`<tr>
                                                         <td>${name}</td>
                                                         <td>${request}</td>
                                                         <td>${doctor}</td>
+                                                        <td>${timeLimit}</td>
                                                         <td>${result}</td>
                                                         <td>
                                                             <div class="input-group">
@@ -79,6 +80,7 @@
                                                         <td>${name}</td>
                                                         <td>${request}</td>
                                                         <td>${doctor}</td>
+                                                        <td>${timeLimit}</td>
                                                         <td>
                                                             <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-lab-results-modal">Results</button>
                                                         </td>
@@ -151,9 +153,7 @@
                 }else{
                     labResultsList.append(`<img style="width: 100%; height: auto" src="php/${result}" class="mt-4 rounded-4 border border-dark img-fluid">`);
                 }
-                
             }
-            
         })
     </script>
     <title>The Furr Project</title>
@@ -215,6 +215,7 @@
                                 <th scope="col">Patient Name</th>
                                 <th scope="col">Laboratory Request</th>
                                 <th scope="col">Attending Vet</th>
+                                <th scope="col">Time Limit(min)</th>
                                 <th scope="col">Result</th>
                                 <th scope="col">Upload Result</th>
                                 <th scope="col">Requested At</th>
