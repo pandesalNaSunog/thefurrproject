@@ -54,7 +54,7 @@
         $dateDiff = date_diff(date_create($today), date_create(date('Y-m-d H:i:s', $expectedTime)));
         $timeLeft = $dateDiff->format("%i");
 
-        $percentR = $timeLeft->format("%R");
+        $percentR = $dateDiff->format("%R");
 
         if($percentR == "-"){
             $timeLeft = 0;

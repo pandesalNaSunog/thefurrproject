@@ -66,6 +66,12 @@
         $expectedTime = strtotime($timeRequested . " + " . $timeLimit . " minute");
         $dateDiff = date_diff(date_create($today), date_create(date('Y-m-d H:i:s', $expectedTime)));
         $timeLeft = $dateDiff->format("%i");
+
+        $percentR = $dateDiff->format("%R");
+
+        if($percentR == "-"){
+            $timeLeft = 0;
+        }
         return $timeLeft;
     }
 ?>
