@@ -83,6 +83,7 @@
             var labResultAttendingVet = $('#lab-result-attending-vet');
             var labResultsList = $('#lab-results-list');
             var chooseVetTech = $('#choose-vet-tech');
+            var timeLimit = $('#time-limit');
             var chooseVetTechDropDownIsActive = false;
 
             chooseVetTech.on('click', function(){
@@ -126,6 +127,8 @@
                     labRequest.addClass('is-invalid');
                 }else if(chooseVetTech.text() == "Choose Vet Tech"){
                     alert('Please assign a vet tech to process the Lab Request.');
+                }else if(timeLimit.val() == ""){
+                    timeLimit.addClass('is-invalid');
                 }else{
                     $.ajax({
                         type: 'POST',
@@ -134,6 +137,7 @@
                             pet_id: globalPetId,
                             request: labRequest.val(),
                             vet_tech_id: globalVetTechId,
+                            time_limit: timeLimit.val(),
                         },
                         success: function(response){
                             if(response != 0){
@@ -312,9 +316,10 @@
                 })
             }
 
-            function addToLabRequestTable(index,id, request, lab_tech, doctor, result){
+            function addToLabRequestTable(index,id, request, lab_tech, doctor, result, date){
                 if(result == "Pending"){
                     labRequestTable.append(`<tr>
+                                            <td>${date}</td>
                                             <td>${request}</td>
                                             <td>${lab_tech}</td>
                                             <td>${doctor}</td>
@@ -1029,6 +1034,7 @@
                     </div>
                     
                     <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
+                    <input id="time-limit" type="number" placeholder="Set Time Limit in minutes" class="form-control">
                     <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
 
 
