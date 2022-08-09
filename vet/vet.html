@@ -80,6 +80,18 @@
             var labResultLabRequest = $('#lab-result-lab-request');
             var labResultAttendingVet = $('#lab-result-attending-vet');
             var labResultsList = $('#lab-results-list');
+            var chooseVetTech = $('#choose-vet-tech');
+
+
+            chooseVetTech.on('click', function(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetTechnicians.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            })
 
             refreshLabRequests.on('click', function(){
                 getPetLabRequestsFunc();
@@ -87,7 +99,7 @@
 
             confirmLabRequest.on('click', function(){
                 if(labRequest.val() == ""){
-                    labRequest.addCLass('is-invalid');
+                    labRequest.addClass('is-invalid');
                 }else{
                     $.ajax({
                         type: 'POST',
@@ -979,7 +991,15 @@
                             </tbody>
                         </table>
                     </div>
-                    <textarea id="lab-request" class="form-control"></textarea>
+                    
+                    <div class="dropdown">
+                        <button id="choose-vet-tech" class="rounded-button" data-bs-toggle="dropdown">Choose Vet Tech</button>
+                        <ul class="dropdown-menu" id="vet-tech-list">
+                            
+                        </ul>
+                    </div>
+                    
+                    <textarea id="lab-request" class="form-control" placeholder="Enter Lab Request Here"></textarea>
                     <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
 
 
