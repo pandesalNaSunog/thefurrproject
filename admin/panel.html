@@ -94,6 +94,8 @@
             var confirmAddNurse = $('#confirm-add-nurse');
             var addVetNurses = $('#add-vet-nurses');
             var nurseTable = $('#nurse-table');
+            var servicesLink = $('#services-link');
+            var servicesSection = $('#services-section');
 
 
             addVetNurses.on('click', function(){
@@ -373,17 +375,20 @@
 
             navLink.on('click', function(){
                 navLink.removeClass('active');
+                servicesSection.hide();
                 $(this).addClass('active');
                 bg.children('section').hide();
             })
 
             clientLink.on('click', function(){
+                servicesSection.hide();
                 clientRecordsSection.show();
                 getClients();
                 staffSection.hide();
             })
 
             staffLink.on('click', function(){
+                servicesSection.hide();
                 clientRecordsSection.hide()
                 staffSection.show();
                 doctorsTable.children().remove();
@@ -395,6 +400,7 @@
 
             clientRecordsSection.show();
             staffSection.hide();
+            servicesSection.hide();
             getClients();
             session();
 
@@ -1071,6 +1077,9 @@
                         <a id="staff-link" href="#" class="navigation nav-link">Staff</a>
                     </li>
                     <li class="nav-item">
+                        <a id="services-link" href="#" class="navigation nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
                         <div class="dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Account</a>
                             <ul class="dropdown-menu">
@@ -1723,5 +1732,71 @@
             </div>
         </div>
     </div>
+
+    <section id="services-section">
+        <div class="container">
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Laboratory Services
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Service</th>
+                            </thead>
+                            <tbody id="lab-services">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Emergency Services
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Service</th>
+                            </thead>
+                            <tbody id="emergency-services">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Surgery Services
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Service</th>
+                            </thead>
+                            <tbody id="surgery-services">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-danger fw-bold px-5 rounded-4">
+                Add Service
+            </button>
+        </div>
+    </section>
 </body>
 </html>
