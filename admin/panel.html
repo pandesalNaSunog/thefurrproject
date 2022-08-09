@@ -108,6 +108,9 @@
 
 
             function getAllServices(){
+                labServices.children().remove();
+                surgeryServices.children().remove();
+                emergencyServices.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getAllServices.php',
