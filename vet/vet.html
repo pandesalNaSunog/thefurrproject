@@ -14,7 +14,7 @@
         $(document).ready(function(){
             var globalPetId = 0;
             var globalUserId = 0;
-
+            var globalVetTechId = 0;
             var vetTechList = $('#vet-tech-list');
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
@@ -106,8 +106,14 @@
 
             function addToChooseVetTechList(index, id, name){
                 vetTechList.append(`<li>
-                                        <button class="dropdown-item" value="${id}">${name}</button>
+                                        <button class="vet-tech dropdown-item" value="${id}">${name}</button>
                                     </li>`)
+
+                var vetTech = vetTechList.children().eq(index).find('.vet-tech');
+
+                vetTech.on('click', function(){
+                    globalVetTechId = $(this).val()
+                })
             }
 
             refreshLabRequests.on('click', function(){
