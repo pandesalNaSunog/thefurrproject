@@ -149,11 +149,17 @@
 
             function addToServicesTable(index, id, service, category){
                 if(category == "surgery"){
-                    surgeryServices.append(`<tr><td>${service}</td></tr>`)
+                    surgeryServices.append(`<tr>
+                                                <td>${service}</td>
+                                                <td><button class="btn btn-danger">Edit</td>
+                                            </tr>`)
                 }else if(category == "laboratory"){
                     labServices.append(`<tr><td>${service}</td></tr>`)
                 }else{
-                    emergencyServices.append(`<tr><td>${service}</td></tr>`)
+                    emergencyServices.append(`<tr>
+                                                <td>${service}</td>
+                                                <td><button class="btn btn-danger">Edit</td>
+                                            </tr>`)
                 }
             }
 
