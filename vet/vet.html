@@ -81,16 +81,20 @@
             var labResultAttendingVet = $('#lab-result-attending-vet');
             var labResultsList = $('#lab-results-list');
             var chooseVetTech = $('#choose-vet-tech');
-
+            var chooseVetTechDropDownIsActive = false;
 
             chooseVetTech.on('click', function(){
-                $.ajax({
-                    type: 'GET',
-                    url: 'php/getVetTechnicians.php',
-                    success: function(response){
-                        console.log(response);
-                    }
-                })
+                if(chooseVetTechDropDownIsActive == false){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getVetTechnicians.php',
+                        success: function(response){
+                            console.log(response);
+                            chooseVetTechDropDownIsActive = !chooseVetTechDropDownIsActive;
+                        }
+                    })
+                }
+                
             })
 
             refreshLabRequests.on('click', function(){
