@@ -16,7 +16,7 @@
             $petRow = $pet->fetch_assoc();
             $hasResult = "No";
             $clientId = $petRow['user_id'];
-            $query = $con->prepare("INSERT INTO lab_requests(has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at,`time_limit`)VALUES(?,?,?,?,?,?,?,?,?)");
+            $query = $con->prepare("INSERT INTO lab_requests(has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at,time_limit)VALUES(?,?,?,?,?,?,?,?,?)");
             $query->bind_param("siiiisssi",$hasResult, $clientId, $petId, $doctorId, $labTechId, $request, $today, $today, $timeLimit);
             $query->execute();
 
