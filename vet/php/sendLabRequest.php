@@ -41,6 +41,7 @@
                 'lab_tech' => $attendingLabTech,
                 'doctor' => $doctor,
                 'date' => date_format(date_create($labRequestRow['created_at']),"M d, Y h:i A"),
+                'time_limit' => $labRequestRow['time_limit']
             );
             echo json_encode($response);
         }else{

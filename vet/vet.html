@@ -147,11 +147,13 @@
                                 globalVetTechId = 0;
                                 var data = JSON.parse(response);
                                 labRequestTable.append(`<tr>
+                                                            <td>${data.date}</td>
+                                                            <td>${data.time_limit}</td>
                                                             <td>${data.request}</td>
                                                             <td>${data.lab_tech}</td>
                                                             <td>${data.doctor}</td>
                                                             <td>Pending</td>
-                                                            <td>${data.date}</td>
+                                        
                                                         </tr>`)
                             }else{
                                 alert('Session Expired. Please Log in to continue.');
