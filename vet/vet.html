@@ -139,12 +139,15 @@
                             if(response != 0){
                                 alert('Lab Request has been submitted.');
                                 labRequest.val('')
+                                chooseVetTech.text('Choose Vet Tech');
+                                globalVetTechId = 0;
                                 var data = JSON.parse(response);
                                 labRequestTable.append(`<tr>
                                                             <td>${data.request}</td>
                                                             <td>${data.lab_tech}</td>
                                                             <td>${data.doctor}</td>
                                                             <td>Pending</td>
+                                                            <td>${data.date}</td>
                                                         </tr>`)
                             }else{
                                 alert('Session Expired. Please Log in to continue.');
@@ -991,10 +994,7 @@
 
                     <label class="mt-3">Attending Vet Nurse:</label>
                     <select class="form-select" id="choose-vet-assistant">
-                        <option value="Yes">Vet Nurse</option>
-                        <option value="Yes">Vet Nurse</option>
-                        <option value="Yes">Vet Nurse</option>
-                        <option value="Yes">Vet Nurse</option>
+                        
                     </select>
 
                     <input class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service">
@@ -1008,6 +1008,8 @@
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
+                                <th scope="col">Date and Time</th>
+                                <th scope="col">Time Limit (min)</th>
                                 <th scope="col">Request</th>
                                 <th scope="col">Attending Vet Tech</th>
                                 <th scope="col">Attending Vet</th>

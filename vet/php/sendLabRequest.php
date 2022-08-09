@@ -28,20 +28,18 @@
             $doctorRow = $doctorQuery->fetch_assoc();
             $doctor = $doctorRow['name'];
 
-            if($labRequestRow['lab_tech_id'] == 0){
-                $attendingLabTech = "Pending";
-            }else{
-                $attendingLabTechId = $labRequestRow['lab_tech_id'];
-                $query = "SELECT * FROM users WHERE id = '$attendingLabTechId'";
-                $labTech = $con->query($query) or die($con->error);
-                $labTechRow = $labTech->fetch_assoc();
-                $attendingLabTech = $labTechRow['name'];
-            }
+            $attendingLabTechId = $labRequestRow['lab_tech_id'];
+            $query = "SELECT * FROM users WHERE id = '$attendingLabTechId'";
+            $labTech = $con->query($query) or die($con->error);
+            $labTechRow = $labTech->fetch_assoc();
+            $attendingLabTech = $labTechRow['name'];
+            
             
             $response = array(
                 'request' => $labRequestRow['request'],
                 'lab_tech' => $attendingLabTech,
-                'doctor' => $doctor
+                'doctor' => $doctor,
+                'date' => date_format(date_create($labRequestRow['created_at']),"M d, Y h:i A"),
             );
             echo json_encode($response);
         }else{
