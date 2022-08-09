@@ -14,6 +14,8 @@
         $(document).ready(function(){
             var globalPetId = 0;
             var globalUserId = 0;
+
+            var vetTechList = $('#vet-tech-list');
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
             var clientSection = $('#clients-section');
@@ -90,13 +92,22 @@
                         type: 'GET',
                         url: 'php/getVetTechnicians.php',
                         success: function(response){
-                            console.log(response);
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToChooseVetTechList(index, value.id, value.name)
+                            })
                         }
                     })
                 }
                 console.log(chooseVetTechDropDownIsActive);
                 
             })
+
+            function addToChooseVetTechList(index, id, name){
+                vetTechList.append(`<li>
+                                        <button class="dropdown-item" value="${id}">${name}</button>
+                                    </li>`)
+            }
 
             refreshLabRequests.on('click', function(){
                 getPetLabRequestsFunc();
