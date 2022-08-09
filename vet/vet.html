@@ -123,13 +123,16 @@
             confirmLabRequest.on('click', function(){
                 if(labRequest.val() == ""){
                     labRequest.addClass('is-invalid');
+                }else if(chooseVetTech.text == "Choose Vet Tech"){
+                    alert('Please assign a vet tech to process the Lab Request.');
                 }else{
                     $.ajax({
                         type: 'POST',
                         url: 'php/sendLabRequest.php',
                         data:{
                             pet_id: globalPetId,
-                            request: labRequest.val()
+                            request: labRequest.val(),
+                            vet_tech_id: globalVetTechId,
                         },
                         success: function(response){
                             if(response != 0){
@@ -1022,7 +1025,7 @@
                         </ul>
                     </div>
                     
-                    <textarea id="lab-request" class="form-control" placeholder="Enter Lab Request Here"></textarea>
+                    <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
                     <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
 
 
