@@ -123,7 +123,7 @@
             confirmLabRequest.on('click', function(){
                 if(labRequest.val() == ""){
                     labRequest.addClass('is-invalid');
-                }else if(chooseVetTech.text == "Choose Vet Tech"){
+                }else if(chooseVetTech.text() == "Choose Vet Tech"){
                     alert('Please assign a vet tech to process the Lab Request.');
                 }else{
                     $.ajax({
