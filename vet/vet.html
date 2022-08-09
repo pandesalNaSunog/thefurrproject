@@ -85,7 +85,7 @@
 
             chooseVetTech.on('click', function(){
                 chooseVetTechDropDownIsActive = !chooseVetTechDropDownIsActive;
-                if(chooseVetTechDropDownIsActive == false){
+                if(chooseVetTechDropDownIsActive == true){
                     $.ajax({
                         type: 'GET',
                         url: 'php/getVetTechnicians.php',
