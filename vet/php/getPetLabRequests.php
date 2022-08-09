@@ -63,11 +63,9 @@
 
 
     function calculateTimeLeft($today, $timeRequested, $timeLimit, $con ,$labRequestId){
-        $expectedTime = strtotime($timeRequested . "+ " . $timeLimit . " minute");
-        $dateDiff = date_diff($today, $expectedTime);
+        $expectedTime = strtotime($timeRequested . " + " . $timeLimit . " minute");
+        $dateDiff = date_diff(date_create($today), date_create(date('Y-m-d H:i:s', $expectedTime)));
         $timeLeft = $dateDiff->format("%i");
-        $query = "UPDATE lab_requests SET  WHERE id = '$labRequestId'";
-        $con->query($query) or die($con->error);
         return $timeLeft;
     }
 ?>
