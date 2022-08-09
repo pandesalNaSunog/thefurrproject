@@ -2,6 +2,7 @@
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         session_start();
         include('connection.php');
+        $today = getCurrentDate();
         $con = connect();
         if(isset($_POST) && isset($_SESSION['doctor_id'])){
             $doctorId = $_SESSION['doctor_id'];
@@ -39,9 +40,11 @@
                     $result = $labResults;
                 }
 
+                $timeLeft = calculateTimeLeft($today, $requestRow['created_at'], $requestRow['time_limit'], $con, $labRequestId);
+
                 $requests[] = array(
                     'id' => $requestRow['id'],
-                    'time_limit' => $requestRow['time_limit']."min",
+                    'time_limit' => $timeLeft."min",
                     'request' => $requestRow['request'],
                     'lab_tech' => $labTech,
                     'doctor' => $doctor,
@@ -49,12 +52,22 @@
                     'date' => date_format(date_create($requestRow['created_at']),"M d, Y h:i A"),
                 );
             }
-
             echo json_encode($requests);
         }else{
             echo 0;
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
+    }
+
+
+
+    function calculateTimeLeft($today, $timeRequested, $timeLimit, $con ,$labRequestId){
+        $expectedTime = strtotime($timeRequested . "+ " . $timeLimit . " minute");
+        $dateDiff = date_diff($today, $expectedTime);
+        $timeLeft = $dateDiff->format("%i");
+        $query = "UPDATE lab_requests SET  WHERE id = '$labRequestId'";
+        $con->query($query) or die($con->error);
+        return $timeLeft;
     }
 ?>
