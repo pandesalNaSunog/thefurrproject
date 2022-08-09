@@ -311,7 +311,7 @@
                         if(response != 0){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToLabRequestTable(index, value.id, value.request, value.time_limit, value.lab_tech, value.doctor, value.result);
+                                addToLabRequestTable(index, value.id, value.request, value.time_limit, value.lab_tech, value.doctor, value.result,value.date);
                             })
                         }
                     }
