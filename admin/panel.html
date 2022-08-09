@@ -154,7 +154,10 @@
                                                 <td><button class="btn btn-danger">Edit</button></td>
                                             </tr>`)
                 }else if(category == "laboratory"){
-                    labServices.append(`<tr><td>${service}</td></tr>`)
+                    labServices.append(`<tr>
+                                            <td>${service}</td>
+                                            <td><button class="btn btn-danger">Edit</button></td>
+                                        </tr>`)
                 }else{
                     emergencyServices.append(`<tr>
                                                 <td>${service}</td>
