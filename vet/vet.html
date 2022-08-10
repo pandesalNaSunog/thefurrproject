@@ -91,6 +91,7 @@
             var basePrice = $('#base-price');
             var quantity = $('#quantity');
             var soaTable = $('#soa-table');
+            var chooseServiceDropdownIsActive = false;
 
             confirmService.on('click', function(){
                 if(chooseService.text() == "Choose Service"){
@@ -144,18 +145,22 @@
             })
 
             chooseService.on('click', function(){
-                servicesList.children().remove();
-                $.ajax({
-                    type: 'GET',
-                    url: 'php/getServices.php',
-                    success: function(response){
-                        var data = JSON.parse(response);
-                        console.log(data);
-                        $(data).each(function(index, value){
-                            addToServicesList(index, value.id, value.service)
-                        })
-                    }
-                })
+                chooseServiceDropdownIsActive = !chooseServiceDropdownIsActive;
+                if(chooseServiceDropdownIsActive == true){
+                    servicesList.children().remove();
+                    $.ajax({
+                        type: 'GET',
+                        url: 'php/getServices.php',
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            console.log(data);
+                            $(data).each(function(index, value){
+                                addToServicesList(index, value.id, value.service)
+                            })
+                        }
+                    })
+                }
+                
             })
             function addToServicesList(index, id, service){
                 servicesList.append(`<li>
