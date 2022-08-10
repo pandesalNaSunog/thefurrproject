@@ -85,6 +85,84 @@
             var chooseVetTech = $('#choose-vet-tech');
             var timeLimit = $('#time-limit');
             var chooseVetTechDropDownIsActive = false;
+            var servicesList = $('#services-list');
+            var chooseService = $('#choose-service');
+            var confirmService = $('#confirm-service');
+            var basePrice = $('#base-price');
+            var quantity = $('#quantity');
+            var soaTable = $('#soa-table');
+
+            confirmService.on('click', function(){
+                if(chooseService.text() == "Choose Service"){
+                    alert('Please choose a service.');
+                }else if(basePrice.val() == ""){
+                    basePrice.addClass('is-invalid');
+                }else if(quantity.val() == ""){
+                    quantity.addClass('is-invalid');
+                }else{
+                    var total = parseFloat(basePrice.val()) * parseFloat(quantity.val());
+                    var index = soaTable.children().length;
+                    addToSoaTable(index, chooseService.text(), basePrice.val(), quantity.val(), total);
+
+                    basePrice.val('');
+                    quantity.val('')
+                    chooseService.text('Choose Service')
+                }
+            })
+
+            function addToSoaTable(index, service, basePrice, quantity, total){
+                soaTable.append(`<tr>
+                                    <td>${service}</td>
+                                    <td>&#8369 ${basePrice}</td>
+                                    <td>${quantity}</td>
+                                    <td>&#8369 <span class="total-price">${total}</span></td>
+                                    <td>
+                                        <input type="number" class="form-control discount" value=0>
+                                    </td>
+                                </tr>`)
+                var discount = soaTable.children().eq(index).find('.discount');
+                var totalPrice = soaTable.children().eq(index).find('.total-price');
+                discount.on('change', function(){
+                    var thisDiscount = $(this);
+                    var rate = thisDiscount.val()
+
+                    if(rate == ""){
+                        thisDiscount.val(0);
+                        rate = 0;
+                    }
+                    var percentage = parseFloat(parseFloat(rate) / parseFloat(100) * total);
+                    var discountedPrice = parseFloat(total - percentage);
+                    totalPrice.text(discountedPrice);
+                })
+            }
+
+            chooseService.on('click', function(){
+                servicesList.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getServices.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        $(data).each(function(index, value){
+                            addToServicesList(index, value.id, value.service)
+                        })
+                    }
+                })
+            })
+            function addToServicesList(index, id, service){
+                servicesList.append(`<li>
+                                        <button value="${id}" class="service dropdown-item">
+                                            ${service}
+                                        </button>
+                                    </li>`)
+                var service = servicesList.children().eq(index).find('.service');
+
+                service.on('click', function(){
+                    chooseService.val($(this).val())
+                    chooseService.text($(this).text())
+                })
+            }
 
             chooseVetTech.on('click', function(){
                 chooseVetTechDropDownIsActive = !chooseVetTechDropDownIsActive;
@@ -1079,15 +1157,38 @@
                                         <th scope="col">Base Price</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Total Price</th>
+                                        <th scope="col">Discount(%)</th>
                                     </thead>
                                     <tbody id="soa-table">
         
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer">
-
+                            <div class="dropdown">
+                                <button id="choose-service" class="rounded-outline-button dropdown-toggle" data-bs-toggle="dropdown">
+                                    Choose Service
+                                </button>
+                                <ul class="dropdown-menu" id="services-list">
+                                    
+                                </ul>
                             </div>
+                            
+                            <div>
+                                <input type="number" placeholder="Base Price" id="base-price" class="mt-3 form-control">
+                                <div class="invalid-feedback">
+                                    Please fill out this field.
+                                </div>
+                            </div>
+                            <div>
+                                <input type="number" placeholder="Quantity" id="quantity" class="mt-3 form-control">
+                                <div class="invalid-feedback">
+                                    Please fill out this field
+                                </div>
+                            </div>
+                            <button class="rounded-outline-button mt-3" id="confirm-service">Confirm Service</button>
+                        </div>
+                        <div class="card-footer">
+                            <button class="rounded-button" id="confirm-service">Submit SOA</button>
                         </div>
                     </div>
                     
