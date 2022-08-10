@@ -92,6 +92,29 @@
             var quantity = $('#quantity');
             var soaTable = $('#soa-table');
             var chooseServiceDropdownIsActive = false;
+            var customService = $('#custom-service');
+            var customBasePrice = $('#custom-base-price');
+            var customQuantity = $('#custom-quantity');
+            var confirmCustomService = $('#confirm-custom-service');
+
+
+            confirmCustomService.on('click', function(){
+                if(customService.val() == ""){
+                    customService.addClass('is-invalid');
+                }else if(customBasePrice.val() == ""){
+                    customBasePrice.addClass('is-invalid');
+                }else if(customQuantity.val() == ""){
+                    customQuantity.addClass('is-invalid');
+                }else{
+                    var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
+                    var index = soaTable.children().length;
+                    addToSoaTable(index, customService.val(), customBasePrice.val(), customQuantity.val(), total);
+
+                    customBasePrice.val('');
+                    customQuantity.val('')
+                    customService.val('');
+                }
+            })
 
             confirmService.on('click', function(){
                 if(chooseService.text() == "Choose Service"){
@@ -1197,7 +1220,31 @@
                                     Please fill out this field
                                 </div>
                             </div>
-                            <button class="rounded-outline-button mt-3" id="confirm-service">Confirm Service</button>
+                            <button class="rounded-outline-button mt-3" id="confirm-service">Confirm Custom Service</button>
+
+
+                            <h4 class="fw-bold text-center mt-5">
+                                Custom Service
+                            </h4>
+                            <div>
+                                <input type="text" placeholder="Custom Service" id="custom-service" class="mt-2 form-control">
+                                <div class="invalid-feedback">
+                                    Please fill out this field.
+                                </div>
+                            </div>
+                            <div>
+                                <input type="number" placeholder="Base Price" id="custom-base-price" class="mt-3 form-control">
+                                <div class="invalid-feedback">
+                                    Please fill out this field.
+                                </div>
+                            </div>
+                            <div>
+                                <input type="number" placeholder="Quantity" id="custom-quantity" class="mt-3 form-control">
+                                <div class="invalid-feedback">
+                                    Please fill out this field
+                                </div>
+                            </div>
+                            <button class="rounded-outline-button mt-3" id="confirm-custom-service">Confirm Custom Service</button>
                         </div>
                         <div class="card-footer">
                             <button class="rounded-button" id="confirm-service">Submit SOA</button>
