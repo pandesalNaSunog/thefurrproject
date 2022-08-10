@@ -24,6 +24,7 @@ return array(
     'App\\Models\\LabRequest' => $baseDir . '/app/Models/LabRequest.php',
     'App\\Models\\LabResult' => $baseDir . '/app/Models/LabResult.php',
     'App\\Models\\Pet' => $baseDir . '/app/Models/Pet.php',
+    'App\\Models\\RenderedService' => $baseDir . '/app/Models/RenderedService.php',
     'App\\Models\\Service' => $baseDir . '/app/Models/Service.php',
     'App\\Models\\StatementOfAccount' => $baseDir . '/app/Models/StatementOfAccount.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',

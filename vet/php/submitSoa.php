@@ -12,6 +12,7 @@
             $totalPrices = $_POST['total_prices'];
             $quantities = $_POST['quantities'];
             $discounts = $_POST['discounts'];
+            $customServiceCategories = $_POST['categories'];
 
 
             $details = "";
@@ -22,6 +23,8 @@
             $query = "INSERT INTO statement_of_accounts(`pet_id`,`doctor_id`,`soa_number`,`details`,`created_at`,`updated_at`)VALUES('$petId','$doctorId','no','$details','$today','$today')";
             $con->query($query) or die($con->error);
 
+            
+
             $query = "SELECT * FROM statement_of_accounts WHERE id = LAST_INSERT_ID()";
             $soa = $con->query($query) or die($con->error);
             $soaRow = $soa->fetch_assoc();
@@ -30,8 +33,19 @@
             $soaId = $soaRow['id'];
             $query = "UPDATE statement_of_accounts SET soa_number = '$soaNumber' WHERE id = '$soaId'";
             $con->query($query) or die($con->error);
-            
-            echo 'ok';
+
+            $query = "SELECT * FROM statement_of_accounts WHERE id = LAST_INSERT_ID()";
+            $soa = $con->query($query) or die($con->error);
+            $soaRow = $soa->fetch_assoc();
+
+            $renderedServices = $soaRow['details'];
+
+            $renderedServicesArray = explode("**",$renderedServices);
+
+
+            echo json_encode($renderedServicesArray);
+
+            $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('')";
         }else{
             echo 0;
         }
