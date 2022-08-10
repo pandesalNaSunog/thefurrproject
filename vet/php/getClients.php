@@ -25,7 +25,7 @@
             $currentUserId = 0;
             foreach($userIds as $userIdItem){
                 if($userIdItem != $currentUserId){
-                    $query = "SELECT * FROM users WHERE id = '$userIdItem' AND user_type = 'client'";
+                    $query = "SELECT * FROM users WHERE id = '$userIdItem'";
                     $userQuery = $con->query($query) or die($con->error);
                     $userRow = $userQuery->fetch_assoc();
                     $users[] = array(
