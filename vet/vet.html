@@ -224,9 +224,7 @@
             })
             function addToServicesList(index, id, service){
                 servicesList.append(`<li>
-                                        <button value="${id}" class="service dropdown-item">
-                                            ${service}
-                                        </button>
+                                        <button value="${id}" class="service dropdown-item">${service}</button>
                                     </li>`)
                 var service = servicesList.children().eq(index).find('.service');
 
