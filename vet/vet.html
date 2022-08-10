@@ -136,6 +136,13 @@
                 })
             }
 
+            basePrice.on('keydown', function(){
+                basePrice.removeClass('is-invalid');
+            })
+            quantity.on('keydown', function(){
+                quantity.removeClass('is-invalid');
+            })
+
             chooseService.on('click', function(){
                 servicesList.children().remove();
                 $.ajax({
