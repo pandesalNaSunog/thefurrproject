@@ -96,6 +96,36 @@
             var customBasePrice = $('#custom-base-price');
             var customQuantity = $('#custom-quantity');
             var confirmCustomService = $('#confirm-custom-service');
+            var submitSoa = $('#submit-soa');
+
+
+            var soaServices = [];
+            var soaBasePrices = [];
+            var soaTotalPrices = [];
+            var soaQuantities = [];
+            var soaDiscounts = [];
+            
+
+            
+
+
+            submitSoa.on('click', function(){
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/submitSoa.php',
+                    data:{
+                        pet_id: globalPetId,
+                        services: soaServices,
+                        base_prices: soaBasePrices,
+                        total_prices: soaTotalPrices,
+                        quantities: soaQuantities,
+                        discounts: soaDiscounts,
+                    },
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            })
 
 
             confirmCustomService.on('click', function(){
@@ -135,6 +165,11 @@
             })
 
             function addToSoaTable(index, service, basePrice, quantity, total){
+                soaServices.push(service)
+                soaBasePrices.push(basePrice);
+                soaQuantities.push(quantity);
+                soaTotalPrices.push(total);
+                soaDiscounts.push(0);
                 soaTable.append(`<tr>
                                     <td>${service}</td>
                                     <td>&#8369 ${basePrice}</td>
@@ -157,6 +192,8 @@
                     var percentage = parseFloat(parseFloat(rate) / parseFloat(100) * total);
                     var discountedPrice = parseFloat(total - percentage);
                     totalPrice.text(discountedPrice);
+                    soaDiscounts[index] = rate;
+                    soaTotalPrices[index] = discountedPrice;
                 })
             }
 
@@ -1247,7 +1284,7 @@
                             <button class="rounded-outline-button mt-3" id="confirm-custom-service">Confirm Custom Service</button>
                         </div>
                         <div class="card-footer">
-                            <button class="rounded-button" id="confirm-service">Submit SOA</button>
+                            <button class="rounded-button" id="submit-soa">Submit SOA</button>
                         </div>
                     </div>
                     
