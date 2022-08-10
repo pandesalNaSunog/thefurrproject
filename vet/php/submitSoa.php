@@ -12,12 +12,12 @@
             $totalPrices = $_POST['total_prices'];
             $quantities = $_POST['quantities'];
             $discounts = $_POST['discounts'];
-            $customServiceCategories = $_POST['categories'];
+            $serviceCategories = $_POST['categories'];
 
 
             $details = "";
             foreach($services as $key => $service){
-                $details .= $service . "*" . $basePrices[$key] . "*" . $totalPrices[$key] . "*" . $quantities[$key] . "*" . $discounts[$key] . "**";
+                $details .= $service . "*" . $serviceCategories[$key] . "*" . $basePrices[$key] . "*" . $totalPrices[$key] . "*" . $quantities[$key] . "*" . $discounts[$key] . "**";
             }
 
             $query = "INSERT INTO statement_of_accounts(`pet_id`,`doctor_id`,`soa_number`,`details`,`created_at`,`updated_at`)VALUES('$petId','$doctorId','no','$details','$today','$today')";
