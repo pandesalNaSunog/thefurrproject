@@ -122,11 +122,23 @@
                         discounts: soaDiscounts,
                     },
                     success: function(response){
-                        console.log(response);
+                        if(response == 'ok'){
+                            alert('Statement of Accounts has been successfully submitted.');
+                            soaTable.children().remove();
+                            clearSoa()
+                        }
                     }
                 })
             })
 
+
+            function clearSoa(){
+                soaServices = [];
+                soaBasePrices = [];
+                soaTotalPrices = [];
+                soaQuantities = [];
+                soaDiscounts = [];
+            }
 
             confirmCustomService.on('click', function(){
                 if(customService.val() == ""){

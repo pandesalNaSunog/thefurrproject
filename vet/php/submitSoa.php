@@ -31,8 +31,7 @@
             $query = "UPDATE statement_of_accounts SET soa_number = '$soaNumber' WHERE id = '$soaId'";
             $con->query($query) or die($con->error);
             
-
-            
+            echo 'ok';
         }else{
             echo 0;
         }
