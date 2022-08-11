@@ -847,12 +847,13 @@
                 clientSection.hide();
                 appointmentSection.hide()
                 getRenderedServices();
-            })
-
-            function getRenderedServices(){
                 laboratoryList.children().remove();
                 emergencyList.children().remove();
                 surgeryList.children().remove();
+            })
+
+            function getRenderedServices(){
+                
                 $.ajax({
                     type: 'GET',
                     url: 'php/getRenderredServices.php',
