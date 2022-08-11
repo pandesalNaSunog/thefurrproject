@@ -98,6 +98,7 @@
             var confirmCustomService = $('#confirm-custom-service');
             var submitSoa = $('#submit-soa');
             var customServiceCategory = $('#custom-service-category');
+            var servicesLink = $('#services-link');
 
 
             var serviceCategories = [];
@@ -833,6 +834,19 @@
                 appointmentSection.show()
                 getAppointments();
             })
+            servicesLink.on('click', function(){
+                getRenderedServices();
+            })
+
+            function getRenderedServices(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getRenderredServices.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
         })
     </script>
     <title>The Furr Project</title>
