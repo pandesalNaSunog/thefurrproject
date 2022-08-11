@@ -239,7 +239,7 @@
                         url: 'php/getServices.php',
                         success: function(response){
                             var data = JSON.parse(response);
-                            console.log(data);
+                        
                             $(data).each(function(index, value){
                                 addToServicesList(index, value.category, value.service)
                             })
@@ -275,7 +275,7 @@
                         }
                     })
                 }
-                console.log(chooseVetTechDropDownIsActive);
+
                 
             })
 
@@ -359,7 +359,6 @@
                             service: medicalRecordService.val()
                         },
                         success: function(response){
-                            console.log(response);
                             if(response == 'ok'){
                                 alert('Medical Record has been successfully added.')
                                 $('#create-patient-records-modal').find('input').val('');
@@ -481,7 +480,6 @@
                         pet_id: globalPetId
                     },
                     success: function(response){
-                        console.log(response);
                         if(response != 0){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
@@ -526,7 +524,6 @@
                                 lab_request_id: thisViewResult.val(),
                             },
                             success: function(response){
-                                console.log(response);
                                 var data = JSON.parse(response)
 
                                 labResultAttendingVet.text(data.attending_vet);
@@ -744,7 +741,6 @@
                         },
                         success: function(response){
                             if(response != 0){
-                                console.log(response)
                                 var data = JSON.parse(response);
                                 $(data).each(function(index, value){
                                     medicalRecordClientName.text("Client Name: " + value.client_name);
@@ -752,7 +748,7 @@
                                     medicalRecordPetName.text("Patient Name: " + value.pet_name)
                                     
                                     $(value.records).each(function(index, values){
-                                        console.log(medicalRecordsTable);
+                                        
                                         medicalRecordsTable.append(`<tr>
                                                                         <td>${values.pet_weight}</td>
                                                                         <td>${values.temp}</td>
