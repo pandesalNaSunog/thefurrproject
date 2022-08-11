@@ -47,8 +47,9 @@
 
                 $thisServiceArray = explode("*", $serviceRendered);
                 $thisService = $thisServiceArray[0];
+                $thisCategory = $thisServiceArray[1];
                 if($serviceRendered != ""){
-                    $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisService','$soaNumber','0','$doctorId','$today','$today')";
+                    $query = "INSERT INTO rendered_services(`category`,`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisCategory','$thisService','$soaNumber','0','$doctorId','$today','$today')";
 
                     $con->query($query) or die($con->error);
                 }
