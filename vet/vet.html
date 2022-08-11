@@ -863,33 +863,49 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToServicesTables(index, value.date, value.category, value.service, value.lab_tech, value.soa_no);
+                            addToServicesTables(value.date, value.category, value.service, value.lab_tech, value.soa_no);
                         })
                     }
                 })
             }
 
-            function addToServicesTables(index, date, category, service, labTech, soaNo){
+            function addToServicesTables(date, category, service, labTech, soaNo){
                 if(category == "laboratory"){
                     laboratoryList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td>${soaNo}</td>
+                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
                                             </tr>`)
+
+                    var soaNumber = laboratoryList.children().eq(laboratoryList.children().length - 1).find('.soa-number');
+
+                    soaNumber.on('click', function(){
+                        var thisSoaNumber = $(this).text();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getSoa.php',
+                            data:{
+                                soa_number: thisSoaNumber,
+                            },
+                            success: function(response){
+                                console.log(response);
+                            }
+                        })
+                    })
                 }else if(category == "emergency"){
                     emergencyList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td>${soaNo}</td>
+                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
                                             </tr>`)
                 }else if(category == "surgery"){
                     surgeryList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td>${soaNo}</td>
+                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
                                             </tr>`)
                 }
             }
