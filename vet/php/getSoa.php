@@ -8,7 +8,7 @@
             $query = "SELECT * FROM statement_of_accounts WHERE soa_number = '$soaNumber'";
             $soa = $con->query($query) or die($con->error);
             $soas = array();
-            while($soaRow = $soas->fetch_assoc()){
+            while($soaRow = $soa->fetch_assoc()){
                 $soas[] = $soaRow;
             }
             echo json_encode($soas);
