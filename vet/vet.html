@@ -99,6 +99,7 @@
             var submitSoa = $('#submit-soa');
             var customServiceCategory = $('#custom-service-category');
             var servicesLink = $('#services-link');
+            var servicesSection = $('#services-section');
 
 
             var serviceCategories = [];
@@ -825,6 +826,7 @@
             clientLink.on('click', function(){
                 appointmentSection.hide();
                 clientSection.show();
+                servicesSection.hide();
                 getClients();
                 getProfile();
             })
@@ -832,9 +834,13 @@
             appointmentLink.on('click', function(){
                 clientSection.hide();
                 appointmentSection.show()
+                servicesSection.hide();
                 getAppointments();
             })
             servicesLink.on('click', function(){
+                servicesSection.show();
+                clientSection.hide();
+                appointmentSection.hide()
                 getRenderedServices();
             })
 
