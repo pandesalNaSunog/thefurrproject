@@ -11,6 +11,10 @@
             $labTechId = $_POST['vet_tech_id'];
             $timeLimit = $_POST['time_limit'];
 
+            if($labTechId == 0){
+                $labTechId = $doctorId;
+            }
+
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();

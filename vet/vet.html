@@ -299,8 +299,6 @@
             confirmLabRequest.on('click', function(){
                 if(labRequest.val() == ""){
                     labRequest.addClass('is-invalid');
-                }else if(chooseVetTech.text() == "Choose Vet Tech"){
-                    alert('Please assign a vet tech to process the Lab Request.');
                 }else if(timeLimit.val() == ""){
                     timeLimit.addClass('is-invalid');
                 }else{
@@ -449,6 +447,7 @@
                     var services = petsList.children().eq(index).find('.services');
 
                     services.on('click', function(){
+                        globalVetTechId = 0;
                         globalPetId = $(this).val();
                         
                         $.ajax({
