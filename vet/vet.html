@@ -863,7 +863,28 @@
             }
 
             function addToServicesTables(index, date, category, service, labTech, soaNo){
-                console.log(category);
+                if(category == "laboratory"){
+                    laboratoryList.append(`<tr>
+                                                <td>${date}</td>
+                                                <td>${service}</td>
+                                                <td>${labTech}</td>
+                                                <td>${soaNo}</td>
+                                            </tr>`)
+                }else if(category == "emergency"){
+                    emergencyList.append(`<tr>
+                                                <td>${date}</td>
+                                                <td>${service}</td>
+                                                <td>${labTech}</td>
+                                                <td>${soaNo}</td>
+                                            </tr>`)
+                }else if(category == "surgery"){
+                    surgeryList.append(`<tr>
+                                                <td>${date}</td>
+                                                <td>${service}</td>
+                                                <td>${labTech}</td>
+                                                <td>${soaNo}</td>
+                                            </tr>`)
+                }
             }
         })
     </script>

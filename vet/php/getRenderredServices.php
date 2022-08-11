@@ -7,9 +7,9 @@
         if(isset($_SESSION['doctor_id'])){
             $doctorId = $_SESSION['doctor_id'];
             $query = "SELECT * FROM rendered_services WHERE doctor_id = '$doctorId'";
-            $service = $con->query($query) or die($con->error);
+            $serviceQuery = $con->query($query) or die($con->error);
             $services = array();
-            while($serviceRow = $service->fetch_assoc()){
+            while($serviceRow = $serviceQuery->fetch_assoc()){
 
                 $date = date_format(date_create($serviceRow['created_at']), "M d, Y h:i A");
                 $category = $serviceRow['category'];
@@ -39,7 +39,6 @@
             }
             echo json_encode($services);
         }
-        addToServicesTables(index, value.date, value.category, value.service, value.lab_tech, value.soa_no);
     }else{
         echo header('HTTP/1.1 403 Forbidden');
     }
