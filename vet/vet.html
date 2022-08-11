@@ -100,6 +100,9 @@
             var customServiceCategory = $('#custom-service-category');
             var servicesLink = $('#services-link');
             var servicesSection = $('#services-section');
+            var laboratoryList = $('#laboratory-list');
+            var emergencyList = $('#emergency-list');
+            var surgeryList = $('#surgery-list');
 
 
             var serviceCategories = [];
@@ -850,9 +853,16 @@
                     type: 'GET',
                     url: 'php/getRenderredServices.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToServicesTables(index, value.date, value.category, value.service, value.lab_tech, value.soa_no);
+                        })
                     }
                 })
+            }
+
+            function addToServicesTables(index, date, category, service, labTech, soaNo){
+                console.log(category);
             }
         })
     </script>
