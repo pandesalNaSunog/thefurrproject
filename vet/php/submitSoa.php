@@ -43,9 +43,13 @@
             $renderedServicesArray = explode("**",$renderedServices);
 
 
-            echo json_encode($renderedServicesArray);
+            foreach($renderedServicesArray as $serviceRendered){
+                if($serviceRendered != ""){
+                    $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('')";
+                }
+            }
 
-            $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('')";
+            
         }else{
             echo 0;
         }
