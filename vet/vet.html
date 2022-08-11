@@ -850,6 +850,9 @@
             })
 
             function getRenderedServices(){
+                laboratoryList.children().remove();
+                emergencyList.children().remove();
+                surgeryList.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getRenderredServices.php',
