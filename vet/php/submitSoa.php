@@ -45,10 +45,11 @@
 
             foreach($renderedServicesArray as $serviceRendered){
 
-                $thisServiceArray = explode("*", $serviceRendered);
-                $thisService = $thisServiceArray[0];
-                $thisCategory = $thisServiceArray[1];
+                
                 if($serviceRendered != ""){
+                    $thisServiceArray = explode("*", $serviceRendered);
+                    $thisService = $thisServiceArray[0];
+                    $thisCategory = $thisServiceArray[1];
                     $query = "INSERT INTO rendered_services(`category`,`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisCategory','$thisService','$soaNumber','0','$doctorId','$today','$today')";
 
                     $con->query($query) or die($con->error);
