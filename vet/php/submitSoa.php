@@ -37,19 +37,24 @@
             $query = "SELECT * FROM statement_of_accounts WHERE id = LAST_INSERT_ID()";
             $soa = $con->query($query) or die($con->error);
             $soaRow = $soa->fetch_assoc();
-
+            $soaNumber = $soaRow['soa_number'];
             $renderedServices = $soaRow['details'];
 
             $renderedServicesArray = explode("**",$renderedServices);
 
 
             foreach($renderedServicesArray as $serviceRendered){
+
+                $thisServiceArray = explode("*", $serviceRendered);
+                $thisService = $thisServiceArray[0];
                 if($serviceRendered != ""){
-                    $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('')";
+                    $query = "INSERT INTO rendered_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisService','$soaNumber','0','$doctorId','$today','$today')";
+
+                    $con->query($query) or die($con->error);
                 }
             }
 
-            
+            echo 'ok';
         }else{
             echo 0;
         }
