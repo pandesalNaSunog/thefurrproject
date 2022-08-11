@@ -117,27 +117,30 @@
 
 
             submitSoa.on('click', function(){
-                $.ajax({
-                    type: 'POST',
-                    url: 'php/submitSoa.php',
-                    data:{
-                        pet_id: globalPetId,
-                        services: soaServices,
-                        base_prices: soaBasePrices,
-                        total_prices: soaTotalPrices,
-                        quantities: soaQuantities,
-                        discounts: soaDiscounts,
-                        categories: serviceCategories,
-                    },
-                    success: function(response){
-                        console.log(response);                
-                        if(response == 'ok'){
-                            alert('Statement of Accounts has been successfully submitted.');
-                            soaTable.children().remove();
-                            clearSoa();
+
+                if(confirm("Confirm Submission of Statement of Accounts? Consider reviewing the details first.") == true){
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/submitSoa.php',
+                        data:{
+                            pet_id: globalPetId,
+                            services: soaServices,
+                            base_prices: soaBasePrices,
+                            total_prices: soaTotalPrices,
+                            quantities: soaQuantities,
+                            discounts: soaDiscounts,
+                            categories: serviceCategories,
+                        },
+                        success: function(response){              
+                            if(response == 'ok'){
+                                alert('Statement of Accounts has been successfully submitted.');
+                                soaTable.children().remove();
+                                clearSoa();
+                            }
                         }
-                    }
-                })
+                    })
+                }
+                
             })
 
 
