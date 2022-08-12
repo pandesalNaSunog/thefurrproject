@@ -15,6 +15,7 @@
             var globalPetId = 0;
             var globalUserId = 0;
             var globalVetTechId = 0;
+            var globalApppointmentId = 0;
             var vetTechList = $('#vet-tech-list');
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
@@ -350,6 +351,7 @@
                         url: 'php/addMedicalRecord.php',
                         data:{
                             pet_id: globalPetId,
+                            appointment_id: globalApppointmentId,
                             client_id: globalUserId,
                             weight: medicalRecordWeight.val(),
                             temp: medicalRecordTemp.val(),
@@ -463,6 +465,7 @@
                             success: function(response){
                                 var data = JSON.parse(response);
                                 globalUserId = data.client_id;
+                                globalApppointmentId = data.appointment_id;
                                 patientOwnerName.text(data.name);
                                 if(data.has_medical_record == true){
                                     patientName.text(data.pet_name);
