@@ -59,7 +59,7 @@
                             soaClientName.text(data.client_name);
                             soaPatientName.text(data.patient_name);
                             soaClientCode.text(data.client_code);
-                            totalAmount.text("&#8369" + data.total_amount);
+                            totalAmount.text("&#8369 " + data.total_amount);
                             $(data.soa).each(function(index, value){
                                 addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount);
                             })
