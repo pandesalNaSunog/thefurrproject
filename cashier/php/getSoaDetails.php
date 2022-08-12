@@ -23,7 +23,7 @@
                     $amount = $soaDetailsBreakdown[2] * $soaDetailsBreakdown[4];
                     $quantity = $soaDetailsBreakdown[4];
                     $discounted = $soaDetailsBreakdown[3];
-                    $discount = $soaDetailsBreakdown[6];
+                    $discount = $soaDetailsBreakdown[5];
 
 
                     $response[] = array(
