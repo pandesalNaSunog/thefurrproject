@@ -49,15 +49,23 @@
                             soa_id: thisViewSoaDetails.val(),
                         },
                         success: function(response){
-                            console.log(response);
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount);
+                            })
                         }
                     })
                 })
             }
 
-
-            function getSoaDetails(){
-                
+            function addToSoaDetailsTable(index, service, basePrice, amount, quantity, discounted, discount){
+                soaDetailsTable.append(`<tr>
+                                            <td>${service}</td>
+                                            <td>${quantity}</td>
+                                            <td>&#8369 ${amount}</td>
+                                            <td>&#8369 ${discounted}</td>
+                                            <td>${discount}%</td>
+                                        </tr>`)
             }
         })
     </script>
