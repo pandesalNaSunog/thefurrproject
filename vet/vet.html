@@ -456,6 +456,7 @@
                     services.on('click', function(){
                         globalVetTechId = 0;
                         var servicesValue = $(this).val();
+                        globalPetId = servicesValue.split("*")[0];
                         $.ajax({
                             type: 'POST',
                             url: 'php/getPetOwner.php',
