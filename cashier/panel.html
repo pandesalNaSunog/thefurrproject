@@ -14,6 +14,7 @@
         $(document).ready(function(){
 
             var soaTable = $('#soa-table');
+            var soaDetailsTable = $('#soa-details-table');
             var globalSoaId = 0;
             getSoas();
             function getSoas(){
@@ -33,7 +34,7 @@
                 soaTable.append(`<tr>
                                     <td>${clientName}</td>
                                     <td>${pet}</td>
-                                    <td><button value="${id}" class="view-soa-details btn btn-link">${soaNumber}</button></td>
+                                    <td><button value="${id}" class="view-soa-details btn btn-link" data-bs-toggle="modal" data-bs-target="#view-soa-details-modal">${soaNumber}</button></td>
                                     <td>${date}</td>
                                 </tr>`)
 
@@ -161,8 +162,40 @@
         </div>
     </div>
 
-    <div class="modal fade" data-bs-backdrop="static">
-        
+    <div class="modal fade" data-bs-backdrop="static" id="view-soa-details-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="bg-light rounded-3 p-3">
+                        <p>Client Name: <span class="fw-bold" id="soa-client-name"></span></p>
+                        <p>Patient Name: <span class="fw-bold" id="soa-patient-name"></span></p>
+                        <p>Client Code: <span class="fw-bold" id="soa-client-code"></span></p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Service</th>
+                                <th scope="col">Base Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Amount(Discounted)</th>
+                                <th scope="col">Discount</th>
+                            </thead>
+                            <tbody id="soa-details-table">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
