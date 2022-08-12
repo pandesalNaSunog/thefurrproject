@@ -14,6 +14,7 @@
         $(document).ready(function(){
 
             var soaTable = $('#soa-table');
+            var globalSoaId = 0;
             getSoas();
             function getSoas(){
                 $.ajax({
@@ -32,9 +33,30 @@
                 soaTable.append(`<tr>
                                     <td>${clientName}</td>
                                     <td>${pet}</td>
-                                    <td>${soaNumber}</td>
+                                    <td><button value="${id}" class="view-soa-details btn btn-link">${soaNumber}</button></td>
                                     <td>${date}</td>
                                 </tr>`)
+
+                var viewSoaDetails = soaTable.children().eq(index).find('.view-soa-details');
+
+                viewSoaDetails.on('click', function(){
+                    var thisViewSoaDetails = $(this);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getSoaDetials.php',
+                        data:{
+                            soa_id: thisViewSoaDetails.val(),
+                        },
+                        success: function(response){
+                            console.log(response);
+                        }
+                    })
+                })
+            }
+
+
+            function getSoaDetails(){
+                
             }
         })
     </script>
