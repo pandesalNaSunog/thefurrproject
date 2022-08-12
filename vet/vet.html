@@ -114,6 +114,7 @@
             var soaTotalPrices = [];
             var soaQuantities = [];
             var soaDiscounts = [];
+            var labTechIds = [];
             
 
             
@@ -127,6 +128,7 @@
                         url: 'php/submitSoa.php',
                         data:{
                             pet_id: globalPetId,
+                            lab_tech_id: globalVetTechId,
                             services: soaServices,
                             base_prices: soaBasePrices,
                             total_prices: soaTotalPrices,
@@ -154,6 +156,7 @@
                 soaQuantities = [];
                 soaDiscounts = [];
                 serviceCategories = [];
+                labTechIds = [];
             }
 
             confirmCustomService.on('click', function(){
