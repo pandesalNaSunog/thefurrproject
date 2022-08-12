@@ -411,7 +411,7 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             noAppointments.hide();
-                            addToAppointmentsList(index, value.id, value.client_name, value.date, value.time, value.pets,value.concern);
+                            addToAppointmentsList(index, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern);
                         })
                     }
                 })

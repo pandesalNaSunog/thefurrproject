@@ -32,6 +32,7 @@
                 $clientName = $userRow['name'];
 
                 $response[] = array(
+                    'appointment_id' => $appointmentRow['id'],
                     'client_name' => $clientName,
                     'concern' => $appointmentRow['concern'],
                     'date' => date_format(date_create($appointmentRow['date']), "M d, Y"),
