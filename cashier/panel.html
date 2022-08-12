@@ -15,6 +15,7 @@
             var soaClientName = $('#soa-client-name');
             var soaClientCode = $('#soa-client-code');
             var soaPatientName = $('#soa-patient-name');
+            var totalAmount = $('#total-amount');
 
 
             var soaTable = $('#soa-table');
@@ -58,6 +59,7 @@
                             soaClientName.text(data.client_name);
                             soaPatientName.text(data.patient_name);
                             soaClientCode.text(data.client_code);
+                            totalAmount.text("&#8369" + data.total_amount);
                             $(data.soa).each(function(index, value){
                                 addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount);
                             })
@@ -135,6 +137,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="card-footer">
+                    <p>Total: <span class="fw-bold" id="total-amount"></span></p>
                 </div>
             </div>
         </div>

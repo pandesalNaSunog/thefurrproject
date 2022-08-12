@@ -24,7 +24,7 @@
             $clientCode = $userRow['client_code'];
             $petName = $petRow['name'];
             $statementOfAccounts = array();
-            
+            $totalAmount = 0;
             
             $soaDetails = $soaRow['details'];
 
@@ -40,6 +40,8 @@
                     $quantity = $soaDetailsBreakdown[4];
                     $discounted = $soaDetailsBreakdown[3];
                     $discount = $soaDetailsBreakdown[5];
+
+                    $totalAmount += $discounted;
 
 
                     $statementOfAccounts[] = array(
@@ -58,7 +60,8 @@
                     'soa' => $statementOfAccounts,
                     'client_name' => $clientName,
                     'patient_name' => $petName,
-                    'client_code' => $clientCode
+                    'client_code' => $clientCode,
+                    'total_amount' => $totalAmount
                 )
             );
         }
