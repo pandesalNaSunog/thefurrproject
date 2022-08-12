@@ -4,7 +4,18 @@
         $con = connect();
 
         if(isset($_POST)){
-            $petId = $_POST['pet_id'];
+            $petIdArray = explode("*",$_POST['pet_id']);
+            $petId = $petIdArray[0];
+            $appointmentId = $petIdArray[1];
+
+            $hasMedicalRecord = false;
+            $query = "SELECT * FROM medical_records WHERE pet_id = '$petId' AND appointment_id = '$appointmentId'";
+            $medicalRecord = $con->query($query) or die($con->error);
+            if($medicalRecordRow = $medicalRecord->fetch_asso()){
+                $hasMedicalRecord = true;
+            }else{
+                $hasMedicalRecord = false;
+            }
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
@@ -21,6 +32,7 @@
                 'name' => $name,
                 'pet_name' => $petName,
                 'client_code' => $code,
+                'has_medical_record' => $hasMedicalRecord
             );
 
             echo json_encode($response);
