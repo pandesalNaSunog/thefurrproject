@@ -103,6 +103,9 @@
             var laboratoryList = $('#laboratory-list');
             var emergencyList = $('#emergency-list');
             var surgeryList = $('#surgery-list');
+            var vetLabRequestTable = $('#vet-lab-request-table');
+            var labRequestLink = $('#lab-request-link');
+            var labRequestSection = $('#lab-request-section');
 
 
             var serviceCategories = [];
@@ -604,6 +607,7 @@
             getProfile();
             appointmentSection.hide();
             servicesSection.hide();
+            labRequestSection.hide();
 
             function getClients(){
                 clientsTable.children().remove();
@@ -826,21 +830,32 @@
                 
             })
 
+            labRequestLink.on('click', function(){
+                labRequestSection.show();
+                appointmentSection.hide();
+                clientSection.hide();
+                servicesSection.hide();
+                getVetLabRequests();
+            })
+
             clientLink.on('click', function(){
                 appointmentSection.hide();
                 clientSection.show();
                 servicesSection.hide();
+                labRequestSection.hide();
                 getClients();
                 getProfile();
             })
 
             appointmentLink.on('click', function(){
+                labRequestSection.hide();
                 clientSection.hide();
                 appointmentSection.show()
                 servicesSection.hide();
                 getAppointments();
             })
             servicesLink.on('click', function(){
+                labRequestSection.hide();
                 servicesSection.show();
                 clientSection.hide();
                 appointmentSection.hide()
@@ -850,6 +865,109 @@
                 surgeryList.children().remove();
             })
 
+
+            function getVetLabRequests(){
+                vetLabRequestTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetLabRequests.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        console.log(data)
+                        $(data).each(function(index, value){
+                            addToLabRequestTableWithResults(index, value.time_limit, value.id, value.patient_name, value.result, value.request, value.date);
+                        })
+                    }
+                })
+            }
+
+            function addToLabRequestTableWithResults(index, timeLimit, id, name, result, request, requestedAt){
+                console.log(index)
+                if(result == 'pending'){
+                    vetLabRequestTable.append(`<tr>
+                                                        <td>${name}</td>
+                                                        <td>${request}</td>
+                                                        <td>${timeLimit}</td>
+                                                        <td>${result}</td>
+                                                        <td>
+                                                            <div class="input-group ig-upload">
+                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
+                                                                <input class="result form-control" type="file">
+                                                            </div>
+                                                        </td>
+                                                        <td>${requestedAt}</td>
+                                                    </tr>`)
+                }else{
+                    vetLabRequestTable.append(`<tr>
+                                                        <td>${name}</td>
+                                                        <td>${request}</td>
+                                                        <td>${timeLimit}</td>
+                                                        <td>
+                                                            <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-lab-results-modal">Results</button>
+                                                        </td>
+                                                        <td>
+                                                            <div class="input-group ig-upload">
+                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
+                                                                <input class="result form-control" type="file">
+                                                            </div>
+                                                        </td>
+                                                        <td>${requestedAt}</td>
+                                                    </tr>`)
+                    var viewResults = vetLabRequestTable.children().eq(index).find('.view-results');
+                    viewResults.on('click', function(){
+                        var thisViewResults = $(this);
+                        labResultsList.children().remove();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/getLabResults.php',
+                            data:{
+                                lab_request_id: thisViewResults.val(),
+                            },
+                            success: function(response){
+                                labResultPatientName.text(thisViewResults.parent().parent().children().eq(0).text())
+                                labResultLabRequest.text(thisViewResults.parent().parent().children().eq(1).text())
+                                labResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
+                                var data = JSON.parse(response);
+                                $(data.results).each(function(index, value){
+                                    addToLabResultsList(index, value.id, value.result);
+                                })
+                            }
+                        })
+                    })
+                }
+                
+                var result = vetLabRequestTable.children().eq(index).find('.result');
+                var upload = vetLabRequestTable.children().eq(index).find('.upload')
+                
+                upload.on('click', function(){
+                    var thisUpload = $(this);
+                    var labRequestId = $(this).val();
+                    if(result.val() == ""){
+                        result.addClass('is-invalid');
+                    }else{
+                        var formData = new FormData();
+
+                        formData.append("result", result[0].files[0]);
+                        formData.append("lab_request_id", labRequestId);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/submitLabResult.php',
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            success: function(response){
+                                console.log(response);
+                                // if(response == 'invalid file'){
+                                //     alert('Please upload image files only')
+                                // }else{
+                                //     location.reload();
+                                // }
+                            }
+                        })
+                    }
+                })
+            }
             function getRenderedServices(){
                 
                 $.ajax({
@@ -931,6 +1049,10 @@
                     </li>
 
                     <li>
+                        <a href="#" id="lab-request-link" class="navigation nav-link">Lab Requests</a>
+                    </li>
+
+                    <li>
                         <a id="services-link" class="navigation nav-link" href="#">Services</a>
                     </li>
                     <li>
@@ -954,6 +1076,37 @@
         </div>
     </nav>
 
+    <section id="lab-request-section">
+        <div class="container">
+            <div class="card shadow rounded-4 mx-auto mt-5">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Lab Requests
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Patient Name</th>
+                                <th scope="col">Laboratory Request</th>
+                                <th scope="col">Time Limit</th>
+                                <th scope="col">Result</th>
+                                <th scope="col">Upload Result</th>
+                                <th scope="col">Requested At</th>
+                            </thead>
+                            <tbody id="vet-lab-request-table">
+
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
     <section id="clients-section">
         <div class="container">
             <div class="card shadow rounded-4 col-lg-6 mx-auto mt-5">
@@ -961,7 +1114,7 @@
                     <h3 class="fw-bold">
                         Clients
                     </h3>
-                    <div class="input-group">
+                    <div class="input-group" id="search">
                         <button id="search-client" class="btn btn-outline-primary">
                             Search
                         </button>

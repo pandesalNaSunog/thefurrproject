@@ -74,12 +74,12 @@
     background-color: darkblue;
 }
 
-.input-group{
+#search{
     width: 60%;
 }
 
 @media (min-width: 768px){
-    .input-group{
+    #search{
         width: 50%;
     }
 }
