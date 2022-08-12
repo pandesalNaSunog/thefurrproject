@@ -11,7 +11,7 @@
             $hasMedicalRecord = false;
             $query = "SELECT * FROM medical_records WHERE pet_id = '$petId' AND appointment_id = '$appointmentId'";
             $medicalRecord = $con->query($query) or die($con->error);
-            if($medicalRecordRow = $medicalRecord->fetch_asso()){
+            if($medicalRecordRow = $medicalRecord->fetch_assoc()){
                 $hasMedicalRecord = true;
             }else{
                 $hasMedicalRecord = false;

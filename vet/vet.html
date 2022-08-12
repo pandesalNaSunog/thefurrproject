@@ -461,17 +461,16 @@
                                 pet_id: servicesValue,
                             },
                             success: function(response){
-                                console.log(response);
-                                // var data = JSON.parse(response);
-                                // globalUserId = data.client_id;
-                                // patientOwnerName.text(data.name);
-                                // if(data.has_medical_record == true){
-                                //     patientName.text(data.pet_name);
-                                // }else{
-                                //     patientName.text(data.pet_name + " (no medical record inputted)");
-                                // }
+                                var data = JSON.parse(response);
+                                globalUserId = data.client_id;
+                                patientOwnerName.text(data.name);
+                                if(data.has_medical_record == true){
+                                    patientName.text(data.pet_name);
+                                }else{
+                                    patientName.text(data.pet_name + " (no medical record inputted)");
+                                }
                                 
-                                // clientCode.text(data.client_code);
+                                clientCode.text(data.client_code);
                             }
                         })
 
