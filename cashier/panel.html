@@ -12,6 +12,10 @@
 
     <script>
         $(document).ready(function(){
+            var soaClientName = $('#soa-client-name');
+            var soaClientCode = $('#soa-client-code');
+            var soaPatientName = $('#soa-patient-name');
+
 
             var soaTable = $('#soa-table');
             var soaDetailsTable = $('#soa-details-table');
@@ -51,7 +55,10 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            $(data).each(function(index, value){
+                            soaClientName.text(data.client_name);
+                            soaPatientName.text(data.patient_name);
+                            soaClientCode.text(data.client_code);
+                            $(data.soa).each(function(index, value){
                                 addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount);
                             })
                         }
@@ -132,45 +139,6 @@
             </div>
         </div>
     </section>
-    
-    <div class="modal fade" id="invoices-modal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div class="modal-title">
-                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <th scope="col">Services</th>
-                                <th scope="col">Price</th>
-                            </thead>
-                            <tbody id="service-invoice-table">
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <p><span class="fw-bold">Total: </span><span id="total-price"></span></p>
-                    <div class="col-md-5">
-                        <input id="amount-renderred" type="number" class="form-control" placeholder="Amount Renderred">
-                        <div class="invalid-feedback">
-                            Please fill out this field
-                        </div>
-                    </div>
-                    <button id="confirm-renderred" class="btn btn-primary px-5 rounded-pill mt-3">Confirm</button>
-
-                    
-                </div>
-                
-
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" data-bs-backdrop="static" id="view-soa-details-modal">
         <div class="modal-dialog modal-lg">

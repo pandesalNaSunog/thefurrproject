@@ -10,6 +10,22 @@
             $soa = $con->query($query) or die($con->error);
             $soaRow = $soa->fetch_assoc();
             $response = array();
+            
+            $petId = $soaRow['pet_id'];
+            $query = "SELECT * FROM pets WHERE id = '$petId'";
+            $pet = $con->query($query) or die($con->error);
+            $petRow = $pet->fetch_assoc();
+
+            $userId = $petRow['user_id'];
+            $query = "SELECT * FROM users WHERE id = '$userId'";
+            $user = $con->query($query) or die($con->error);
+            $userRow = $user->fetch_assoc();
+            $clientName = $userRow['name'];
+            $clientCode = $userRow['client_code'];
+            $petName = $petRow['name'];
+            $statementOfAccounts = array();
+            
+            
             $soaDetails = $soaRow['details'];
 
             $soaDetailsArray = explode("**", $soaDetails);
@@ -26,7 +42,7 @@
                     $discount = $soaDetailsBreakdown[5];
 
 
-                    $response[] = array(
+                    $statementOfAccounts[] = array(
                         'service' => $service,
                         'base_price' => $basePrice,
                         'amount' => $amount,
@@ -37,7 +53,14 @@
                 }
             }
 
-            echo json_encode($response);
+            echo json_encode(
+                array(
+                    'soa' => $statementOfAccounts,
+                    'client_name' => $clientName,
+                    'patient_name' => $petName,
+                    'client_code' => $clientCode
+                )
+            );
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
