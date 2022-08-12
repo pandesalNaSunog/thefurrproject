@@ -453,11 +453,12 @@
                     var services = petsList.children().eq(index).find('.services');
                     services.on('click', function(){
                         globalVetTechId = 0;
+                        var servicesValue = $(this).val();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getPetOwner.php',
                             data:{
-                                pet_id: $(this).val(),
+                                pet_id: servicesValue,
                             },
                             success: function(response){
                                 var data = JSON.parse(response);
