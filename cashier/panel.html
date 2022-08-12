@@ -42,6 +42,7 @@
 
                 viewSoaDetails.on('click', function(){
                     var thisViewSoaDetails = $(this);
+                    soaDetailsTable.children().remove();
                     $.ajax({
                         type: 'POST',
                         url: 'php/getSoaDetails.php',
