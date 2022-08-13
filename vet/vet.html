@@ -430,7 +430,6 @@
                                 alert('Medical Record has been successfully added.')
                                 $('#create-patient-records-modal').find('input').val('');
                                 $('#create-patient-records-modal').find('textarea').val('');
-                                $('#create-patient-records-modal').modal('hide');
                                 var newPatientName = patientName.text();
                                 newPatientName = newPatientName.replace(" (no medical record inputted)","");
                                 patientName.text(newPatientName);
