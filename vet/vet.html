@@ -136,6 +136,27 @@
                 })
             })
 
+            customServiceAttendingLabTech.on('click', function(){
+                customServiceAttendingLabTechList.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetTechnicians.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            customServiceAttendingLabTechList.append(`<li><button value="${value.id}" class="custom-service-lab-tech dropdown-item">${value.name}</button></li>`);
+                            var customServiceLabTech = customServiceAttendingLabTechList.children().eq(index).find('.custom-service-lab-tech');
+
+                            customServiceLabTech.on('click', function(){
+
+                                customServiceAttendingLabTech.text($(this).text());
+                                customServiceAttendingLabTech.val($(this).val());
+                            })
+                        })
+                    }
+                })
+            })
+
 
             var serviceCategories = [];
             var soaServices = [];
@@ -195,10 +216,10 @@
                 }else{
                     var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
                     var index = soaTable.children().length;
-
-
-
-                    addToSoaTable(index, customService.val(), customBasePrice.val(), customQuantity.val(), total);
+                    if(customServiceAttendingLabTech.val() == ""){
+                        customServiceAttendingLabTech.va(0);
+                    }
+                    addToSoaTable(index, customServiceAttendingLabTech.val(), customService.val(), customBasePrice.val(), customQuantity.val(), total);
 
                     serviceCategories.push(customServiceCategory.val());
                     customBasePrice.val('');
@@ -222,7 +243,6 @@
                         serviceAttendingLabTech.val(0);
                     }
                     addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
-                    console.log(soalabTechIds);
                     serviceCategories.push(chooseService.val());
                     basePrice.val('');
                     quantity.val('')
@@ -1598,12 +1618,12 @@
                                 </div>
                             </div>
 
-                            <select class="form-select mt-3" id="custom-service-attending-lab-tech">
-                                <option value="--" selected>--Choose Attending Vet Tech--</option>
-                                <div id="custom-service-attending-lab-tech-list">
-                                    
-                                </div>
-                            </select>
+                            <div class="dropdown mt-3">
+                                <button class="rounded-outline-button dropdown-toggle" id="custom-service-attending-lab-tech" data-bs-toggle="dropdown">Choose Attending Vet Tech</button>
+                                <ul class="dropdown-menu" id="custom-service-attending-lab-tech-list">
+
+                                </ul>
+                            </div>
 
                             
 
