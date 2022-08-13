@@ -126,11 +126,11 @@
                                     concern: appointmentConcern.val()
                                 },
                                 success: function(response){
-                                    console.log(response);
-                                    // if(response == 'ok'){
-                                    //     alert('Appointment has been successfully booked.');
-                                    //     location.reload();
-                                    //}
+
+                                    if(response == 'ok'){
+                                        alert('Appointment has been successfully booked.');
+                                        location.reload();
+                                    }
                                 }
                             })
                         }
