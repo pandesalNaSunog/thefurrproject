@@ -6,7 +6,7 @@
         include('connection.php');
         $con = connect();
 
-        $query = "SELECT * FROM appointments WHERE date = '$today'";
+        $query = "SELECT * FROM appointments";
 
         $appointment = $con->query($query) or die($con->error);
         $appointments = array();
