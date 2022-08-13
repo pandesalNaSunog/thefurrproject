@@ -109,11 +109,12 @@
             var labRequestSection = $('#lab-request-section');
             var serviceAttendingLabTech = $('#service-attending-lab-tech')
             var customServiceAttendingLabTech = $('#custom-service-attending-lab-tech');
-            var serviceAttendingLabTechList = $('#service-attending-lab-tech-list');
+            
 
 
             serviceAttendingLabTech.on('click', function(){
                 serviceAttendingLabTechList.children().remove();
+                var serviceAttendingLabTechList = $('#service-attending-lab-tech-list');
                 $.ajax({
                     type: 'GET',
                     url: 'php/getVetTechnicians.php',
