@@ -38,7 +38,6 @@
                     'pet' => $petName
                 );
             }
-            echo json_encode($appointments);
         }
 
         echo json_encode($appointments);
