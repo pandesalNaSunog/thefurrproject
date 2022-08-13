@@ -4,7 +4,7 @@
         include('connection.php');
         $con = connect();
         $today = getCurrentDate();
-        if(isset($_FILES) && isset($_SESSION['lab_tech_id'])){
+        if(isset($_FILES) && isset($_SESSION['doctor_id'])){
             $labRequestId = $_POST['lab_request_id'];
             $labTechId = $_SESSION['lab_tech_id'];
             $result = $_FILES['result']['name'];
