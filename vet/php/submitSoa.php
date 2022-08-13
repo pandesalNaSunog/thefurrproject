@@ -13,7 +13,7 @@
             $quantities = $_POST['quantities'];
             $discounts = $_POST['discounts'];
             $serviceCategories = $_POST['categories'];
-            $labTechId = $_POST['lab_tech_id'];
+            $labTechIds = $_POST['lab_tech_ids'];
 
 
             $details = "";
