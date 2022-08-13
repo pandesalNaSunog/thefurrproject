@@ -24,7 +24,7 @@
                 $query = "SELECT * FROM users WHERE id = '$doctorId'";
                 $doctor = $con->query($query) or die($con->error);
                 $doctorRow = $doctor->fetch_assoc();
-                $doctorName = $doctorName['name'];
+                $doctorName = $doctorRow['name'];
 
                 $petId = $petIdArray[$key];
                 $query = "SELECT * FROM pets WHERE id = '$petId'";
