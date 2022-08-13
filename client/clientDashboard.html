@@ -34,6 +34,7 @@
             var bookAppointmentModal = $('#book-appointment-modal');
             var bookedAppointmentsList = $('#booked-appointments-list');
             var noBookedAppointments = $('#no-booked-appointments');
+            var noNextAppointments = $('#no-next-appointments');
             appointmentDate.on('change', function(){
                 timeSchedules.children().remove();
                 $.ajax({
@@ -208,6 +209,7 @@
                         console.log(response);
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
+                            noNextAppointments.hide();
                             appointmentsList.append(`<div class="card shadow rounded-4 mb-3">
                                                         <div class="card-body">
                                                             <h3 class="fw-bold">Next Appointment</h3>
@@ -368,8 +370,9 @@
                                     <h3 class="fw-bold">Next Appointment</h3>
                                 </div>
                                 <div class="card-body">
+                                    <p class="lead p-5 text-center" id="no-next-appointments">No Appointments</p>
                                     <div id="appointments-list">
-                                        <p class="lead p-5 text-center">No Appointments</p>
+                                        
                                     </div>
                                 </div>
                             </div>
