@@ -218,6 +218,9 @@
                     var total = parseFloat(basePrice.val()) * parseFloat(quantity.val());
                     var index = soaTable.children().length;
 
+                    if(serviceAttendingLabTech.val() == ""){
+                        serviceAttendingLabTech.val(0);
+                    }
                     addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
                     console.log(soalabTechIds);
                     serviceCategories.push(chooseService.val());
