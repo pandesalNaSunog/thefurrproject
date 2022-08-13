@@ -111,7 +111,7 @@
             var customServiceAttendingLabTech = $('#custom-service-attending-lab-tech');
             var serviceAttendingLabTechList = $('#service-attending-lab-tech-list');
 
-            serviceAttendingLabTechList.val('');
+            serviceAttendingLabTechList.val(0);
 
 
             serviceAttendingLabTech.on('click', function(){
@@ -222,6 +222,7 @@
                     serviceCategories.push(chooseService.val());
                     basePrice.val('');
                     quantity.val('')
+                    serviceAttendingLabTech.val(0);
                     chooseService.text('Choose Service')
                 }
             })
