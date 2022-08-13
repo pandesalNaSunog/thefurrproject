@@ -30,18 +30,19 @@
 
 
             soaLink.on('click', function(){
-                console.log('soa-link')
                 appointmentsSection.hide();
                 soaSection.show();
                 getSoas();
             });
             appointmentsLink.on('click', function(){
-                console.log('appointments-link');
                 appointmentsSection.show();
                 soaSection.hide();
                 getTodaysAppointments();
             })
+
+
             getTodaysAppointments();
+            soaSection.hide();
 
 
             navigation.on('click', function(){
@@ -197,7 +198,7 @@
 
     <section id="appointments-section">
         <div class="container">
-            <div class="card col-lg-6 mx-auto shadow rounded-4">
+            <div class="card mt-5 col-lg-6 mx-auto shadow rounded-4">
                 <div class="card-header">
                     <h3 class="fw-bold">
                         Today's Appointments
