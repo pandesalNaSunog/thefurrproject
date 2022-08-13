@@ -1,7 +1,7 @@
 <?php
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         date_default_timezone_set('Asia/Manila');
-        $today('Y-m-d');
+        $today = date('Y-m-d');
 
         include('connection.php');
         $con = connect();
