@@ -107,6 +107,24 @@
             var vetLabRequestTable = $('#vet-lab-request-table');
             var labRequestLink = $('#lab-request-link');
             var labRequestSection = $('#lab-request-section');
+            var serviceAttendingLabTech = $('#service-attending-lab-tech')
+            var customServiceAttendingLabTech = $('#custom-service-attending-lab-tech');
+            var serviceAttendingLabTechList = $('#service-attending-lab-tech-list');
+
+
+            serviceAttendingLabTech.on('click', function(){
+                serviceAttendingLabTechList.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getVetTechnicians.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            serviceAttendingLabTechList.append(`<option value="${value.id}">${value.name}</option>`)
+                        })
+                    }
+                })
+            })
 
 
             var serviceCategories = [];
@@ -115,10 +133,12 @@
             var soaTotalPrices = [];
             var soaQuantities = [];
             var soaDiscounts = [];
-            var labTechIds = [];
-            
+            var soalabTechIds = [];
 
-            
+
+            serviceAttendingLabTech.on('click', function(){
+
+            })
 
 
             submitSoa.on('click', function(){
@@ -157,7 +177,7 @@
                 soaQuantities = [];
                 soaDiscounts = [];
                 serviceCategories = [];
-                labTechIds = [];
+                soalabTechIds = [];
             }
 
             confirmCustomService.on('click', function(){
@@ -170,6 +190,9 @@
                 }else{
                     var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
                     var index = soaTable.children().length;
+
+
+
                     addToSoaTable(index, customService.val(), customBasePrice.val(), customQuantity.val(), total);
 
                     serviceCategories.push(customServiceCategory.val());
@@ -1565,7 +1588,7 @@
 
                             <select class="form-select mt-3" id="custom-service-attending-lab-tech">
                                 <option value="--" selected>--Choose Attending Vet Tech--</option>
-                                <div id="service-attending-lab-tech-list">
+                                <div id="custom-service-attending-lab-tech-list">
                                     
                                 </div>
                             </select>
