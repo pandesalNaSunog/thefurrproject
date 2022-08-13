@@ -16,6 +16,7 @@
             var soaClientCode = $('#soa-client-code');
             var soaPatientName = $('#soa-patient-name');
             var totalAmount = $('#total-amount');
+            var todaysAppointmentTable = $('#todays-appointment-table');
 
 
             var soaTable = $('#soa-table');
@@ -32,9 +33,17 @@
                     type: 'GET',
                     url: 'php/getTodaysAppointments.php',
                     success: function(response){
-                        console.log(response);
+                        var data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            addToTodaysAppointmentTable(index, value.date, value.doctor, value.pet)
+                        })
                     }
                 })
+            }
+
+            function addToTodaysAppointmentTable(){
+                todaysAppointmentTable.append(`<tr><td>${date}</td><td>${doctor}</td><td>${pet}</td></tr>`)
             }
             function getSoas(){
                 $.ajax({
@@ -109,7 +118,12 @@
                 <ul class="navbar-nav ms-auto fw-bold">
                     <li class="nav-item">
                         <a href="#" class="nav-link active">
-                            Invoices
+                            Statement of Accounts
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            Appointments
                         </a>
                     </li>
                     <li class="nav-item">
@@ -153,6 +167,31 @@
                     </div>
                 </div>
                 
+            </div>
+        </div>
+    </section>
+
+
+    <section id="appointments-section">
+        <div class="container">
+            <div class="card col-lg-6 shadow rounded-4">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Today's Appointments
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <th scope="col">Date</th>
+                            <th scope="col">Attending Vet</th>
+                            <th scope="col">Patient Name</th>
+                        </thead>
+                        <tbody id="todays-appointment-table">
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>

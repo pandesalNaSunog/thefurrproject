@@ -12,7 +12,32 @@
         $appointments = array();
 
         while($appointmentRow = $appointment->fetch_assoc()){
-            $appointments[] = $appointmentRow;
+            $date = date_format(date_create($appointmentRow['date']), "M d, Y");
+            $doctorIds = $appointmentRow['doctor_id'];
+            $petIds = $appointmentRow['pet_ids'];
+
+            $doctorIdArray = explode("*", $doctorIds);
+            $petIdArray = explode("*", $petIds);
+
+            foreach($doctorIdArray as $key => $doctorId){
+                $query = "SELECT * FROM users WHERE id = '$doctorId' AND user_type = 'doctor'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+                $doctorName = $doctorName['name'];
+
+                $petId = $petIdArray[$key];
+                $query = "SELECT * FROM pets WHERE id = '$petId'";
+                $pet = $con->query($query) or die($con->error);
+                $petRow = $pet->fetch_assoc();
+                $petName = $petRow['name'];
+
+                $appointments[] = array(
+                    'date' => $date,
+                    'doctor' => $doctorName,
+                    'pet' => $petName
+                );
+            }
+            echo json_encode($appointments);
         }
 
         echo json_encode($appointments);
