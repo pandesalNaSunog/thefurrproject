@@ -23,31 +23,33 @@
                 if($wellnessRow = $wellness->fetch_assoc() && $wellnessRow['doctor_d'] != 0){
                     $doctorId = $wellnessRow['doctor_id'];
                     echo $doctorId;
-                }else{
-                    $query = "SELECT * FROM users WHERE user_type ='doctor'";
-                    $doctor = $con->query($query) or die($con->error);
-                    while($doctorRow = $doctor->fetch_assoc()){
-                        $doctorIds[] = $doctorRow['id'];
-                    }
-
-                    $doctorIndex = rand(0,3);
-
-                    $doctorId = $doctorIds[$doctorIndex];
                 }
-                if($key == 0){
-                    $petIdString .= $petId;
-                    $doctorIdString .= $doctorId;
-                }else{
-                    $petIdString .= "**".$petId;
-                    $doctorIdString .= "**".$doctorId;
-                }
+            //     }else{
+            //         $query = "SELECT * FROM users WHERE user_type ='doctor'";
+            //         $doctor = $con->query($query) or die($con->error);
+            //         while($doctorRow = $doctor->fetch_assoc()){
+            //             $doctorIds[] = $doctorRow['id'];
+            //         }
+
+            //         $doctorIndex = rand(0,3);
+
+            //         $doctorId = $doctorIds[$doctorIndex];
+            //     }
+            //     if($key == 0){
+            //         $petIdString .= $petId;
+            //         $doctorIdString .= $doctorId;
+            //     }else{
+            //         $petIdString .= "**".$petId;
+            //         $doctorIdString .= "**".$doctorId;
+            //     }
+            // }
+
+            // $query = $con->prepare("INSERT INTO appointments(user_id,doctor_id,concern,date,time,arrival_status,pet_ids,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?)");
+            // $query->bind_param("issssssss", $clientId, $doctorIdString, $concern, $date, $time, $status, $petIdString, $today, $today);
+            // $query->execute();
+
+            // echo 'ok';
             }
-
-            $query = $con->prepare("INSERT INTO appointments(user_id,doctor_id,concern,date,time,arrival_status,pet_ids,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?)");
-            $query->bind_param("issssssss", $clientId, $doctorIdString, $concern, $date, $time, $status, $petIdString, $today, $today);
-            $query->execute();
-
-            echo 'ok';
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
