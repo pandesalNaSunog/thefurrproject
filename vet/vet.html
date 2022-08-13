@@ -1027,12 +1027,11 @@
                             contentType: false,
                             processData: false,
                             success: function(response){
-                                console.log(response);
-                                // if(response == 'invalid file'){
-                                //     alert('Please upload image files only')
-                                // }else{
-                                //     location.reload();
-                                // }
+                                if(response == 'invalid file'){
+                                    alert('Please upload image files only')
+                                }else{
+                                    location.reload();
+                                }
                             }
                         })
                     }
@@ -1565,6 +1564,7 @@
                             <h3 class="text-center fw-bold">
                                 STATEMENT OF ACCOUNTS
                             </h3>
+                            <p><em class="text-center">Data inputted here will be recorded as history of services renderred by the attending Vet/attending Vet Tech</em></p>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
