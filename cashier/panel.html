@@ -30,11 +30,13 @@
 
 
             soaLink.on('click', function(){
+                console.log('soa-link')
                 appointmentsSection.hide();
                 soaSection.show();
                 getSoas();
             });
             appointmentsLink.on('click', function(){
+                console.log('appointments-link');
                 appointmentsSection.show();
                 soaSection.hide();
                 getTodaysAppointments();
