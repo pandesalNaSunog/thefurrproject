@@ -20,7 +20,7 @@
             $petIdArray = explode("*", $petIds);
 
             foreach($doctorIdArray as $key => $doctorId){
-                $query = "SELECT * FROM users WHERE id = '$doctorId' AND user_type = 'doctor'";
+                $query = "SELECT * FROM users WHERE id = '$doctorId'";
                 $doctor = $con->query($query) or die($con->error);
                 $doctorRow = $doctor->fetch_assoc();
                 $doctorName = $doctorName['name'];
