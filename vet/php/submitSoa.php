@@ -18,7 +18,7 @@
 
             $details = "";
             foreach($services as $key => $service){
-                $details .= $service . "*" . $serviceCategories[$key] . "*" . $basePrices[$key] . "*" . $totalPrices[$key] . "*" . $quantities[$key] . "*" . $discounts[$key] . "**";
+                $details .= $service . "*" . $serviceCategories[$key] . "*" . $basePrices[$key] . "*" . $totalPrices[$key] . "*" . $quantities[$key] . "*" . $discounts[$key] . "*" . $labTechIds[$key] . "**";
             }
 
             $query = "INSERT INTO statement_of_accounts(`pet_id`,`doctor_id`,`soa_number`,`details`,`created_at`,`updated_at`)VALUES('$petId','$doctorId','no','$details','$today','$today')";
@@ -51,7 +51,8 @@
                     $thisServiceArray = explode("*", $serviceRendered);
                     $thisService = $thisServiceArray[0];
                     $thisCategory = $thisServiceArray[1];
-                    $query = "INSERT INTO rendered_services(`category`,`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisCategory','$thisService','$soaNumber','0','$doctorId','$today','$today')";
+                    $thisLabTechId = $thisServiceArray[6];
+                    $query = "INSERT INTO rendered_services(`category`,`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`)VALUES('$thisCategory','$thisService','$soaNumber','$thisLabTechId','$doctorId','$today','$today')";
 
                     $con->query($query) or die($con->error);
                 }

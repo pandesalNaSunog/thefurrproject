@@ -152,7 +152,7 @@
                         url: 'php/submitSoa.php',
                         data:{
                             pet_id: globalPetId,
-                            lab_tech_id: globalVetTechId,
+                            lab_tech_ids: soalabTechIds,
                             services: soaServices,
                             base_prices: soaBasePrices,
                             total_prices: soaTotalPrices,
@@ -215,7 +215,8 @@
                 }else{
                     var total = parseFloat(basePrice.val()) * parseFloat(quantity.val());
                     var index = soaTable.children().length;
-                    addToSoaTable(index, chooseService.text(), basePrice.val(), quantity.val(), total);
+
+                    addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
                     serviceCategories.push(chooseService.val());
                     basePrice.val('');
                     quantity.val('')
@@ -223,12 +224,13 @@
                 }
             })
 
-            function addToSoaTable(index, service, basePrice, quantity, total){
+            function addToSoaTable(index, labtechId, service, basePrice, quantity, total){
                 soaServices.push(service)
                 soaBasePrices.push(basePrice);
                 soaQuantities.push(quantity);
                 soaTotalPrices.push(total);
                 soaDiscounts.push(0);
+                soalabTechIds.push(labtechId);
                 soaTable.append(`<tr>
                                     <td>${service}</td>
                                     <td>&#8369 ${basePrice}</td>
