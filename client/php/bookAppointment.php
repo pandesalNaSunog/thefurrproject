@@ -20,9 +20,11 @@
                 $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
                 $wellness = $con->query($query) or die($con->error);
                 $doctorId = 0;
-                if($wellnessRow = $wellness->fetch_assoc() && $wellnessRow['doctor_d'] != 0){
-                    $doctorId = $wellnessRow['doctor_id'];
-                    echo $doctorId;
+                if($wellnessRow = $wellness->fetch_assoc()){
+                    if($wellnessRow['doctor_d'] != 0){
+                        $doctorId = $wellnessRow['doctor_id'];
+                        echo $doctorId;
+                    }
                 }
             //     }else{
             //         $query = "SELECT * FROM users WHERE user_type ='doctor'";
