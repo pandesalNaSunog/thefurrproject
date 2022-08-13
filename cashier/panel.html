@@ -69,6 +69,7 @@
                 todaysAppointmentTable.append(`<tr><td>${date}</td><td>${doctor}</td><td>${pet}</td></tr>`)
             }
             function getSoas(){
+                soaTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getSoa.php',
