@@ -122,7 +122,7 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             console.log(serviceAttendingLabTechList);
-                            serviceAttendingLabTechList.append(`<option value="${value.id}">${value.name}</option>`)''
+                            serviceAttendingLabTechList.append(`<option value="${value.id}">${value.name}</option>`);
                         })
                     }
                 })
