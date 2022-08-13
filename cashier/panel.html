@@ -22,6 +22,20 @@
             var soaDetailsTable = $('#soa-details-table');
             var globalSoaId = 0;
             getSoas();
+
+
+            getTodaysAppointments();
+
+
+            function getTodaysAppointments(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getTodaysAppointments.php',
+                    success: function(response){
+                        console.log(response);
+                    }
+                })
+            }
             function getSoas(){
                 $.ajax({
                     type: 'GET',
