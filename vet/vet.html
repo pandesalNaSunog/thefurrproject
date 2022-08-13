@@ -125,9 +125,9 @@
                             var serviceLabTech = serviceAttendingLabTechList.children().eq(index).find('.service-lab-tech');
 
                             serviceLabTech.on('click', function(){
-                                console.log($(this).text());
-                                // serviceAttendingLabTech.text($(this).text());
-                                // serviceAttendingLabTech.val($(this).val());
+
+                                serviceAttendingLabTech.text($(this).text());
+                                serviceAttendingLabTech.val($(this).val());
                             })
                         })
                     }
