@@ -122,7 +122,7 @@
                         $(data).each(function(index, value){
                             console.log(serviceAttendingLabTechList);
                             serviceAttendingLabTechList.append(`<li><button value="${value.id}" class="service-lab-tech dropdown-item">${value.name}</button></li>`);
-                            var serviceLabTech = serviceAttendingLabTech.children().eq(index).find('.service-lab-tech');
+                            var serviceLabTech = serviceAttendingLabTechList.children().eq(index).find('.service-lab-tech');
 
                             serviceLabTech.on('click', function(){
                                 console.log($(this).text());
