@@ -121,7 +121,13 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             console.log(serviceAttendingLabTechList);
-                            serviceAttendingLabTechList.append(`<li><button value="${value.id}" class="dropdown-item">${value.name}</button></li>`);
+                            serviceAttendingLabTechList.append(`<li><button value="${value.id}" class="service-lab-tech dropdown-item">${value.name}</button></li>`);
+                            var serviceLabTech = serviceAttendingLabTech.children().eq(index).find('.service-lab-tech');
+
+                            serviceLabTech.on('click', function(){
+                                serviceAttendingLabTech.text($(this).text());
+                                serviceAttendingLabTech.val($(this).val());
+                            })
                         })
                     }
                 })
@@ -135,11 +141,6 @@
             var soaQuantities = [];
             var soaDiscounts = [];
             var soalabTechIds = [];
-
-
-            serviceAttendingLabTech.on('click', function(){
-
-            })
 
 
             submitSoa.on('click', function(){
@@ -1551,7 +1552,7 @@
                                     Choose Service
                                 </button>
 
-                                <div class="dropdown">
+                                <div class="dropdown mt-3">
                                     <button class="rounded-outline-button dropdown-toggle" id="service-attending-lab-tech" data-bs-toggle="dropdown">Choose Attending Vet Tech</button>
                                     <ul class="dropdown-menu" id="service-attending-lab-tech-list">
 
