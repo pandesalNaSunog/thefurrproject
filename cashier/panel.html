@@ -17,25 +17,44 @@
             var soaPatientName = $('#soa-patient-name');
             var totalAmount = $('#total-amount');
             var todaysAppointmentTable = $('#todays-appointment-table');
+            var navigation = $('#navigation');
+            var soaSection = $('#soa-section');
+            var appointmentsSection = $('$appointments-section')
 
 
             var soaTable = $('#soa-table');
             var soaDetailsTable = $('#soa-details-table');
             var globalSoaId = 0;
-            getSoas();
+            var soaLink = $('#soa-link');
+            var appointmentsLink = $('appointments-link');
 
 
+            soaLink.on('click', function(){
+                appointmentsSection.hide();
+                soaSection.show();
+                getSoas();
+            });
+            appointmentsSection.on('click', function(){
+                appointmentsSection.show();
+                soaSection.hide();
+                getTodaysAppointments();
+            })
             getTodaysAppointments();
 
 
+            navigation.on('click', function(){
+                navigation.removeClass('active');
+                $(this).addClass('active');
+            })
+
+
             function getTodaysAppointments(){
+                todaysAppointmentTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getTodaysAppointments.php',
                     success: function(response){
-                        console.log(response);
                         var data = JSON.parse(response);
-
                         $(data).each(function(index, value){
                             addToTodaysAppointmentTable(index, value.date, value.doctor, value.pet)
                         })
@@ -118,15 +137,16 @@
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto fw-bold">
                     <li class="nav-item">
-                        <a href="#" class="nav-link active">
-                            Statement of Accounts
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active">
+                        <a href="#" class="appointments-link navigation nav-link active">
                             Appointments
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="soa-link navigation nav-link">
+                            Statement of Accounts
+                        </a>
+                    </li>
+                    
                     <li class="nav-item">
                         <a id="logout" href="#" class="nav-link">
                             Logout
@@ -137,7 +157,7 @@
         </div>
     </nav>
 
-    <section id="invoices">
+    <section id="soa-section">
         <div class="container">
             
             <div class="card col-lg-7 mt-5 mx-auto shadow rounded-4">
