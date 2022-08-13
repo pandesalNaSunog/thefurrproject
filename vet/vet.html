@@ -121,6 +121,7 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             serviceAttendingLabTechList.append(`<option value="${value.id}">${value.name}</option>`)
+                            console.log(value.id);
                         })
                     }
                 })
@@ -1553,7 +1554,7 @@
                                 <select class="form-select mt-3" id="service-attending-lab-tech">
                                     <option value="--" selected>--Choose Attending Vet Tech--</option>
                                     <div id="service-attending-lab-tech-list">
-                                        <option value="--" selected>--Choose Attending Vet Tech--</option>
+                                       
                                     </div>
                                 </select>
                                 <ul class="dropdown-menu" id="services-list">
