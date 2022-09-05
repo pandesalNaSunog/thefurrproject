@@ -103,10 +103,64 @@
             var labServices = $('#lab-services');
             var emergencyServices = $('#emergency-services');
             var surgeryServices = $('#surgery-services')
+            var addReceptionistName = $('#add-receptionist-name');
+            var addReceptionistEmail = $('#add-receptionist-email');
+            var confirmAddReceptionist = $('#confirm-add-receptionist');
+            var receptionistTable = $('#receptionist-table');
+
+
+            confirmAddReceptionist.on('click', function(){
+                if(addReceptionistName.val() == ""){
+                    addReceptionistName.addClass('is-invalid');
+                }else if(addReceptionistEmail.val() == ""){
+                    addReceptionistEmail.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addReceptionist.php',
+                        data:{
+                            name: addReceptionistName.val(),
+                            email: addReceptionistEmail.val()
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToReceptionistTable(index, value.name, value.email, value.id);
+                            })
+
+                            addReceptionistName.val('');
+                            addReceptionistEmail.val('');
+                        }
+                    })
+                }
+            })
+
+
+            function addToReceptionistTable(index, name, email, id){
+                receptionistTable.append(`<tr>
+                                            <td>${name}</td>
+                                            <td>${email}</td>
+                                            <td>
+                                                <button class="btn btn-danger">Edit</button>
+                                                <button class="btn btn-outline-danger">Edit</button>
+                                            </td>
+                                        </tr>`)
+            }
 
 
 
-
+            function getReceptionists(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/getAllReceptionists.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        $(data).each(function(index, value){
+                            addToReceptionistTable(index, value.name, value.email, value.id);
+                        })
+                    }
+                })
+            }
             function getAllServices(){
                 labServices.children().remove();
                 surgeryServices.children().remove();
@@ -471,6 +525,7 @@
                 getDoctors();
                 getLabTechnicians();
                 getVetNurses();
+                getReceptionists();
             })
 
 
@@ -1286,6 +1341,31 @@
                     <button id="add-vet-nurses" class="btn btn-danger rounded-pill px-5" data-bs-target="#add-nurse-modal" data-bs-toggle="modal">Add Vet Nurses</button>
                 </div>
             </div>
+
+            <div class="card shadow rounded-4 mt-5 col-lg-8 mx-auto">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Receptionists
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </thead>
+                            <tbody id="receptionist-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button id="add-receptionists" class="btn btn-danger rounded-pill px-5" data-bs-target="#add-receptionist-modal" data-bs-toggle="modal">Add Receptionists</button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1375,6 +1455,37 @@
                     </div>
                     
                     <button id="confirm-add-nurse" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" data-bs-backdrop="static" id="add-receptionist-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="add-receptionist-name" type="text" class="form-control" placeholder="Name">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <input id="add-receptionist-email" type="email" class="form-control mt-3" placeholder="Email">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-add-receptionist" class="btn btn-danger rounded-pill mt-3" style="width: 100%">Confirm</button>
                 </div>
             </div>
         </div>
