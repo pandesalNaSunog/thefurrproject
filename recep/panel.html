@@ -40,7 +40,7 @@
                 getTodaysAppointments();
             })
 
-
+            session();
             getTodaysAppointments();
             soaSection.hide();
 
@@ -49,6 +49,18 @@
                 navigation.removeClass('active');
                 $(this).addClass('active');
             })
+
+            function session(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/session.php',
+                    success: function(response){
+                        if(response != 'ok'){
+                            window.location.replace('index.html');
+                        }
+                    }
+                })
+            }
 
 
             function getTodaysAppointments(){

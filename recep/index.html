@@ -17,39 +17,33 @@
 
     <script>
         $(document).ready(function(){
-            // var email = $('#email');
-            // var password = $('#password');
-            // var login = $('#log-in');
-
-            // login.on('click', function(e){
-            //     e.preventDefault();
-            //     if(email.val() == ""){
-            //         email.addClass('is-invalid');
-            //     }else if(password.val() == ""){
-            //         password.addClass('is-invalid');
-            //     }else{
-            //         $.ajax({
-            //             type: 'POST',
-            //             url: 'php/login.php',
-            //             data: {
-            //                 email: email.val(),
-            //                 password: password.val()
-            //             },
-            //             success: function(response){
-            //                 if(response == 'panel.html'){
-            //                     window.location.replace(response);
-            //                 }else{
-            //                     console.log(response);
-            //                 }
-            //             }
-            //         })
-            //     }
-            // })
-
+            var email = $('#email');
+            var password = $('#password');
             var login = $('#log-in');
 
-            login.on('click', function(){
-                window.location.replace('panel.html');
+            login.on('click', function(e){
+                e.preventDefault();
+                if(email.val() == ""){
+                    email.addClass('is-invalid');
+                }else if(password.val() == ""){
+                    password.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/login.php',
+                        data: {
+                            email: email.val(),
+                            password: password.val()
+                        },
+                        success: function(response){
+                            if(response == 'panel.html'){
+                                window.location.replace(response);
+                            }else{
+                                console.log(response);
+                            }
+                        }
+                    })
+                }
             })
         })
     </script>

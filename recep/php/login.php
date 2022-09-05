@@ -7,7 +7,7 @@
             $email = htmlspecialchars($_POST['email']);
             $password = $_POST['password'];
 
-            $query = $con->prepare("SELECT * FROM users WHERE email = ? AND user_type = 'cashier'");
+            $query = $con->prepare("SELECT * FROM users WHERE email = ? AND user_type = 'receptionist'");
             $query->bind_param("s", $email);
             $query->execute();
             $result = $query->get_result();
