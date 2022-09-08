@@ -11,6 +11,7 @@
             $response = array();
             while($userRow = $user->fetch_assoc()){
                 $response[] = array(
+                    'id' => $userRow['id'],
                     'name' => $userRow['name'],
                     'client_code' => $userRow['client_code']
                 );

@@ -12,6 +12,7 @@
 
     <script>
         $(document).ready(function(){
+            var globalClientId = 0;
             var soaClientName = $('#soa-client-name');
             var soaClientCode = $('#soa-client-code');
             var soaPatientName = $('#soa-patient-name');
@@ -35,6 +36,51 @@
             var clientsLink = $('#clients-link');
             var clientSearch = $('#client-search');
             var confirmClientSearch = $('#confirm-client-search');
+            var clientsTable = $('#clients-table');
+            var petsList = $('#pets-list');
+            var clientCode = $('#client-code');
+            var clientName = $('#client-name');
+            var confirmBook = $('#confirm-book');
+            var concern = $('#concern');
+
+
+
+            concern.on('keydown', function(){
+                concern.removeClass('is-invalid');
+            })
+            confirmBook.on('click', function(){
+                var petIds = [];
+
+                petsList.children().find('input').each(function(){
+                    if($(this).prop("checked") == true){
+                        petIds.push($(this).val());
+                    }
+                })
+
+
+                if(petIds.length < 1){
+                    alert("Please choose atleast one pet.");
+                }else if(concern.val() == ""){
+                    concern.addClass('is-invalid');
+                }else{
+                    if(confirm('Confirm Booking? Please consider reviewing the details') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/walkInBook.php',
+                            data:{
+                                user_id: globalClientId,
+                                concern: concern.val(),
+                                pet_ids: petIds
+                            },
+                            success: function(response){
+                                if(response == "ok"){
+                                    alert('Successfully Booked');
+                                }
+                            }
+                        })
+                    }
+                }
+            })
 
 
             clientSearch.on('keydown', function(){
@@ -52,11 +98,64 @@
                             keyword: clientSearch.val(),
                         },
                         success: function(response){
-                            console.log(response);
+                            var data = JSON.parse(response);
+                            clientsTable.children().remove();
+                            $(data).each(function(index, value){
+                                addToClientsTable(index, value.id, value.name, value.client_code);
+                            })
                         }
                     })
                 }
             })
+
+            function addToClientsTable(index, id, name, code){
+                clientsTable.append(`<tr>
+                                        <td>${name}</td>
+                                        <td>${code}</td>
+                                        <td>
+                                            <button value="${id}" class="book btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-pets-modal">Book</button>
+                                        </td>
+                                    </tr>`)
+
+                var book = clientsTable.children().eq(index).find('.book');
+
+                book.on('click', function(){
+                    globalClientId = $(this).val();
+                    petsList.children().remove();
+                    clientName.text($(this).parent().parent().children().eq(0).text())
+                    clientCode.text($(this).parent().parent().children().eq(1).text())
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/viewPets.php',
+                        data:{
+                            user_id: globalClientId,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index, value){
+                                addToPetsList(index, value.name, value.id);
+                            })
+                        }
+                    })
+                })
+            }
+
+            function addToPetsList(index, name, id){
+                petsList.append(`<div class="card shadow rounded-4">
+                                    <div class="card-body">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="${id}">
+                                            <label class="form-check-label">
+                                                ${name}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>`)
+            }
+
+
+
 
 
 
@@ -333,7 +432,11 @@
                             <thead>
                                 <th scope="col">Client Name</th>
                                 <th scope="col">Client Code</th>
+                                <th scope="col">Action</th>
                             </thead>
+                            <tbody id="clients-table">
+
+                            </tbody>
                         </table>
                     </div>
                     
@@ -411,6 +514,35 @@
                         
                         
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="view-pets-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Client's Name: <span class="fw-bold" id="client-name"></span></p>
+                    <p>Client Code: <span class="fw-bold" id="client-code"></span></p>
+                    <h3 class="fw-bold mt-3">Pets</h3>
+                    <hr>
+                    <div id="pets-list">
+
+                    </div>
+                    <div>
+                        <input id="concern" type="text" placeholder="Concern" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                    </div>
+                    <button id="confirm-book" class="btn btn-primary rounded-pill w-100 mt-3">Confirm</button>
                 </div>
             </div>
         </div>
