@@ -150,6 +150,7 @@
 
 
             function getReceptionists(){
+                receptionistTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getAllReceptionists.php',

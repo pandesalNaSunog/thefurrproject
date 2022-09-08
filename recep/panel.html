@@ -20,29 +20,120 @@
             var navigation = $('.navigation');
             var soaSection = $('#soa-section');
             var appointmentsSection = $('#appointments-section')
-
+            var viewSoaDetailsModal = $('#view-soa-details-modal');
+            var confirmSearch = $('#confirm-search');
+            var search = $('#search');
 
             var soaTable = $('#soa-table');
             var soaDetailsTable = $('#soa-details-table');
             var globalSoaId = 0;
             var soaLink = $('#soa-link');
             var appointmentsLink = $('#appointments-link');
+            var amount = $('#amount');
+            var confirmAmount = $('#confirm-amount');
+            var clientSection = $('#clients-section');
+            var clientsLink = $('#clients-link');
+            var clientSearch = $('#client-search');
+            var confirmClientSearch = $('#confirm-client-search');
+
+
+            clientSearch.on('keydown', function(){
+                clientSearch.removeClass('is-invalid');
+            })
+            confirmClientSearch.on('click', function(){
+                if(clientSearch.val() == ""){
+                    clientSearch.addClass('is-invalid');
+                }else{
+                    clientSearch.removeClass('is-invalid');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/searchClient.php',
+                        data:{
+                            keyword: clientSearch.val(),
+                        },
+                        success: function(response){
+                            console.log(response);
+                        }
+                    })
+                }
+            })
+
+
+
+            search.on('keydown', function(){
+                search.removeClass('is-invalid');
+            })
+            confirmSearch.on('click', function(){
+                if(search.val() == ""){
+                    search.addClass('is-invalid');
+                }else{
+                    soaTable.children().remove();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/searchSoa.php',
+                        data:{
+                            keyword: search.val(),
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            $(data).each(function(index, value){
+                                addToSoaTable(index, value.id, value.client_name, value.patient_name, value.soa_number, value.date)
+                            })
+                        }
+                    })
+                }
+            })
+
+
+            amount.on('keydown', function(){
+                amount.removeClass('is-invalid');
+            })
+            confirmAmount.on('click', function(){
+                if(amount.val() == ""){
+                    amount.addClass('is-invalid');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/pay.php',
+                        data:{
+                            amount: amount.val(),
+                            soa_id: globalSoaId
+                        },
+                        success: function(response){
+                            if(response == 'ok'){
+                                alert('Transaction Successful.');
+                                amount.val('');
+                                viewSoaDetailsModal.modal('hide');
+                            }
+                        }
+                    })
+                }
+            })
 
 
             soaLink.on('click', function(){
                 appointmentsSection.hide();
+                clientSection.hide();
                 soaSection.show();
                 getSoas();
             });
             appointmentsLink.on('click', function(){
                 appointmentsSection.show();
                 soaSection.hide();
+                clientSection.hide();
                 getTodaysAppointments();
+            })
+
+            clientsLink.on('click', function(){
+                appointmentsSection.hide();
+                soaSection.hide();
+                clientSection.show();
             })
 
             session();
             getTodaysAppointments();
             soaSection.hide();
+            clientSection.hide();
 
 
             navigation.on('click', function(){
@@ -107,6 +198,7 @@
                 viewSoaDetails.on('click', function(){
                     var thisViewSoaDetails = $(this);
                     soaDetailsTable.children().remove();
+                    globalSoaId = thisViewSoaDetails.val();
                     $.ajax({
                         type: 'POST',
                         url: 'php/getSoaDetails.php',
@@ -152,9 +244,16 @@
             </button>
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto fw-bold">
+
+                    
                     <li class="nav-item">
                         <a href="#" id="appointments-link" class="navigation nav-link active">
                             Appointments
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" id="clients-link" class="navigation nav-link">
+                            Clients
                         </a>
                     </li>
                     <li class="nav-item">
@@ -182,10 +281,10 @@
                         Statement of Accounts
                     </h3>
                     <div class="ms-auto input-group" id="search-input">
-                        <button class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <button id="confirm-search" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                           </svg></button>
-                        <input type="text" class="form-control" placeholder="Search here">
+                        <input id="search" type="text" class="form-control" placeholder="Search here">
                     </div>
                 </div>
                 <div class="card-body">
@@ -204,6 +303,41 @@
                     </div>
                 </div>
                 
+            </div>
+        </div>
+    </section>
+
+
+    <section id="clients-section">
+        <div class="container">
+            <div class="card col-lg-6 mx-auto shadow rounded-4 mt-5">
+                <div class="card-header">
+                    <div class="row row-cols-1 row-cols-lg-2">
+                        <div class="col">
+                            <h3 class="fw-bold">Clients</h3>
+                        </div>
+                        <div class="col">
+                            <div class="ms-auto input-group">
+                                <button id="confirm-client-search" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg></button>
+                                <input id="client-search" type="text" class="form-control" placeholder="Search Client Name or Client Code">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Client Code</th>
+                            </thead>
+                        </table>
+                    </div>
+                    
+                </div>
             </div>
         </div>
     </section>
@@ -267,6 +401,16 @@
                 </div>
                 <div class="modal-footer">
                     <p>Total: &#8369 <span class="fw-bold" id="total-amount"></span></p>
+                    <div class="input-group">
+                        
+                        <input id="amount" type="number" placeholder="Amount Renderred" class="form-control">
+                        <div class="invalid-feedback">
+                            Please fill out this field
+                        </div>
+                        <button id="confirm-amount" class="btn btn-primary">Confirm</button>
+                        
+                        
+                    </div>
                 </div>
             </div>
         </div>

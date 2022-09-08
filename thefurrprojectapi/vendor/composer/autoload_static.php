@@ -547,6 +547,7 @@ class ComposerStaticInitde08cd6c95ee4ad5833af69112a5e7b4
         'App\\Models\\InitialCheckup' => __DIR__ . '/../..' . '/app/Models/InitialCheckup.php',
         'App\\Models\\LabRequest' => __DIR__ . '/../..' . '/app/Models/LabRequest.php',
         'App\\Models\\LabResult' => __DIR__ . '/../..' . '/app/Models/LabResult.php',
+        'App\\Models\\Payment' => __DIR__ . '/../..' . '/app/Models/Payment.php',
         'App\\Models\\Pet' => __DIR__ . '/../..' . '/app/Models/Pet.php',
         'App\\Models\\RenderedService' => __DIR__ . '/../..' . '/app/Models/RenderedService.php',
         'App\\Models\\Service' => __DIR__ . '/../..' . '/app/Models/Service.php',

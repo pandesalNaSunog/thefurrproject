@@ -23,6 +23,7 @@ return array(
     'App\\Models\\InitialCheckup' => $baseDir . '/app/Models/InitialCheckup.php',
     'App\\Models\\LabRequest' => $baseDir . '/app/Models/LabRequest.php',
     'App\\Models\\LabResult' => $baseDir . '/app/Models/LabResult.php',
+    'App\\Models\\Payment' => $baseDir . '/app/Models/Payment.php',
     'App\\Models\\Pet' => $baseDir . '/app/Models/Pet.php',
     'App\\Models\\RenderedService' => $baseDir . '/app/Models/RenderedService.php',
     'App\\Models\\Service' => $baseDir . '/app/Models/Service.php',
