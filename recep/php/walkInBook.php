@@ -7,7 +7,7 @@
 
         $date = date('Y-m-d');
         $time = date('H:i:s');
-        $timeString = $time."(walk-in)";
+        $timeString = $time." (walk-in)";
         if(isset($_POST)){
 
             $userId = $_POST['user_id'];
@@ -17,11 +17,6 @@
             $doctorIdString = "";
             $doctorIds = array();
             foreach($petIds as $key => $petId){
-
-               
-                
-                
-
                 $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
                 $wellness = $con->query($query) or die($con->error);
                 if($wellnessRow = $wellness->fetch_assoc()){

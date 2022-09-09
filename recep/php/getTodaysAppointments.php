@@ -17,14 +17,21 @@
             $doctorIds = $appointmentRow['doctor_id'];
             $petIds = $appointmentRow['pet_ids'];
 
-            $doctorIdArray = explode("*", $doctorIds);
-            $petIdArray = explode("*", $petIds);
-
+            $doctorIdArray = explode("**", $doctorIds);
+            $petIdArray = explode("**", $petIds);
+            $doctorNameString = "";
+            $petNameString = "";
             foreach($doctorIdArray as $key => $doctorId){
-                $query = "SELECT * FROM users WHERE id = '$doctorId'";
-                $doctor = $con->query($query) or die($con->error);
-                $doctorRow = $doctor->fetch_assoc();
-                $doctorName = $doctorRow['name'];
+
+                if($doctorId != 0){
+                    $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                    $doctor = $con->query($query) or die($con->error);
+                    $doctorRow = $doctor->fetch_assoc();
+                    $doctorName = $doctorRow['name'];
+                }else{
+                    $doctorName = "GROOMING ONLY";
+                }
+                
 
                 $petId = $petIdArray[$key];
                 $query = "SELECT * FROM pets WHERE id = '$petId'";
@@ -32,12 +39,20 @@
                 $petRow = $pet->fetch_assoc();
                 $petName = $petRow['name'];
 
-                $appointments[] = array(
-                    'date' => $date,
-                    'doctor' => $doctorName,
-                    'pet' => $petName
-                );
+                if($key == 0){
+                    $doctorNameString .= $doctorName;
+                    $petNameString .= $petName;
+                }else{
+                    $doctorNameString .= " / ".$doctorName;
+                    $petNameString .= " / ".$petName;
+                }
             }
+
+            $appointments[] = array(
+                'date' => $date,
+                'doctor' => $doctorNameString,
+                'pet' => $petNameString
+            );
         }
 
         echo json_encode($appointments);

@@ -42,11 +42,50 @@
             var clientName = $('#client-name');
             var confirmBook = $('#confirm-book');
             var concern = $('#concern');
+            var viewPetsModal = $('#view-pets-modal');
+            var bookGrooming = $('#book-grooming');
 
 
 
             concern.on('keydown', function(){
                 concern.removeClass('is-invalid');
+            })
+
+            bookGrooming.on('click', function(){
+                var petIds = [];
+                var petWeight = [];
+                petsList.children().find('.form-check-input').each(function(){
+                    if($(this).prop("checked") == true){
+                        petIds.push($(this).val());
+                    }
+                })
+
+                petsList.children().find('.weight').each(function(){
+                    console.log($(this).val());
+                    petWeight.push($(this).val());
+                })
+
+                if(petIds.length < 1){
+                    alert("Please choose atleast one pet.");
+                }else{
+                    if(confirm('Confirm Book for Grooming?') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/bookGrooming.php',
+                            data:{
+                                user_id: globalClientId,
+                                pet_ids: petIds,
+                                weight: petWeight,
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Booked');
+                                    viewPetsModal.modal('hide');
+                                }
+                            }
+                        })
+                    }
+                }
             })
             confirmBook.on('click', function(){
                 var petIds = [];
@@ -75,6 +114,8 @@
                             success: function(response){
                                 if(response == "ok"){
                                     alert('Successfully Booked');
+                                    concern.val('');
+                                    viewPetsModal.modal('hide');
                                 }
                             }
                         })
@@ -150,6 +191,7 @@
                                                 ${name}
                                             </label>
                                         </div>
+                                        <input class="weight form-control mt-3" placeholder="Weight">
                                     </div>
                                 </div>`)
             }
@@ -455,16 +497,19 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th scope="col">Date</th>
-                            <th scope="col">Attending Vet</th>
-                            <th scope="col">Patient Name</th>
-                        </thead>
-                        <tbody id="todays-appointment-table">
-
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Date</th>
+                                <th scope="col">Attending Vet</th>
+                                <th scope="col">Patient Name</th>
+                            </thead>
+                            <tbody id="todays-appointment-table">
+    
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -537,12 +582,17 @@
 
                     </div>
                     <div>
-                        <input id="concern" type="text" placeholder="Concern" class="form-control">
+                        <input id="concern" type="text" placeholder="Concern" class="form-control mt-3">
                         <div class="invalid-feedback">
                             Please fill out this field
                         </div>
                     </div>
                     <button id="confirm-book" class="btn btn-primary rounded-pill w-100 mt-3">Confirm</button>
+                    <hr>
+                    <h3 class="fw-bold mt-4">
+                        For Grooming
+                    </h3>
+                    <button class="btn btn-primary w-100 rounded-pill mt-3" id="book-grooming">Book</button>
                 </div>
             </div>
         </div>
