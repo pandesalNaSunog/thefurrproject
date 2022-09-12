@@ -44,8 +44,11 @@
             var concern = $('#concern');
             var viewPetsModal = $('#view-pets-modal');
             var bookGrooming = $('#book-grooming');
+            var groomingPrice = $('#grooming-price');
 
-
+            groomingPrice.on('keydown', function(){
+                groomingPrice.removeClass('is-invalid');
+            })
 
             concern.on('keydown', function(){
                 concern.removeClass('is-invalid');
@@ -67,6 +70,8 @@
 
                 if(petIds.length < 1){
                     alert("Please choose atleast one pet.");
+                }else if(groomingPrice.val() == ""){
+                    groomingPrice.addClass('is-invalid');
                 }else{
                     if(confirm('Confirm Book for Grooming?') == true){
                         $.ajax({
@@ -76,6 +81,7 @@
                                 user_id: globalClientId,
                                 pet_ids: petIds,
                                 weight: petWeight,
+                                price: groomingPrice.val(),
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -592,6 +598,13 @@
                     <h3 class="fw-bold mt-4">
                         For Grooming
                     </h3>
+                    <div>
+                        <input type="number" placeholder="Price" class="form-control mt-3" id="grooming-price">
+                        <div class="invalid-feedback">
+                            Please fill out this field.
+                        </div>
+                    </div>
+                    
                     <button class="btn btn-primary w-100 rounded-pill mt-3" id="book-grooming">Book</button>
                 </div>
             </div>

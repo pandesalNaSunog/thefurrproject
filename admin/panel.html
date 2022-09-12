@@ -897,13 +897,13 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            addPetsToTable(data.id, data.name, data.sex, data.breed, data.species, data.age);
+                            addPetsToTable(petsTable.children().length - 1, data.id, data.name, data.sex, data.breed, data.species, data.age);
                             name.val('');
                             breed.val('');
                             species.val('');
                             sex.val('');
                             birthDate.val('');
-                            petFunctions();
+
                         }
                     })
                 }
@@ -913,7 +913,7 @@
 
 
 
-            function addPetsToTable(id, name, sex, breed, species, age){
+            function addPetsToTable(index, id, name, sex, breed, species, age){
                 petsTable.append(`<tr>
                                     <td>${name}</td>
                                     <td>${age}</td>
@@ -931,12 +931,10 @@
                                         </svg></button>
                                         <button value=${id} class="view-wellness btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#wellness-record-modal" data-bs-backdrop="static">View Wellness Record</button>
                                 </tr>`)
-            }
 
-            function petFunctions(){
-                var editPet = $('.edit-pet');
-                var deletePet = $('.delete-pet');
-                var viewWellness = $('.view-wellness');
+                var editPet = petsTable.children().eq(index).find('.edit-pet');
+                var deletePet = petsTable.children().eq(index).find('.delete-pet');
+                var viewWellness = petsTable.children().eq(index).find('.view-wellness');
 
                 viewWellness.on('click', function(){
                     globalPetId = $(this).val();
@@ -997,6 +995,7 @@
                     })
                 })
             }
+
 
             function getClients(){
                 clientsTable.children().remove();
@@ -1075,9 +1074,8 @@
                             var data = JSON.parse(response);
                             viewPetsClientName.text(data.client_name);
                             $(data.pets).each(function(index, value){
-                                addPetsToTable(value.id, value.name, value.sex, value.breed, value.species, value.age);
+                                addPetsToTable(index, value.id, value.name, value.sex, value.breed, value.species, value.age);
                             })
-                            petFunctions();
                         }
                     })
                 })
