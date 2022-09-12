@@ -15,6 +15,7 @@
             var bg = $('#bg');
             var globalPetId = 0;
             var globalUserId = 0;
+            var globalDoctorId = 0;
             var globalWellnessRecordId = 0;
             var navLink = $('.navigation');
             var clientLink = $('#client-link');
@@ -446,7 +447,7 @@
             })
 
             confirmAddWellnessRecord.on('click', function(){
-                addWellnessRecord(wellnessRecordPetWeight,globalPetId, globalUserId, wellnessRecordService, wellnessRecordRemarks, wellnessRecordDate, wellnessRecordNextAppointment);
+                addWellnessRecord(wellnessRecordPetWeight,globalPetId, globalDoctorId, wellnessRecordService, wellnessRecordRemarks, wellnessRecordDate, wellnessRecordNextAppointment);
             })
 
             chooseAttendingVet.on('click', function(){
@@ -724,7 +725,7 @@
             function attendingVetFunction(){
                 var attendingVet = $('.attending-vet');
                 attendingVet.on('click', function(){
-                    globalUserId = $(this).val();
+                    globalDoctorId = $(this).val();
                     chooseAttendingVet.text($(this).text());
                 })
             }
@@ -897,7 +898,7 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            addPetsToTable(petsTable.children().length - 1, data.id, data.name, data.sex, data.breed, data.species, data.age);
+                            addPetsToTable(petsTable.children().length, data.id, data.name, data.sex, data.breed, data.species, data.age);
                             name.val('');
                             breed.val('');
                             species.val('');
