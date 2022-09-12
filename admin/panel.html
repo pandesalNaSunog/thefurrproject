@@ -649,8 +649,7 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-                            addWellnessRecordToTable(data.pet_weight,data.service, data.doctor, data.remarks, data.date, data.next_appointment, data.id);
-                            wellnessRecordFunctions();
+                            addWellnessRecordToTable(wellnessRecordTable.children().length,data.pet_weight,data.service, data.doctor, data.remarks, data.date, data.next_appointment, data.id);
                             petWeight.val('');
                             service.val('');
                             remarks.val('');
@@ -661,7 +660,7 @@
                 }
             }
 
-            function addWellnessRecordToTable(petWeight,service, doctor, remarks, date, nextAppointment, id){
+            function addWellnessRecordToTable(index, petWeight,service, doctor, remarks, date, nextAppointment, id){
                 wellnessRecordTable.append(`<tr>
                                                 <td>${service}</td>
                                                 <td>${petWeight}</td>
@@ -674,11 +673,9 @@
                                                     <button value="${id}" class="delete-wellness-record btn btn-outline-danger">Delete</button>
                                                 </td>
                                             </tr>`);
-            }
 
-            function wellnessRecordFunctions(){
-                var editWellnessRecord = $('.edit-wellness-record');
-                var deleteWellnessRecord  = $('.delete-wellness-record');
+                var editWellnessRecord = wellnessRecordTable.children().eq(index).find('.edit-wellness-record');
+                var deleteWellnessRecord  = wellnessRecordTable.children().eq(index).find('.delete-wellness-record');
 
 
                 editWellnessRecord.on('click', function(){
@@ -721,6 +718,7 @@
                     }
                 })
             }
+
 
             function attendingVetFunction(){
                 var attendingVet = $('.attending-vet');
@@ -949,10 +947,9 @@
                         success: function(response){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addWellnessRecordToTable(value.pet_weight,value.service, value.doctor, value.remarks, value.date, value.next_appointment, value.id);
+                                addWellnessRecordToTable(index, value.pet_weight,value.service, value.doctor, value.remarks, value.date, value.next_appointment, value.id);
                             })
 
-                            wellnessRecordFunctions();
                             
                         }
                     })
