@@ -38,7 +38,8 @@
                     'date' => date_format(date_create($appointmentRow['date']), "M d, Y"),
                     'time' => $appointmentRow['time'],
                     'arrival_status' => $appointmentRow['arrival_status'],
-                    'pets' => $pets
+                    'pets' => $pets,
+                    'is_done' => $appointmentRow['is_done']
                 );
 
 

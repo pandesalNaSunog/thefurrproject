@@ -12,6 +12,7 @@
             $time = $_POST['time'];
             $petIds = $_POST['pet_ids'];
             $status = "Pending";
+            $isDone = "no";
             $petIdString = "";
             $doctorIdString = "";
             $doctorIds = array();
@@ -42,8 +43,8 @@
                 }
             }
 
-            $query = $con->prepare("INSERT INTO appointments(user_id,doctor_id,concern,date,time,arrival_status,pet_ids,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?)");
-            $query->bind_param("issssssss", $clientId, $doctorIdString, $concern, $date, $time, $status, $petIdString, $today, $today);
+            $query = $con->prepare("INSERT INTO appointments(is_done,user_id,doctor_id,concern,date,time,arrival_status,pet_ids,created_at,updated_at)VALUES(?,?,?,?,?,?,?,?,?,?)");
+            $query->bind_param("sissssssss", $isDone,$clientId, $doctorIdString, $concern, $date, $time, $status, $petIdString, $today, $today);
             $query->execute();
 
             echo 'ok';

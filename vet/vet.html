@@ -111,6 +111,7 @@
             var customServiceAttendingLabTech = $('#custom-service-attending-lab-tech');
             var customServiceAttendingLabTechList = $('#custom-service-attending-lab-tech-list');
             var serviceAttendingLabTechList = $('#service-attending-lab-tech-list');
+            var soaDetailsTable = $('#soa-details-table');
 
             serviceAttendingLabTechList.val('0');
 
@@ -474,7 +475,7 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             noAppointments.hide();
-                            addToAppointmentsList(index, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern);
+                            addToAppointmentsList(index, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern,value.is_done);
                         })
                     }
                 })
@@ -482,7 +483,7 @@
 
 
 
-            function addToAppointmentsList(index, id, clientName, date, time, pets,concern){
+            function addToAppointmentsList(index, id, clientName, date, time, pets,concern, isDone){
                 var thisConcern = "";
                 if(concern == ""){
                     thisConcern = "not indicated"
@@ -502,18 +503,77 @@
                                                     
                                                 </div>
                                             </div>
+                                            <div class="card-footer">
+                                                <button value="${id}" class="mark-as-done btn btn-outline-primary">Mark As Done</button>
+                                                <button value="${id}" class="mark-as-undone btn btn-outline-primary">Mark As Undone</button>
+                                            </div>
                                         </div>`)
                 var petsList = appointmentsList.children().eq(index).find('.pets-list');
+
+
+                var markAsDone = appointmentsList.children().eq(index).find('.mark-as-done');
+                var markAsUnDone = appointmentsList.children().eq(index).find('.mark-as-undone');
+
+                if(isDone == "yes"){
+                    markAsUnDone.show()
+                    markAsDone.hide()
+                }else{
+                    markAsDone.show()
+                    markAsUnDone.hide()
+                }
+
+
+                markAsUnDone.on('click', function(){
+                    var appointmentId = $(this).val();
+                    if(confirm('Mark this appointment as not done?') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/markAppointmentAsDone.php',
+                            data:{
+                                appointment_id: appointmentId,
+                                is_done: 'no'
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    markAsDone.show()
+                                    markAsUnDone.hide()
+                                }
+                            }
+                        })
+                    }
+                });
+                markAsDone.on('click', function(){
+                    var appointmentId = $(this).val();
+                    if(confirm('Mark this appointment as done?') == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/markAppointmentAsDone.php',
+                            data:{
+                                appointment_id: appointmentId,
+                                is_done: 'yes'
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    markAsDone.hide()
+                                    markAsUnDone.show()
+                                }
+                            }
+                        })
+                    }
+                })
                 $(pets).each(function(index, value){
                     petsList.append(`<div class="card shadow rounded-4 mb-3">
-                                    <div class="card-body d-flex justify-content-between">
-                                        <h5 class="fw-bold align-self-center">${value.name}</h5>
-                                            <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
+                                        <div class="card-body d-flex justify-content-between">
+                                            <h5 class="fw-bold align-self-center">${value.name}</h5>
+                                            <div>
+                                                <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
+                                                
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>`)
+                                    </div>`)
 
                     var services = petsList.children().eq(index).find('.services');
+                    
                     services.on('click', function(){
                         globalVetTechId = 0;
                         var servicesValue = $(this).val();
@@ -1053,19 +1113,30 @@
                 })
             }
 
+            function addToSoaDetailsTable(index, service, base_price, discounted_price, quantity, discount_rate){
+                soaDetailsTable.append(`<tr>
+                                            <td>${service}</td>
+                                            <td>&#8369; ${base_price}</td>
+                                            <td>&#8369; ${discounted_price}</td>
+                                            <td>${quantity}</td>
+                                            <td>${discount_rate}%</td>
+                                        </tr>`)
+            }
+
             function addToServicesTables(date, category, service, labTech, soaNo){
                 if(category == "laboratory"){
                     laboratoryList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
+                                                <td><button class="btn btn-link soa-number" data-bs-target="#soa-details-modal" data-bs-toggle="modal">${soaNo}</button></td>
                                             </tr>`)
 
                     var soaNumber = laboratoryList.children().eq(laboratoryList.children().length - 1).find('.soa-number');
 
                     soaNumber.on('click', function(){
                         var thisSoaNumber = $(this).text();
+                        soaDetailsTable.children().remove()
                         $.ajax({
                             type: 'POST',
                             url: 'php/getSoa.php',
@@ -1073,7 +1144,11 @@
                                 soa_number: thisSoaNumber,
                             },
                             success: function(response){
-                                console.log(response);
+                                var data = JSON.parse(response)
+                                
+                                $(data).each(function(index, value){
+                                    addToSoaDetailsTable(index, value.service, value.base_price, value.discounted_price, value.quantity, value.discount_rate)
+                                })
                             }
                         })
                     })
@@ -1502,6 +1577,36 @@
         </div>
     </div>
 
+
+    <div class="modal fade" data-bs-backdrop="static" id="soa-details-modal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Service</th>
+                                <th scope="col">Base Price</th>
+                                <th scope="col">Discount Price</th>
+                                <th scope="col">Qunatity</th>
+                                <th scope="col">Discount Rate</th>
+                            </thead>
+                            <tbody id="soa-details-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     
 
 
