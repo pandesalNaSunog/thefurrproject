@@ -9,7 +9,25 @@
             $record = $con->query($query) or die($con->error);
             $response = array();
             while($recordRow = $record->fetch_assoc()){
-                $records[] = $recordRow;
+
+                $doctorId = $recordRow['doctor_id'];
+                $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+                $doctorName = $doctorRow['name'];
+                $records[] = array(
+                    'pet_weight' => $recordRow['pet_weight'],
+                    'temp' => $recordRow['temp'],
+                    'hr' => $recordRow['hr'],
+                    'rr' => $recordRow['rr'],
+                    'tests' => $recordRow['tests'],
+                    'procedure' => $recordRow['procedure'],
+                    'medication' => $recordRow['medication'],
+                    'case_closed' => $recordRow['case_closed'],
+                    'doctor_id' => $doctorName,
+                    'vet_nurse' => $recordRow['vet_nurse'],
+                    'created_at' => date_format(date_create($recordRow['created_at']), "M d, Y h:i A")
+                );
 
                 $query = "SELECT * FROM pets WHERE id = '$petId'";
                 $pet = $con->query($query) or die($con->error);
