@@ -1,0 +1,95 @@
+#navbar{
+    transition-duration: 0.3s;
+}
+
+.sticky-nav{
+    position: fixed;
+    top:0;
+    bottom:90;
+    right:0;
+    left:0;
+}
+
+#book-appointment{
+    background-color: darkblue;
+    border-radius: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border:none;
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+}
+
+.navigation-link{
+    text-decoration: none;
+    color: black;
+    transition-duration: 0.3s;
+}
+
+.navigation-link:hover{
+    background-color: red;
+    color: white;
+}
+
+#commited-to{
+    font-size: 20px;
+}
+
+#responsible{
+    font-size: 40px;
+}
+
+#header-section{
+    position:relative;
+}
+@media(min-width: 768px){
+    #commited-to{
+        font-size: 30px;
+    }
+    #responsible{
+        font-size: 70px;
+    }
+}
+
+@media(min-width: 570px){
+    #commited-to{
+        font-size: 30px;
+    }
+    #responsible{
+        font-size: 70px;
+    }
+}
+
+#black-background{
+    height: 70vh;
+    position:absolute;
+    background-color: black;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+}
+#header-section::before{
+    z-index: -1;
+    content: '';
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    background-image: url('header.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 30%;
+    position: absolute;
+}
+#pet-ownership{
+    font-size: 30px;
+}
+
+
+#header{
+    height: 70vh;
+}
