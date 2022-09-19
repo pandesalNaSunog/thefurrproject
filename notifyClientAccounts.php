@@ -1,8 +1,8 @@
 <?php
-    include('encodingModule/php/connection.php');
-    $con = connect();
+    
+    $con = new mysqli("localhost","u568496919_thefurr","Thefurrpassword11","u568496919_thefurr_db");
 
-    $query = "SELECT * FROM users WHERE user_type = 'client' AND contact_no != '' AND email = ''";
+    $query = "SELECT * FROM users WHERE user_type = 'client'";
 
     $user = $con->query($query) or die($con->error);
     $users = array();
@@ -17,6 +17,7 @@
             $query = "UPDATE FROM users SET email = '$email', password = '$password' WHERE id = '$userId'";
             $con->query($query) or die($con->error);
         }
+        sleep(3);
     }
     echo 'done';
 
