@@ -203,22 +203,61 @@
                 }
             })
 
+            function servicesFunctions(table, index){
+                var editService = table.children().eq(index).find('.edit');
+                var deleteService = table.children().eq(index).find('.delete');
+
+
+
+                deleteService.on('click', function(){
+                    console.log($(this));
+                    var serviceId = $(this).val();
+                    var serviceRow = $(this).parent().parent();
+                    if(confirm("Delete this Service?") == true){
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteService.php',
+                            data:{
+                                service_id: serviceId
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    serviceRow.remove();
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
             function addToServicesTable(index, id, service, category){
                 if(category == "surgery"){
                     surgeryServices.append(`<tr>
                                                 <td>${service}</td>
-                                                <td><button class="btn btn-outline-danger">Edit</button></td>
+                                                <td>
+                                                    <button value=${id} class="edit btn btn-outline-danger">Edit</button>
+                                                    <button value=${id} class="delete btn btn-outline-danger">Delete</button>
+                                                </td>
                                             </tr>`)
+                    servicesFunctions(surgeryServices, surgeryServices.children().length -1)
                 }else if(category == "laboratory"){
                     labServices.append(`<tr>
                                             <td>${service}</td>
-                                            <td><button class="btn btn-outline-danger">Edit</button></td>
+                                            <td>
+                                                <button value=${id} class="edit btn btn-outline-danger">Edit</button>
+                                                <button value=${id} class="delete btn btn-outline-danger">Delete</button>
+                                            </td>
                                         </tr>`)
+                    servicesFunctions(labServices, labServices.children().length -1)
                 }else{
                     emergencyServices.append(`<tr>
                                                 <td>${service}</td>
-                                                <td><button class="btn btn-danger">Edit</button></td>
+                                                <td>
+                                                    <button value=${id} class="edit btn btn-danger">Edit</button>
+                                                    <button value=${id} class="delete btn btn-outline-danger">Delete</button>
+                                                </td>
                                             </tr>`)
+                    servicesFunctions(emergencyServices, emergencyServices.children().length -1)
                 }
             }
 
