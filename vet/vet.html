@@ -121,6 +121,9 @@
             var confirmInsertPet = $('#confirm-insert-pet');
             var confirmBook = $('#confirm-book');
             var refreshSpinner = $('#refresh-spinner');
+            var confirmBookSpinner = $('#confirm-book-spinner');
+
+            confirmBookSpinner.hide();
             refreshSpinner.hide();
 
 
@@ -135,19 +138,29 @@
                     }
                 })
 
-                $.ajax({
-                    type: 'POST',
-                    url: 'php/bookAppointment.php',
-                    data:{
-                        pet_ids: petIds,
-                        user_id: globalUserId
-                    },
-                    success: function(response){
-                        if(response == 'ok'){
-                            alert('Successfully Booked! Please proceed to Appointments Tab to view recently booked appointment.');
+                if(petIds.length == 0){
+                    alert('Please choose atleast one pet.');
+                }else{
+                    confirmBook.prop('disabled', true);
+                    confirmBookSpinner.show();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/bookAppointment.php',
+                        data:{
+                            pet_ids: petIds,
+                            user_id: globalUserId
+                        },
+                        success: function(response){
+                            confirmBook.prop('disabled', false);
+                            confirmBookSpinner.hide();
+                            if(response == 'ok'){
+                                alert('Successfully Booked! Please proceed to Appointments Tab to view recently booked appointment.');
+                                $('#client-booking-modal').modal('hide');
+                            }
                         }
-                    }
-                })
+                    })
+                }
+                
             })
 
             confirmInsertPet.on('click', function(){
@@ -1739,7 +1752,7 @@
                     </div>
 
                     <button class="rounded-button mt-3" id="confirm-book">
-                        Book
+                        <span class="spinner-border spinner-border-sm" id="confirm-book-spinner"></span><span class="ms-3">Book</span>
                     </button>
                 </div>
             </div>
