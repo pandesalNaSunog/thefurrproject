@@ -5,16 +5,84 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery.js"></script>
     <title>The Furr Project</title>
+
+    <script>
+        $(window).scroll(function(){
+            var navbar = $('#navbar');
+            if($(window).scrollTop() == 0){
+                navbar.removeClass('m-3 rounded-3')
+            }else{
+                navbar.addClass('m-3 rounded-3')
+
+            }
+        })
+        $(document).ready(function(){
+        })
+    </script>
 </head>
 <body class="bg-light">
-    <div class="container">
-        <div class="col-lg-7 mt-5 mx-auto text-center fw-bold">
-            <img src="images/thefurrproject.PNG" class="img-fluid" alt="">
-            <p class="fs-1 mt-4">This page is still under development. Thank you for your patience.</p>
-        </div>
+
+        <nav class="sticky-nav navbar bg-light navbar-expand-lg navbar-light shadow" id="navbar" style="z-index: 99">
+            <div class="container">
+                <div class="navbar-brand">
+                    <img src="images/thefurrproject.PNG" alt="" style="height:45px" class="shadow rounded-2 img-fluid">
+                </div>
+                <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navmenu">
+                    <ul class="navbar-nav ms-auto fw-bold">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">Home</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="black-background" style="margin-top: 4%; z-index: -2"></div>
+
+        <section id="header-section" style="margin-top: 4%">
+            <div class="container">
+                <div class="row row-cols-md-2 row-cols-1 p-5" id="header">
+                    <div class="col text-md-start text-center" style="color: white; font-family: Arial Narrow; text-shadow: 2px 2px 2px black; align-self: center">
+                        
+                        <h4 class="fw-bold" id="commited-to">
+                            COMMITTED TO
+                        </h4>
+                        <h2 class="fw-bold" id="responsible">
+                            RESPONSIBLE
+                        </h4>
+                        <h5 class="fw-bold" id="pet-ownership">
+                            PET OWNERSHIP
+                        </h5>
+                        <hr>
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque facere nihil exercitationem dignissimos reprehenderit explicabo doloribus placeat dolorem iusto voluptas quo, odio quaerat tempore ab, excepturi possimus natus deleniti accusantium!</p>
+                        <button id="book-appointment">Book Appointment Now</button>
+                    </div>
+                    <div class="col d-md-block d-none" style="align-self:center" id="header-image">
+                        <img src="images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="our-story">
+            <div class="container">
+                <h3 class="fw-bold text-center">
+                    Our Story
+                </h3>
+            </div>
+        </section>
+
+
+
+
     </div>
 </body>
 </html>
