@@ -23,6 +23,9 @@
 
             if($nexAppointment == ""){
                 $nexAppointment = $date;
+            }else{
+                $query = "INSERT INTO appointments(`user_id`,`doctor_id`,`concern`,`date`,`time`,`arrival_status`,`pet_ids`,`created_at`,`updated_at`,`is_done`)VALUES('$clientId','$doctorId','Scheduled Next Appointment','$nexAppointment','10:00 am onwards','Pending','$petId','$today','$today','no')";
+                $con->query($query) or die($con->error);
             }
 
 
