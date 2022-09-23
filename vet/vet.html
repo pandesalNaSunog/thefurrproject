@@ -157,7 +157,7 @@
                             if(response != 'client code already exists'){
                                 alert('Client added successfully');
                                 var data = JSON.parse(response);
-                                addToClientsTable(clientsTable.children().length, data.contact_no, data.name, data.client_code, data.id)
+                                addToClientsTable(clientsTable.children().length, data.attending_vet, data.contact_no, data.name, data.client_code, data.id)
                                 addClientName.val('');
                                 addClientEmail.val('');
                                 addClientContact.val('');
@@ -839,7 +839,7 @@
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToClientsTable(index, value.contact_no, value.name, value.client_code, value.id);
+                                addToClientsTable(index, value.attending_vet, value.contact_no, value.name, value.client_code, value.id);
                                 if(value.banned == 1){
                                     clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
                                 }
@@ -863,7 +863,7 @@
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToClientsTable(index,value.contact_no, value.name, value.client_code, value.id);
+                                addToClientsTable(index, value.attending_vet, value.contact_no, value.name, value.client_code, value.id);
                                 if(value.banned == 1){
                                     clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
                                 }
@@ -899,11 +899,12 @@
                                         </div>`)
             }
 
-            function addToClientsTable(index, contact, name, code, clientId){
+            function addToClientsTable(index, vet, contact, name, code, clientId){
                 clientsTable.append(`<tr>
                                         <td>${name}</td>
                                         <td>${code}</td>
                                         <td>${contact}</td>
+                                        <td>${vet}</td>
                                         <td class="dropdown">
 
                                             <button class="normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
