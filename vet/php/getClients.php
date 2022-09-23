@@ -25,9 +25,13 @@
 
                         $query = "SELECT * FROM users WHERE id = '$doctorId'";
                         $doctor = $con->query($query) or die($con->error);
-                        $doctorRow = $doctor->fetch_assoc();
+                        if($doctorRow = $doctor->fetch_assoc()){
+                            $doctorName = $doctorRow['name'];
+                        }else{
+                            $doctorName = "NO RECORDS";
+                        }
 
-                        $doctorName = $doctorRow['name'];
+                        
                     }else{
                         $doctorName = "NO RECORDS";
                     }
