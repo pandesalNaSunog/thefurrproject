@@ -904,13 +904,24 @@
                                         <td>${name}</td>
                                         <td>${code}</td>
                                         <td>${contact}</td>
-                                        <td class="row row-cols-lg-2 row-cols-1 g-0">
-                                            <div class="col">
-                                                <button value="${clientId}" class="book normal-outline-button" data-bs-toggle="modal" data-bs-target="#client-booking-modal">Book</button>
-                                            </div>
-                                            <div class="col">
-                                                <button value="${clientId}" class="view-pets normal-outline-button" data-bs-toggle="modal" data-bs-target="#pets-modal">View Pets</button>
-                                            </div>
+                                        <td class="dropdown">
+
+                                            <button class="normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
+
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <button value="${clientId}" class="book dropdown-item" data-bs-toggle="modal" data-bs-target="#client-booking-modal">Book</button>
+                                                    </li>
+                                                        
+                                                    <li>
+                                                        <button value="${clientId}" class="view-pets dropdown-item" data-bs-toggle="modal" data-bs-target="#pets-modal">View Pets</button>
+                                                    </li>
+                                                </ul>
+                                                
+                                            
+                                            
+                                                
+                                            
                                         </td>
                                     </tr>`)
                 var viewPets = clientsTable.children().eq(index).find('.view-pets');
@@ -1435,7 +1446,7 @@
     <section id="clients-section">
         <div class="container">
            
-            <div class="card shadow rounded-4 col-lg-8 mx-auto mt-2">
+            <div class="card shadow rounded-4 col-lg-8 mx-auto mt-5">
                 <div class="card-header rounded-4 d-flex justify-content-between">
                     <h3 class="fw-bold">
                         Clients
