@@ -15,7 +15,34 @@
             $user = $con->query($query) or die($con->error);
             $users = array();
             while($userRow = $user->fetch_assoc()){
-                $users[] = $userRow;
+                $userId = $userRow['id'];
+
+                $query = "SELECT * FROM pets WHERE user_id = '$userId'";
+                $pet = $con->query($query) or die($con->error);
+                while($petRow = $pet->fetch_assoc()){
+                    $petId = $petRow['id'];
+
+                    $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId' ORDER BY created_at DESC";
+                    $record = $con->query($query) or die($con->error);
+                    if($recordRow = $record->fetch_assoc()){
+                        $doctorId = $recordRow['doctor_id'];
+
+                        $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                        $doctor = $con->query($query) or die($con->error);
+                        $doctorRow = $doctor->fetch_assoc();
+
+                        $doctorName = $doctorRow['name'];
+                    }else{
+                        $doctorName = "NO RECORDS";
+                    }
+                }
+                $users[] = array(
+                    'id' => $userRow['id'],
+                    'name' => $userRow['name'],
+                    'client_code' => $userRow['client_code'],
+                    'contact_no' => $userRow['contact_no'],
+                    'attending_vet' => $doctorName
+                );
             }
 
             echo json_encode($users);
