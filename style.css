@@ -11,21 +11,33 @@
 }
 
 #book-appointment{
+    text-decoration: none;
     background-color: darkblue;
     border-radius: 50px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
     border:none;
     color: white;
     font-family: sans-serif;
     font-weight: bold;
+    transition-duration: 0.3s;
+}
+
+#our-story{
+    margin: 20px;
+    background-color: darkblue; 
+    border-top-left-radius: 100px; 
+    border-bottom-right-radius: 100px;
+    padding-top:20px; 
+    padding-bottom:20px;
+    color: white
 }
 
 .navigation-link{
     text-decoration: none;
-    color: black;
+    color: white;
     transition-duration: 0.3s;
 }
 
@@ -61,6 +73,11 @@
     #responsible{
         font-size: 70px;
     }
+}
+
+#book-appointment:hover{
+    background-color: blue;
+    transform: scale(1.1) ;
 }
 
 #black-background{

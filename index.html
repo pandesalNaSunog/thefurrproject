@@ -22,31 +22,54 @@
             }
         })
         $(document).ready(function(){
+            var bookAppointment = $('#book-appointment');
+
+            bookAppointment.on('click', function(){
+                window.location.replace('client/index.html');
+            })
         })
     </script>
 </head>
 <body class="bg-light">
 
-        <nav class="sticky-nav navbar bg-light navbar-expand-lg navbar-light shadow" id="navbar" style="z-index: 99">
+    <div class="container">
+        <div class="col-lg-7 mt-5 mx-auto text-center fw-bold">
+            <img src="images/thefurrproject.PNG" class="img-fluid" alt="">
+            <p class="fs-1 mt-4">This page is still under development. Thank you for your patience.</p>
+        </div>
+    </div>
+        <!-- <nav class="sticky-nav navbar navbar-expand-lg navbar-dark shadow" style="background-color: darkblue;z-index: 99" id="navbar">
             <div class="container">
                 <div class="navbar-brand">
-                    <img src="images/thefurrproject.PNG" alt="" style="height:45px" class="shadow rounded-2 img-fluid">
+                    <img src="images/thefurrproject.PNG" alt="" style="height:30px; width: auto" class="img-fluid rounded-2 shadow">
                 </div>
                 <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navmenu">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navmenu">
-                    <ul class="navbar-nav ms-auto fw-bold">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">Our Veterinarians</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">Our Services</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link navigation-link px-4 py-2 rounded-2">Contact Us</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <div id="black-background" style="margin-top: 4%; z-index: -2"></div>
+        <div id="black-background" style="z-index: -2"></div>
 
-        <section id="header-section" style="margin-top: 4%">
+        <section id="header-section">
             <div class="container">
                 <div class="row row-cols-md-2 row-cols-1 p-5" id="header">
                     <div class="col text-md-start text-center" style="color: white; font-family: Arial Narrow; text-shadow: 2px 2px 2px black; align-self: center">
@@ -77,11 +100,10 @@
                 <h3 class="fw-bold text-center">
                     Our Story
                 </h3>
+                <hr clas="px-5">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore possimus velit pariatur nesciunt inventore quos placeat quo ipsum natus voluptatum laboriosam odio asperiores fuga exercitationem, necessitatibus veritatis modi ad vero repellat! Et eos iste modi quo nesciunt vel vitae unde necessitatibus illum, quis quae praesentium. Voluptate, omnis veritatis! Dolor, ipsa?</p>
             </div>
-        </section>
-
-
-
+        </section> -->
 
     </div>
 </body>

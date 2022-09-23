@@ -122,6 +122,56 @@
             var confirmBook = $('#confirm-book');
             var refreshSpinner = $('#refresh-spinner');
             var confirmBookSpinner = $('#confirm-book-spinner');
+            var addClientName = $('#add-client-name');
+            var addClientEmail = $('#add-client-email');
+            var addClientContact = $('#add-client-contact');
+            var addClientCode = $('#add-client-code');
+            var confirmAddClient = $('#confirm-add-client');
+            var addClientCodeError = $("#add-client-code-error");
+            var addCLientNameError = $('#add-client-name-error')
+            
+            addClientCode.on('keydown', function(){
+                addClientCode.removeClass('is-invalid');
+            })
+            addClientName.on('keydown', function(){
+                addClientName.removeClass('is-invalid');
+            })
+            confirmAddClient.on('click', function(){
+                if(addClientCode.val() == ""){
+                    addClientCode.addClass('is-invalid');
+                    addCLientCodeError.text('Please fill out this field');
+                }else if(addClientName.val() == ""){
+                    addClientName.addClass('is-invalid');
+                    addCLientNameError.text('Please fill out this field');
+                }else{
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addClient.php',
+                        data:{
+                            name: addClientName.val(),
+                            email: addClientEmail.val(),
+                            code: addClientCode.val(),
+                            contact: addClientContact.val()
+                        },
+                        success: function(response){
+                            if(response != 'client code already exists'){
+                                alert('Client added successfully');
+                                var data = JSON.parse(response);
+                                addToClientsTable(clientsTable.children().length, data.contact_no, data.name, data.client_code, data.id)
+                                addClientName.val('');
+                                addClientEmail.val('');
+                                addClientContact.val('');
+                                addClientCode.val('');
+                                $('#add-client-modal').modal('hide');
+                            }else{
+                                addClientCode.addClass('is-invalid');
+                                addClientCodeError.text('This client code already exists.');
+                            }
+                            
+                        }
+                    })
+                }
+            })
 
             confirmBookSpinner.hide();
             refreshSpinner.hide();
@@ -528,18 +578,6 @@
                     }
                 })
             })
-
-
-
-
-            
-            
-
-
-            
-
-
-            
             function getAppointments(){
                 appointmentsList.children().remove();
                 $.ajax({
@@ -801,7 +839,7 @@
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToClientsTable(index, value.name, value.client_code, value.id);
+                                addToClientsTable(index, value.contact_no, value.name, value.client_code, value.id);
                                 if(value.banned == 1){
                                     clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
                                 }
@@ -825,7 +863,7 @@
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToClientsTable(index, value.name, value.client_code, value.id);
+                                addToClientsTable(index,value.contact_no, value.name, value.client_code, value.id);
                                 if(value.banned == 1){
                                     clientsTable.children().eq(index).attr("style", "background-color: #fccccc")
                                 }
@@ -861,10 +899,11 @@
                                         </div>`)
             }
 
-            function addToClientsTable(index, name, code, clientId){
+            function addToClientsTable(index, contact, name, code, clientId){
                 clientsTable.append(`<tr>
                                         <td>${name}</td>
                                         <td>${code}</td>
+                                        <td>${contact}</td>
                                         <td class="row row-cols-lg-2 row-cols-1 g-0">
                                             <div class="col">
                                                 <button value="${clientId}" class="book normal-outline-button" data-bs-toggle="modal" data-bs-target="#client-booking-modal">Book</button>
@@ -1294,6 +1333,11 @@
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto fw-bold">
                     <li>
+                        <button class="btn btn-light px-5 fw-bold mx-3 rounded-pill" data-bs-target="#add-client-modal" data-bs-toggle="modal" style="color: darkblue">
+                            Add Client
+                        </button>
+                    </li>
+                    <li>
                         <a id="appointment-link" class="navigation nav-link" href="#">Appointments</a>
                     </li>
 
@@ -1324,6 +1368,38 @@
             </div>
         </div>
     </nav>
+
+    <div class="modal fade" data-bs-backdrop="static" id="add-client-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="add-client-name" type="text" placeholder="Name" class="form-control">
+                        <div id="add-client-name-error" class="invalid-feedback">
+
+                        </div>
+                    </div>
+                    
+                    <input id="add-client-email" type="email" placeholder="Email" class="form-control mt-3">
+                    <div>
+                        <input id="add-client-code" type="text" placeholder="Client Code" class="form-control mt-3">
+                        <div class="invalid-feedback" id="add-client-code-error">
+
+                        </div>
+                    </div>
+                   
+                    <input id="add-client-contact" type="number" placeholder="Contact Number" class="form-control mt-3">
+                    <button id="confirm-add-client" class="rounded-button mt-3">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section id="lab-request-section">
         <div class="container">
@@ -1358,7 +1434,8 @@
 
     <section id="clients-section">
         <div class="container">
-            <div class="card shadow rounded-4 col-lg-8 mx-auto mt-5">
+           
+            <div class="card shadow rounded-4 col-lg-8 mx-auto mt-2">
                 <div class="card-header rounded-4 d-flex justify-content-between">
                     <h3 class="fw-bold">
                         Clients
@@ -1376,6 +1453,7 @@
                             <thead>
                                 <th scope="col">Client Name</th>
                                 <th scope="col">Client Code</th>
+                                <th scope="col">Contact Number</th>
                                 <th scope="col">Action</th>
                             </thead>
                             <tbody id="clients-table">
