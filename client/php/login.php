@@ -7,14 +7,19 @@
             $email = htmlspecialchars($_POST['email']);
             $password = htmlspecialchars($_POST['password']);
 
-            $query = $con->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
-            $query->bind_param("ss", $email, $password);
+            $query = $con->prepare("SELECT * FROM users WHERE email = ?");
+            $query->bind_param("s", $email);
             $query->execute();
             $result = $query->get_result();
 
             if($data = $result->fetch_assoc()){
-                $_SESSION['client_id'] = $data['id'];
-                echo 'ok';
+                if(password_verify($password, $data['password'])){
+                    $_SESSION['client_id'] = $data['id'];
+                    echo 'ok';
+                }else{
+                    echo 'invalid';
+                }
+                
             }else{
                 echo 'invalid';
             }
