@@ -326,18 +326,19 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToSoaTable(index, value.id, value.client_name, value.patient_name, value.soa_number, value.date)
+                            addToSoaTable(index, value.id, value.client_name, value.patient_name, value.soa_number, value.date, value.balance)
                         })
                     }
                 })
             }
 
-            function addToSoaTable(index, id, clientName, pet, soaNumber, date){
+            function addToSoaTable(index, id, clientName, pet, soaNumber, date, balance){
                 soaTable.append(`<tr>
                                     <td>${clientName}</td>
                                     <td>${pet}</td>
                                     <td><button value="${id}" class="view-soa-details btn btn-link" data-bs-toggle="modal" data-bs-target="#view-soa-details-modal">${soaNumber}</button></td>
                                     <td>${date}</td>
+                                    <td>&#8369; ${balance}</td>
                                 </tr>`)
 
                 var viewSoaDetails = soaTable.children().eq(index).find('.view-soa-details');
@@ -442,6 +443,7 @@
                                 <th scope="col">Patient Name</th>
                                 <th scope="col">SOA #</th>
                                 <th scope="col">Date and Time</th>
+                                <th scope="col">Balance</th>
                             </thead>
                             <tbody id="soa-table">
     
