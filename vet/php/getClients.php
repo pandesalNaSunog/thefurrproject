@@ -44,6 +44,7 @@
                     'contact_no' => $userRow['contact_no'],
                     'attending_vet' => $doctorName
                 );
+                $doctorName = "NO RECORDS";
             }
 
             echo json_encode($users);
