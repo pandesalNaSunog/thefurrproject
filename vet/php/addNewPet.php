@@ -20,8 +20,14 @@
 
             $petRow = $pet->fetch_assoc();
 
-            $dateDiff = date_diff(date_create($birthDate), date_create($today));
-            $age = $dateDiff->format("%y year(s) %m month(s)");
+            if($birthDate == ""){
+                $age = "N/A";
+            }else{
+                $dateDiff = date_diff(date_create($birthDate), date_create($today));
+                $age = $dateDiff->format("%y year(s) %m month(s)");
+            }
+
+            
 
             echo json_encode(
                 array(

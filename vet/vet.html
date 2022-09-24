@@ -229,7 +229,10 @@
                         success: function(response){
                             var data = JSON.parse(response);
                             addToPetsTable(petsTable.children().length , data.pet_id, data.name, data.breed, data.species, data.sex, data.age);
-                            
+                            insertPetName.val('')
+                            insertPetBreed.val('')
+                            insertPetSpecies.val('')
+                            insertPetBirthDate.val('')
                         }
                     })
                 }
