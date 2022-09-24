@@ -9,6 +9,7 @@
             $query = "SELECT id, client_code, contact_no, name FROM users WHERE user_type = 'client' ORDER BY name ASC";
             $user = $con->query($query) or die($con->error);
             $users = array();
+            $doctorName = "NO RECORDS";
             while($userRow = $user->fetch_assoc()){
                 
                 $userId = $userRow['id'];
