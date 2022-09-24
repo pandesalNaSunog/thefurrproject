@@ -1303,7 +1303,7 @@
                             success: function(response){
                                 var data = JSON.parse(response)
                                 
-                                $(data).each(function(index, value){
+                                $(data.details).each(function(index, value){
                                     addToSoaDetailsTable(index, value.service, value.base_price, value.discounted_price, value.quantity, value.discount_rate)
                                 })
                             }
@@ -1337,7 +1337,7 @@
         <div class="container">
             <a class="navbar-brand" href="#">
                 <div class="d-lg-flex">
-                    <img src="../images/thefurrproject.PNG" class="img-fluid" style="width: 200px; height: auto">
+                    <img src="../images/thefurrproject.PNG" class="img-fluid rounded-2 shadow" style="width: 200px; height: auto">
                     <h5 class="fw-bold ms-lg-3 ms-0 mt-3 mt-lg-0 align-self-center" style="font-size: small" id="profile-name"></h5>
                 </div>
                 
@@ -1469,7 +1469,7 @@
                                 <th scope="col">Client Name</th>
                                 <th scope="col">Client Code</th>
                                 <th scope="col">Contact Number</th>
-                                <th scope="col">Attending Vet</th>
+                                <th scope="col">Last Appointment Attending Vet</th>
                                 <th scope="col">Action</th>
                             </thead>
                             <tbody id="clients-table">

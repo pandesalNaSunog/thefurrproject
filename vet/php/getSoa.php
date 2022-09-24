@@ -9,9 +9,11 @@
             $soa = $con->query($query) or die($con->error);
             $response = array();
             $soaRow = $soa->fetch_assoc();
-
+            $totalAmount = 0.0;
             $details = $soaRow['details'];
+            $soaId = $soaRow['id'];
 
+            
             $detailsArray = explode("**", $details);
 
             foreach($detailsArray as $details){
@@ -23,7 +25,7 @@
                     $discountedPrice = $detailsBreakdown[3];
                     $quantity = $detailsBreakdown[4];
                     $discountRate = $detailsBreakdown[5];
-
+                    $totalAmount += $discountedPrice * $quantity;
                     $response[] = array(
                         'service' => $service,
                         'base_price' => $basePrice,
@@ -33,7 +35,21 @@
                     );
                 }
             }
-            echo json_encode($response);
+
+            $query = "SELECT * FROM payments WHERE soa_id = '$soaId' ORDER BY created_at DESC";
+            $payment = $con->query($query) or die($con->error);
+            if($paymentRow = $payment->fetch_assoc()){
+                $balance = $paymentRow['balance'];
+            }else{
+                $balance = $totalAmount;
+            }
+            echo json_encode(
+                array(
+                    'details' => $response,
+                    'total' => $totalAmount,
+                    'balance' => $balance
+                )
+            );
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
