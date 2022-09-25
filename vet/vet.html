@@ -134,6 +134,58 @@
             var confirmPassword = $('#confirm-password');
             var currentPassword = $('#current-password');
             var currentPasswordError = $('#current-password-error');
+            var editPasswordModal = $('#edit-password-modal')
+            var newPassword = $('#new-password')
+            var newPasswordError = $('#new-password-error');
+            var retypeNewPassword = $('#retype-new-password');
+            var retypeNewPasswordError = $('#retype-new-password-error');
+            var confirmNewPassword = $('#confirm-new-password');
+
+
+            newPassword.on('keydown', function(){
+                newPassword.removeClass('is-invalid');
+            })
+
+            retypeNewPassword.on('keydown', function(){
+                retypeNewPassword.removeClass('is-invalid');
+            })
+
+            confirmNewPassword.on('click', function(){
+                if(newPassword.val() == ""){
+                    newPasswordError.text('Please fill out this field');
+                    newPassword.addClass('is-invalid');
+                }else if(retypeNewPassword.val() == ""){
+                    retypeNewPassword.text('Please fill out this field');
+                    retypeNewPassword.addClass('is-invalid');
+                }else if(newPassword.val() != retypeNewPassword.val()){
+                    retypeNewPassword.addClass('is-invalid');
+                    retypeNewPasswordError.text('Password Mismatch');
+                }else{  
+                    confirmNewPassword.text('Updating')
+                    confirmNewPassword.prop('disabled', true);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/updatePassword.php',
+                        data:{
+                            password: newPassword.val(),
+                        },
+                        success: function(response){
+                            confirmNewPassword.prop('disabled', false);
+                            confirmNewPassword.text('Confirm');
+                            if(response == 'ok'){
+                                alert('Password has been updated successfully.');
+                                newPassword.val('')
+                                retypeNewPassword.val('')
+                                editPasswordModal.modal('hide');
+                            }else{
+                                alert('Session expired. Please log in to continue.');
+
+                                window.location.replace('index.html');
+                            }
+                        }
+                    })
+                }
+            })
 
 
             currentPassword.on('keydown', function(){
@@ -158,6 +210,12 @@
 
                             if(response == 'ok'){
                                 currentPasswordModal.modal('hide')
+                                currentPassword.val('');
+
+                                editPasswordModal.modal('show');
+                            }else if(response == 'session expired'){
+                                alert('Session expired. Please log in to continue.');
+                                window.location.replace('index.html');
                             }else{
                                 currentPassword.addClass('is-invalid');
                                 currentPasswordError.text('Invalid Password');
@@ -1767,6 +1825,31 @@
                     </div>
                     
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit-password-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input id="new-password" type="password" placeholder="New Password" class="form-control">
+                        <div class="invalid-feedback" id="new-password-error"></div>
+                    </div>
+                    <div>
+                        <input id="retype-new-password" type="password" placeholder="Retype New Password" class="form-control mt-3">
+                        <div class="invalid-feedback" id="retype-new-password-error"></div>
+                    </div>
+                    
+                    <button class="rounded-button mt-3" id="confirm-new-password">Confirm</button>
                 </div>
             </div>
         </div>

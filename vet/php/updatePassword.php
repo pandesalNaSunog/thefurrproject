@@ -9,17 +9,10 @@
 
             $password = htmlspecialchars($_POST['password']);
 
-            $query = "SELECT * FROM users WHERE id = '$doctorId'";
-
-            $user = $con->query($query) or die($con->error);
-
-            $userRow = $user->fetch_assoc();
-
-            if(password_verify($password, $userRow['password'])){
-                echo 'ok';
-            }else{
-                echo 'invalid';
-            }
+            $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $query = "UPDATE users SET password = '$encryptedPassword' WHERE id = '$doctorId'";
+            $con->query($query) or die($con->error);
+            echo 'ok';
         }else{
             echo 'session expired';
         }
