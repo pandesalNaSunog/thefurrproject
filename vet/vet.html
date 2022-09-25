@@ -140,6 +140,10 @@
             var retypeNewPassword = $('#retype-new-password');
             var retypeNewPasswordError = $('#retype-new-password-error');
             var confirmNewPassword = $('#confirm-new-password');
+            var doctorLabResultPatientName = $('#doctor-lab-result-patient-name');
+            var doctorLabResultLabRequest = $("#doctor-lab-result-lab-request");
+            var doctorLabResultAttendingVet = $("#doctor-lab-result-attending-vet");
+            var doctorLabResultsList = $('#doctor-lab-results-list');
 
 
             newPassword.on('keydown', function(){
@@ -890,6 +894,9 @@
             function addToLabResultsList(index, id, result){
                 labResultsList.append(`<img style="width: 100%; height: auto;" class="img-fluid" src="../lab/php/${result}">`)
             }
+            function addToDoctorLabResultsList(index, id, result){
+                doctorLabResultsList.append(`<img style="width: 100%; height: auto;" class="img-fluid" src="../lab/php/${result}">`)
+            }
 
             confirmInsertMedicalRecord.on('click', function(){
                 $.ajax({
@@ -1267,7 +1274,7 @@
 
             function addToLabRequestTableWithResults(index, timeLimit, id, name, result, request, requestedAt){
                 console.log(index)
-                if(result == 'pending'){
+                if(result == "Pending"){
                     vetLabRequestTable.append(`<tr>
                                                         <td>${name}</td>
                                                         <td>${request}</td>
@@ -1287,7 +1294,7 @@
                                                         <td>${request}</td>
                                                         <td>${timeLimit}</td>
                                                         <td>
-                                                            <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#view-lab-results-modal">Results</button>
+                                                            <button value="${id}" class="view-results btn btn-primary" data-bs-toggle="modal" data-bs-target="#doctor-view-lab-results-modal">Results</button>
                                                         </td>
                                                         <td>
                                                             <div class="input-group ig-upload">
@@ -1300,7 +1307,7 @@
                     var viewResults = vetLabRequestTable.children().eq(index).find('.view-results');
                     viewResults.on('click', function(){
                         var thisViewResults = $(this);
-                        labResultsList.children().remove();
+                        doctorLabResultsList.children().remove();
                         $.ajax({
                             type: 'POST',
                             url: 'php/getLabResults.php',
@@ -1308,12 +1315,12 @@
                                 lab_request_id: thisViewResults.val(),
                             },
                             success: function(response){
-                                labResultPatientName.text(thisViewResults.parent().parent().children().eq(0).text())
-                                labResultLabRequest.text(thisViewResults.parent().parent().children().eq(1).text())
-                                labResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
+                                doctorLabResultPatientName.text(thisViewResults.parent().parent().children().eq(0).text())
+                                doctorLabResultLabRequest.text(thisViewResults.parent().parent().children().eq(1).text())
+                                doctorLabResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
                                 var data = JSON.parse(response);
                                 $(data.results).each(function(index, value){
-                                    addToLabResultsList(index, value.id, value.result);
+                                    addToDoctorLabResultsList(index, value.id, value.result);
                                 })
                             }
                         })
@@ -1344,7 +1351,8 @@
                                 if(response == 'invalid file'){
                                     alert('Please upload image files only')
                                 }else{
-                                    location.reload();
+                                    alert('Lab result has been uploaded successfully.')
+                                    window.location.reload();
                                 }
                             }
                         })
@@ -1910,6 +1918,29 @@
                         <p>Attending Vet: <span class="fw-bold" id="lab-result-attending-vet"></span></p>
                     </div>
                     <div id="lab-results-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="doctor-view-lab-results-modal" data-bs-backdrop="static">
+        <div class="modal-dialog moda-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="sticky-top bg-light rounded-2 p-2">
+                        <p>Patient Name: <span class="fw-bold" id="doctor-lab-result-patient-name"></span></p>
+                        <p>Lab Request: <span class="fw-bold" id="doctor-lab-result-lab-request"></span></p>
+                        <p>Attending Vet: <span class="fw-bold" id="doctor-lab-result-attending-vet"></span></p>
+                    </div>
+                    <div id="doctor-lab-results-list">
 
                     </div>
                 </div>
