@@ -129,6 +129,43 @@
             var confirmAddClient = $('#confirm-add-client');
             var addClientCodeError = $("#add-client-code-error");
             var addCLientNameError = $('#add-client-name-error')
+            var balance = $('#balance');
+            var currentPasswordModal = $('#enter-current-password-modal');
+            var confirmPassword = $('#confirm-password');
+            var currentPassword = $('#current-password');
+            var currentPasswordError = $('#current-password-error');
+
+
+            currentPassword.on('keydown', function(){
+                currentPassword.removeClass('is-invalid');
+                currentPasswordError.text('Please fill out this field');
+            })
+            confirmPassword.on('click', function(){
+                if(currentPassword.val() == ""){
+                    currentPassword.addClass('is-invalid');
+                }else{
+                    confirmPassword.prop('disabled', true);
+                    confirmPassword.text('Please Wait');
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/verifyPassword.php',
+                        data:{
+                            password: currentPassword.val(),
+                        },
+                        success: function(response){
+                            confirmPassword.prop('disabled', false);
+                            confirmPassword.text('Confirm');
+
+                            if(response == 'ok'){
+                                currentPasswordModal.modal('hide')
+                            }else{
+                                currentPassword.addClass('is-invalid');
+                                currentPasswordError.text('Invalid Password');
+                            }
+                        }
+                    })
+                }
+            })
             
             addClientCode.on('keydown', function(){
                 addClientCode.removeClass('is-invalid');
@@ -1302,7 +1339,7 @@
                             },
                             success: function(response){
                                 var data = JSON.parse(response)
-                                
+                                balance.text(data.balance);
                                 $(data.details).each(function(index, value){
                                     addToSoaDetailsTable(index, value.service, value.base_price, value.discounted_price, value.quantity, value.discount_rate)
                                 })
@@ -1330,9 +1367,6 @@
     <title>The Furr Project</title>
 </head>
 <body>
-    
-
-    
     <nav class="sticky-top navbar navbar-expand-xxl text-light bg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -1371,7 +1405,7 @@
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Account</a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#" class="dropdown-item">Update Profile</a>
+                                    <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#enter-current-password-modal">Update Profile</a>
                                 </li><li>
                                     <a id="logout" href="#" class="dropdown-item">Log Out</a>
                                 </li>
@@ -1825,6 +1859,32 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <p>Active Balance: <span class="fw-bold" id="balance"></span></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="enter-current-password-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input placeholder="Enter Current Password" type="password" id="current-password" class="form-control">
+                        <div class="invalid-feedback" id="current-password-error">
+
+                        </div>
+                    </div>
+                    
+                    <button id="confirm-password" class="rounded-button mt-3">Confirm</button>
                 </div>
             </div>
         </div>
