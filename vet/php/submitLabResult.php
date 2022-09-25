@@ -6,12 +6,12 @@
         $today = getCurrentDate();
         if(isset($_FILES) && isset($_SESSION['doctor_id'])){
             $labRequestId = $_POST['lab_request_id'];
-            $labTechId = $_SESSION['lab_tech_id'];
+            $labTechId = $_SESSION['doctor_id'];
             $result = $_FILES['result']['name'];
             $tmpName = $_FILES['result']['tmp_name'];
             $filExtension = strtolower(pathinfo($result, PATHINFO_EXTENSION));
 
-            $allowedExtensions = array("jpg","jpeg","png","pdf");
+            $allowedExtensions = array("jpg","jpeg","png","pdf","webp");
 
             if(in_array($filExtension, $allowedExtensions)){
                 $filepath = "../../lab/php/images/".uniqid().".".$filExtension;
