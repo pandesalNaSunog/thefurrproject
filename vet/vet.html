@@ -144,6 +144,9 @@
             var doctorLabResultLabRequest = $("#doctor-lab-result-lab-request");
             var doctorLabResultAttendingVet = $("#doctor-lab-result-attending-vet");
             var doctorLabResultsList = $('#doctor-lab-results-list');
+            var loadingScreen = $('#loading-screen');
+            var timeLimitError = $('#time-limit-error');
+            var labRequestError = $('#lab-request-error');
 
 
             newPassword.on('keydown', function(){
@@ -588,12 +591,21 @@
                 refreshLabRequests.prop('disabled', true);
                 getPetLabRequestsFunc();
             })
+            labRequest.on('keydown', function(){
+                labRequest.removeClass('is-invalid');
+            })
+
+            timeLimit.on('keydown', function(){
+                timeLimit.removeClass('is-invalid');
+            })
 
             confirmLabRequest.on('click', function(){
                 if(labRequest.val() == ""){
                     labRequest.addClass('is-invalid');
+                    labRequestError.text('Please fill out this field.');
                 }else if(timeLimit.val() == ""){
                     timeLimit.addClass('is-invalid');
+                    timeLimitError.text('Please fill out this field');
                 }else{
                     $.ajax({
                         type: 'POST',
@@ -681,11 +693,13 @@
                 })
             })
             function getAppointments(){
+                loadingScreen.show()
                 appointmentsList.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getAppointments.php',
                     success: function(response){
+                        loadingScreen.hide();
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             noAppointments.hide();
@@ -960,11 +974,13 @@
             labRequestSection.hide();
 
             function getClients(){
+                loadingScreen.show()
                 clientsTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getClients.php',
                     success: function(response){
+                        loadingScreen.hide();
                         if(response != 'invalid session'){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
@@ -1256,13 +1272,15 @@
                 surgeryList.children().remove();
             })
 
-
+            loadingScreen.hide();
             function getVetLabRequests(){
+                loadingScreen.show();
                 vetLabRequestTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getVetLabRequests.php',
                     success: function(response){
+                        loadingScreen.hide();
                         var data = JSON.parse(response);
                         console.log(data)
                         $(data).each(function(index, value){
@@ -1360,11 +1378,12 @@
                 })
             }
             function getRenderedServices(){
-                
+                loadingScreen.show(); 
                 $.ajax({
                     type: 'GET',
                     url: 'php/getRenderredServices.php',
                     success: function(response){
+                        loadingScreen.hide();
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             addToServicesTables(value.date, value.category, value.service, value.lab_tech, value.soa_no);
@@ -2076,9 +2095,16 @@
                                     
                                 </ul>
                             </div>
+                            <div>
+                                <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
+                                <div class="invalid-feedback" id="lab-request-error"></div>
+                            </div>
                             
-                            <textarea id="lab-request" class="form-control mt-3" placeholder="Enter Lab Request Here"></textarea>
-                            <input id="time-limit" type="number" placeholder="Set Time Limit in minutes" class="form-control mt-3">
+                            <div>
+                                <input id="time-limit" type="number" placeholder="Set Time Limit in minutes" class="form-control mt-3">
+                                <div class="invalid-feedback" id="time-limit-error"></div>
+                            </div>
+                            
                             <button class="rounded-button mt-3" id="confirm-lab-request">Submit Lab Request</button>
                         </div>
                     </div>
@@ -2249,6 +2275,14 @@
                     </div>
                     
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-screen">
+        <div class="card rounded-3 shadow">
+            <div class="card body p-5">
+                <span class="spinner-border text-primary"></span>
             </div>
         </div>
     </div>
