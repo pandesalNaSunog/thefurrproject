@@ -119,11 +119,14 @@
                 var upload = labRequestTableWithoutResults.children().eq(index).find('.upload')
                 
                 upload.on('click', function(){
+                    
                     var thisUpload = $(this);
                     var labRequestId = $(this).val();
                     if(result.val() == ""){
                         result.addClass('is-invalid');
                     }else{
+                        upload.prop('disabled', true);
+                        upload.text('Uploading...');
                         var formData = new FormData();
 
                         formData.append("result", result[0].files[0]);
@@ -136,8 +139,10 @@
                             contentType: false,
                             processData: false,
                             success: function(response){
+                                upload.prop('disabled', false);
+                                upload.text('Upload')
                                 if(response == 'invalid file'){
-                                    alert('Please upload image files only')
+                                    alert('Please upload image or pdf files only')
                                 }else{
                                     location.reload();
                                 }
