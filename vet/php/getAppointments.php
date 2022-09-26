@@ -3,7 +3,8 @@
         session_start();
         include('connection.php');
         $con = connect();
-
+        date_default_timezone_set('Asia/Manila');
+        $todaysDate = date('Y-m-d');
         if(isset($_SESSION['doctor_id'])){
             $doctorId = $_SESSION['doctor_id'];
             $query = "SELECT * FROM appointments WHERE doctor_id LIKE '%$doctorId%' ORDER BY date, time ASC";
@@ -11,6 +12,24 @@
             
             $response = array();
             while($appointmentRow = $appointment->fetch_assoc()){
+
+                $date = $appointmentRow['date'];
+
+
+                $todaysDateObject = date_create($todaysDate);
+                $appointmentDateObject = date_create($date);
+
+                $dateDiff = date_diff($appointmentDateObject, $todaysDateObject);
+
+                $dateDifference = $dateDiff->format("%R");
+                $dateDays = $dateDiff->format("%a");
+                if($todaysDate == $date){
+                    $day = "today";
+                }else if($dateDifference == '+') {
+                    $day = "yesterday";
+                }else{
+                    $day = "tomorrow";
+                }
                 $doctorIdArray = explode("**", $appointmentRow['doctor_id']);
                 $pets = array();
                 foreach($doctorIdArray as $key => $doctorIdItem){
@@ -32,6 +51,7 @@
                 $clientName = $userRow['name'];
 
                 $response[] = array(
+                    'day' => $day,
                     'appointment_id' => $appointmentRow['id'],
                     'client_name' => $clientName,
                     'concern' => $appointmentRow['concern'],
