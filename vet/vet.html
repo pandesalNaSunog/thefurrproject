@@ -147,6 +147,8 @@
             var loadingScreen = $('#loading-screen');
             var timeLimitError = $('#time-limit-error');
             var labRequestError = $('#lab-request-error');
+            var yesterdayAppointmentsList = $('#yesterday-appointment-list');
+            var tomorrowAppointmentsList = $('#tomorrow-appointment-list');
 
 
             newPassword.on('keydown', function(){
@@ -351,7 +353,6 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            console.log(serviceAttendingLabTechList);
                             serviceAttendingLabTechList.append(`<li><button value="${value.id}" class="service-lab-tech dropdown-item">${value.name}</button></li>`);
                             var serviceLabTech = serviceAttendingLabTechList.children().eq(index).find('.service-lab-tech');
 
@@ -607,6 +608,8 @@
                     timeLimit.addClass('is-invalid');
                     timeLimitError.text('Please fill out this field');
                 }else{
+                    confirmLabRequest.prop('disabled', true)
+                    confirmLabRequest.text('Submitting...');
                     $.ajax({
                         type: 'POST',
                         url: 'php/sendLabRequest.php',
@@ -617,6 +620,8 @@
                             time_limit: timeLimit.val(),
                         },
                         success: function(response){
+                            confirmLabRequest.prop('disabled', false)
+                            confirmLabRequest.text('Submit Lab Request');
                             if(response != 0){
                                 alert('Lab Request has been submitted.');
                                 labRequest.val('')
@@ -695,6 +700,8 @@
             function getAppointments(){
                 loadingScreen.show()
                 appointmentsList.children().remove();
+                yesterdayAppointmentsList.children().remove();
+                tomorrowAppointmentsList.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getAppointments.php',
@@ -703,7 +710,7 @@
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
                             noAppointments.hide();
-                            addToAppointmentsList(index, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern,value.is_done);
+                            addToAppointmentsList(index, value.day, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern,value.is_done);
                         })
                     }
                 })
@@ -711,14 +718,15 @@
 
 
 
-            function addToAppointmentsList(index, id, clientName, date, time, pets,concern, isDone){
+            function addToAppointmentsList(index, day, id, clientName, date, time, pets,concern, isDone){
                 var thisConcern = "";
                 if(concern == ""){
                     thisConcern = "not indicated"
                 }else{
                     thisConcern = concern;
                 }
-                appointmentsList.append(`<div class="card shadow rounded-4 mt-3">
+                if(day == "today"){
+                    appointmentsList.append(`<div class="card shadow rounded-4 mt-3">
                                             <div class="card-header">
                                                 <h3 class="fw-bold">${clientName}</h3>
                                                 <p><em>${date} ${time}</em></p>
@@ -736,101 +744,108 @@
                                                 <button value="${id}" class="mark-as-undone btn btn-outline-primary">Mark As Undone</button>
                                             </div>
                                         </div>`)
-                var petsList = appointmentsList.children().eq(index).find('.pets-list');
+                    var petsList = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.pets-list');
+                    var markAsDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-done');
+                    var markAsUnDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-undone');
 
-
-                var markAsDone = appointmentsList.children().eq(index).find('.mark-as-done');
-                var markAsUnDone = appointmentsList.children().eq(index).find('.mark-as-undone');
-
-                if(isDone == "yes"){
+                    if(isDone == "yes"){
                     markAsUnDone.show()
                     markAsDone.hide()
-                }else{
-                    markAsDone.show()
-                    markAsUnDone.hide()
-                }
-
-
-                markAsUnDone.on('click', function(){
-                    var appointmentId = $(this).val();
-                    if(confirm('Mark this appointment as not done?') == true){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/markAppointmentAsDone.php',
-                            data:{
-                                appointment_id: appointmentId,
-                                is_done: 'no'
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    markAsDone.show()
-                                    markAsUnDone.hide()
-                                }
-                            }
-                        })
+                    }else{
+                        markAsDone.show()
+                        markAsUnDone.hide()
                     }
-                });
-                markAsDone.on('click', function(){
-                    var appointmentId = $(this).val();
-                    if(confirm('Mark this appointment as done?') == true){
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/markAppointmentAsDone.php',
-                            data:{
-                                appointment_id: appointmentId,
-                                is_done: 'yes'
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    markAsDone.hide()
-                                    markAsUnDone.show()
-                                }
-                            }
-                        })
-                    }
-                })
-                $(pets).each(function(index, value){
-                    petsList.append(`<div class="card shadow rounded-4 mb-3">
-                                        <div class="card-body d-flex justify-content-between">
-                                            <h5 class="fw-bold align-self-center">${value.name}</h5>
-                                            <div>
-                                                <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>`)
 
-                    var services = petsList.children().eq(index).find('.services');
-                    
-                    services.on('click', function(){
-                        globalVetTechId = 0;
-                        var servicesValue = $(this).val();
-                        globalPetId = servicesValue.split("*")[0];
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/getPetOwner.php',
-                            data:{
-                                pet_id: servicesValue,
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response);
-                                globalUserId = data.client_id;
-                                globalApppointmentId = data.appointment_id;
-                                patientOwnerName.text(data.name);
-                                if(data.has_medical_record == true){
-                                    patientName.text(data.pet_name);
-                                }else{
-                                    patientName.text(data.pet_name + " (no medical record inputted)");
-                                }
-                                
-                                clientCode.text(data.client_code);
-                            }
-                        })
 
-                        getPetLabRequestsFunc();
-                        
+                    markAsUnDone.on('click', function(){
+                        var appointmentId = $(this).val();
+                        if(confirm('Mark this appointment as not done?') == true){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/markAppointmentAsDone.php',
+                                data:{
+                                    appointment_id: appointmentId,
+                                    is_done: 'no'
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        markAsDone.show()
+                                        markAsUnDone.hide()
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    markAsDone.on('click', function(){
+                        var appointmentId = $(this).val();
+                        if(confirm('Mark this appointment as done?') == true){
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/markAppointmentAsDone.php',
+                                data:{
+                                    appointment_id: appointmentId,
+                                    is_done: 'yes'
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        markAsDone.hide()
+                                        markAsUnDone.show()
+                                    }
+                                }
+                            })
+                        }
                     })
-                })
+                    $(pets).each(function(index, value){
+                        petsList.append(`<div class="card shadow rounded-4 mb-3">
+                                            <div class="card-body d-flex justify-content-between">
+                                                <h5 class="fw-bold align-self-center">${value.name}</h5>
+                                                <div>
+                                                    <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>`)
+
+                        var services = petsList.children().eq(index).find('.services');
+                        
+                        services.on('click', function(){
+                            globalVetTechId = 0;
+                            var servicesValue = $(this).val();
+                            globalPetId = servicesValue.split("*")[0];
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/getPetOwner.php',
+                                data:{
+                                    pet_id: servicesValue,
+                                },
+                                success: function(response){
+                                    var data = JSON.parse(response);
+                                    globalUserId = data.client_id;
+                                    globalApppointmentId = data.appointment_id;
+                                    patientOwnerName.text(data.name);
+                                    if(data.has_medical_record == true){
+                                        patientName.text(data.pet_name);
+                                    }else{
+                                        patientName.text(data.pet_name + " (no medical record inputted)");
+                                    }
+                                    
+                                    clientCode.text(data.client_code);
+                                }
+                            })
+
+                            getPetLabRequestsFunc();
+                            
+                        })
+                    })
+                }else if(day == "yesterday"){
+                    yesterdayAppointmentsList.append(`<tr><td>${clientName}</td><td>${thisConcern}</td><td>${date} ${time}</td></tr>`)
+                }else{
+                    tomorrowAppointmentsList.append(`<tr><td>${clientName}</td><td>${thisConcern}</td><td>${date} ${time}</td></tr>`)
+                }
+                
+                
+
+                
 
             }
 
@@ -1282,7 +1297,6 @@
                     success: function(response){
                         loadingScreen.hide();
                         var data = JSON.parse(response);
-                        console.log(data)
                         $(data).each(function(index, value){
                             addToLabRequestTableWithResults(index, value.time_limit, value.id, value.patient_name, value.result, value.request, value.date);
                         })
@@ -1291,7 +1305,6 @@
             }
 
             function addToLabRequestTableWithResults(index, timeLimit, id, name, result, request, requestedAt){
-                console.log(index)
                 if(result == "Pending"){
                     vetLabRequestTable.append(`<tr>
                                                         <td>${name}</td>
@@ -1300,7 +1313,7 @@
                                                         <td>${result}</td>
                                                         <td>
                                                             <div class="input-group ig-upload">
-                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
+                                                                <button value="${id}" class="upload btn btn-primary"><span class="upload-spinner spinner-border spinner-border-sm text-light"></span> Upload</button>
                                                                 <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
@@ -1316,13 +1329,15 @@
                                                         </td>
                                                         <td>
                                                             <div class="input-group ig-upload">
-                                                                <button value="${id}" class="upload btn btn-primary">Upload</button>
+                                                                <button value="${id}" class="upload btn btn-primary"><span class="upload-spinner spinner-border spinner-border-sm text-light"></span> Upload</button>
                                                                 <input class="result form-control" type="file">
                                                             </div>
                                                         </td>
                                                         <td>${requestedAt}</td>
                                                     </tr>`)
+
                     var viewResults = vetLabRequestTable.children().eq(index).find('.view-results');
+                    
                     viewResults.on('click', function(){
                         var thisViewResults = $(this);
                         doctorLabResultsList.children().remove();
@@ -1347,13 +1362,19 @@
                 
                 var result = vetLabRequestTable.children().eq(index).find('.result');
                 var upload = vetLabRequestTable.children().eq(index).find('.upload')
-                
+                var uploadSpinner = vetLabRequestTable.children().eq(index).find('.upload-spinner');
+
+                uploadSpinner.hide();
                 upload.on('click', function(){
+                    
                     var thisUpload = $(this);
                     var labRequestId = $(this).val();
                     if(result.val() == ""){
                         result.addClass('is-invalid');
                     }else{
+                        uploadSpinner.show();
+                        upload.text('Uploading...')
+                        upload.prop('disabled', true);
                         var formData = new FormData();
 
                         formData.append("result", result[0].files[0]);
@@ -1366,6 +1387,9 @@
                             contentType: false,
                             processData: false,
                             success: function(response){
+                                uploadSpinner.hide();
+                                upload.prop('disabled', false)
+                                upload.text('Upload');
                                 if(response == 'invalid file'){
                                     alert('Please upload image files only')
                                 }else{
@@ -1603,21 +1627,73 @@
 
     <section id="appointments-section">
         <div class="container">
-            <div class="card shadow rounded-4 col-lg-7 mx-auto mt-5">
-                <div class="card-header rounded-4">
-                    <h3 class="fw-bold">
-                        Appointments
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div id="appointment-list">
 
+            <div class="row row-cols-1 row-cols-xl-3 g-5">
+                <div class="col col-xl-3">
+                    <div class="card shadow rounded-4 mt-5">
+                        <div class="card-header">
+                            <h5 class="fw-bold">
+                                Yesterday's Appointments
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Client Name</th>
+                                        <th scope="col">Concern</th>
+                                        <th scope="col">Date and Time</th>
+                                    </thead>
+                                    <tbody id="yesterday-appointment-list">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <p id="no-appointments" class="lead p-5 text-center">
-                        No Appointments
-                    </p>
+                </div>
+                <div class="col col-xl-6">
+                    <div class="card shadow rounded-4 mx-auto mt-5">
+                        <div class="card-header rounded-4">
+                            <h3 class="fw-bold">
+                                Today's Appointments
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="appointment-list">
+        
+                            </div>
+                            <p id="no-appointments" class="lead p-5 text-center">
+                                No Appointments
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-xl-3">
+                    <div class="card shadow rounded-4 mt-5">
+                        <div class="card-header">
+                            <h5 class="fw-bold">
+                                Upcoming Appointments
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Client Name</th>
+                                        <th scope="col">Concern</th>
+                                        <th scope="col">Date and Time</th>
+                                    </thead>
+                                    <tbody id="tomorrow-appointment-list">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            
         </div>
     </section>
 
