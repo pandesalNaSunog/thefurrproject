@@ -16,6 +16,22 @@
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
 
+
+            $query = "SELECT medication FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
+            $medRecord = $con->query($query) or die($con->error);
+            if($medRow = $medRecord->fetch_assoc()){
+                if($medRow['medication'] != ""){
+                    $medication = $medRow['medication'];
+
+                }else{
+                    $medication = "NONE";
+                }
+                
+            }else{
+                $medication = "NONE";
+            }
+
+
             $userId = $petRow['user_id'];
             $query = "SELECT * FROM users WHERE id = '$userId'";
             $user = $con->query($query) or die($con->error);
@@ -61,7 +77,8 @@
                     'client_name' => $clientName,
                     'patient_name' => $petName,
                     'client_code' => $clientCode,
-                    'total_amount' => $totalAmount
+                    'total_amount' => $totalAmount,
+                    'medication' => $medication,
                 )
             );
         }

@@ -65,5 +65,25 @@
             </div>
         </div>
     </div>
+
+    <button class="btn btn-primary" id="print-test">Test</button>
+
+    <script>
+        var printTest = $('#print-test');
+
+        printTest.on('click', function(){
+            var newWindow = window.open('Print');
+            newWindow.document.write(`<div style="margin: 20px; font-family: sans-serif; height: 100%; width: 100%; background-image: url('../header.jpg')">
+                                        <p style="font-size: 25px; font-family: serif; text-align: center; font-weight: bold">The Furr Project Veterinary Clinic & Pharmacy</p>
+                                        <p>Client Name: <span style="font-weight: bold">Jem Irall Flores</span>
+                                            <br>Client Code: A-897
+                                        </p>
+                                        
+                                    </div>`);
+            newWindow.focus();
+            newWindow.print();
+            newWindow.close()
+        })
+    </script>
 </body>
 </html>
