@@ -7,7 +7,7 @@
 
         $date = date('Y-m-d');
         $time = date('H:i:s');
-        $timeString = $time." (walk-in)";
+        $timeString = date_format(date_create($time), "h:i A") . " (walk-in)";
         if(isset($_POST)){
 
             $userId = $_POST['user_id'];
@@ -28,7 +28,7 @@
                         $doctorIds[] = $doctorRow['id'];
                     }
     
-                    $doctorIndex = rand(0,3);
+                    $doctorIndex = rand(0, count($doctorIds) - 1);
     
                     $doctorId = $doctorIds[$doctorIndex];
                 }

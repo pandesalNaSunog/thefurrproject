@@ -30,7 +30,7 @@
                         $doctorIds[] = $doctorRow['id'];
                     }
 
-                    $doctorIndex = rand(0,count($doctorIds));
+                    $doctorIndex = rand(0,count($doctorIds) - 1);
 
                     $doctorId = $doctorIds[$doctorIndex];
                 }

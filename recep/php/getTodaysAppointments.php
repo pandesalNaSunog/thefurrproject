@@ -17,12 +17,18 @@
             $doctorIds = $appointmentRow['doctor_id'];
             $petIds = $appointmentRow['pet_ids'];
 
+            $userId = $appointmentRow['user_id'];
+            $query = "SELECT name FROM users WHERE id = '$userId'";
+            $user = $con->query($query) or die($con->error);
+            $userRow = $user->fetch_assoc();
+
+            $clientName = $userRow['name'];
+
             $doctorIdArray = explode("**", $doctorIds);
             $petIdArray = explode("**", $petIds);
             $doctorNameString = "";
             $petNameString = "";
             foreach($doctorIdArray as $key => $doctorId){
-
                 if($doctorId != 0){
                     $query = "SELECT * FROM users WHERE id = '$doctorId'";
                     $doctor = $con->query($query) or die($con->error);
@@ -51,7 +57,8 @@
             $appointments[] = array(
                 'date' => $date,
                 'doctor' => $doctorNameString,
-                'pet' => $petNameString
+                'pet' => $petNameString,
+                'client_name' => $clientName
             );
         }
 
