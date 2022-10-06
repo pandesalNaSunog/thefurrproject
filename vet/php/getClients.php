@@ -12,38 +12,34 @@
             $doctorName = "NO RECORDS";
             $doctorNameString = "";
             while($userRow = $user->fetch_assoc()){
-                
                 $userId = $userRow['id'];
-                $query = "SELECT * FROM appointments WHERE user_id = '$userId' ORDER BY created_at DESC";
-                $appointmentQuery = $con->query($query) or die($con->error);
 
-                if($appointmentRow = $appointmentQuery->fetch_assoc()){
-                    $doctorIds = $appointmentRow['doctor_id'];
+                $query = "SELECT * FROM pets WHERE user_id = '$userId'";
+                $pet = $con->query($query) or die($con->error);
+                while($petRow = $pet->fetch_assoc()){
+                    $petId = $petRow['id'];
 
-                    $doctorIdArray = explode("**", $doctorIds);
+                    $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId' ORDER BY created_at DESC";
+                    $record = $con->query($query) or die($con->error);
+                    if($recordRow = $record->fetch_assoc()){
+                        $doctorId = $recordRow['doctor_id'];
 
-                    foreach($doctorIdArray as $key => $doctorId){
-                        $query = "SELECT name FROM users WHERE id = '$doctorId'";
+                        $query = "SELECT * FROM users WHERE id = '$doctorId'";
                         $doctor = $con->query($query) or die($con->error);
-                        if($doctorRow = $doctor->fetch_assoc()){
-                        
-                            $doctorName = $doctorRow['name'];
-                            
-                            $doctorNameString .= $doctorName . "/";
-                        }else{
-                            $doctorNameString .= "NO RECORDS";
-                        }
+                        $doctorRow = $doctor->fetch_assoc();
+
+                        $doctorName = $doctorRow['name'];
+                    }else{
+                        $doctorName = "NO RECORDS";
                     }
                 }
-                
                 $users[] = array(
                     'id' => $userRow['id'],
                     'name' => $userRow['name'],
                     'client_code' => $userRow['client_code'],
                     'contact_no' => $userRow['contact_no'],
-                    'attending_vet' => $doctorNameString
+                    'attending_vet' => $doctorName
                 );
-                $doctorNameString = "";
             }
 
             echo json_encode($users);
