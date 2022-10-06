@@ -45,7 +45,23 @@
             var viewPetsModal = $('#view-pets-modal');
             var bookGrooming = $('#book-grooming');
             var groomingPrice = $('#grooming-price');
+            var logout = $('#logout');
 
+            
+
+            logout.on('click', function(){
+                if(confirm('Are your sure you want to Log Out?')){
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/logout.php',
+                        success: function(response){
+                            if(response == 'ok'){
+                                window.location.replace('index.html')
+                            }
+                        }
+                    })
+                }
+            })
             groomingPrice.on('keydown', function(){
                 groomingPrice.removeClass('is-invalid');
             })
@@ -189,7 +205,7 @@
             }
 
             function addToPetsList(index, name, id){
-                petsList.append(`<div class="card shadow rounded-4">
+                petsList.append(`<div class="card shadow rounded-4 mt-3">
                                     <div class="card-body">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" value="${id}">
@@ -275,7 +291,24 @@
                 appointmentsSection.hide();
                 soaSection.hide();
                 clientSection.show();
+
+                getClients();
             })
+
+            function getClients(){
+                clientsTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/clients.php',
+                    success: function(response){
+                        var data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            addToClientsTable(index, value.id, value.name, value.client_code)
+                        })
+                    }
+                })
+            }
 
             session();
             getTodaysAppointments();
@@ -309,14 +342,14 @@
                     success: function(response){
                         var data = JSON.parse(response);
                         $(data).each(function(index, value){
-                            addToTodaysAppointmentTable(index, value.date, value.doctor, value.pet)
+                            addToTodaysAppointmentTable(index, value.client_name, value.date, value.doctor, value.pet)
                         })
                     }
                 })
             }
 
-            function addToTodaysAppointmentTable(index, date, doctor, pet){
-                todaysAppointmentTable.append(`<tr><td>${date}</td><td>${doctor}</td><td>${pet}</td></tr>`)
+            function addToTodaysAppointmentTable(index, clientName, date, doctor, pet){
+                todaysAppointmentTable.append(`<tr><td>${date}</td><td>${doctor}</td><td>${clientName}</td><td>${pet}</td></tr>`)
             }
             function getSoas(){
                 soaTable.children().remove();
@@ -510,6 +543,7 @@
                             <thead>
                                 <th scope="col">Date</th>
                                 <th scope="col">Attending Vet</th>
+                                <th scope="col">Client Name</th>
                                 <th scope="col">Patient Name</th>
                             </thead>
                             <tbody id="todays-appointment-table">
