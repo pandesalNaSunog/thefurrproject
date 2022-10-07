@@ -69,14 +69,13 @@
                                 noBookedAppointments.remove();
                                 addToBookedAppointmentsList(index, value.concern, value.date, value.pets_with_attending_vet, value.time)
                             })
-                            console.log(data);
                         }
                     }
                 })
             }
 
             function addToBookedAppointmentsList(index, concern, date, petsVet, time){
-                bookedAppointmentsList.append(`<div class="card shadow rounded-4">
+                bookedAppointmentsList.append(`<div class="card shadow rounded-4 mt-3">
                                                     <div class="card-body">             
                                                         <p>Concern: <span class="fw-bold">${concern}</span></p>
                                                         <p>Appointment Date and Time: <span class="fw-bold">${date} ${time}</span></p>
@@ -212,8 +211,6 @@
                             noNextAppointments.hide();
                             appointmentsList.append(`<div class="card shadow rounded-4 mb-3">
                                                         <div class="card-body">
-                                                            <h3 class="fw-bold">Next Appointment</h3>
-                                                            <hr>
                                                             <p>Pet: <span class="fw-bold">${value.pet_name}</span></p>
                                                             <p>Date: <span class="fw-bold">${value.date}</span></p>
                                                             <p>Attending Vet: <span class="fw-bold">${value.doctor}</span></p>
@@ -234,7 +231,7 @@
                         if(data.email != ""){
                             email.text(data.email);
                         }else{
-                            email.text('(no email)');
+                            email.text('(no contact number)');
                         }
                         
                     }

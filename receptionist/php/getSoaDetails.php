@@ -15,11 +15,17 @@
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
+            $doctorName = "";
 
-
-            $query = "SELECT medication FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
+            $query = "SELECT medication, doctor_id FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
             $medRecord = $con->query($query) or die($con->error);
             if($medRow = $medRecord->fetch_assoc()){
+                $doctorId = $medRow['doctor_id'];
+                $query = "SELECT name FROM users WHERE id = '$doctorId'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+
+                $doctorName = $doctorRow['name'];
                 if($medRow['medication'] != ""){
                     $medication = $medRow['medication'];
 
@@ -71,14 +77,30 @@
                 }
             }
 
+            $query = "SELECT amount_renderred, balance, created_at FROM payments WHERE soa_id = '$soaId' ORDER BY created_at DESC";
+            $payment = $con->query($query) or die($con->error);
+            $paymentHistory = array();
+            while($paymentRow = $payment->fetch_assoc()){
+                
+                $paymentHistory[] = array(
+                    'amount_renderred' => $paymentRow['amount_renderred'],
+                    'balance' => $paymentRow['balance'],
+                    'date' => date_format(date_create($paymentRow['created_at']), "M d, Y h:i A")
+                );
+            }
+            
+            
+
             echo json_encode(
                 array(
                     'soa' => $statementOfAccounts,
+                    'payments_history' => $paymentHistory,
                     'client_name' => $clientName,
                     'patient_name' => $petName,
                     'client_code' => $clientCode,
                     'total_amount' => $totalAmount,
                     'medication' => $medication,
+                    'attending_vet' => $doctorName
                 )
             );
         }

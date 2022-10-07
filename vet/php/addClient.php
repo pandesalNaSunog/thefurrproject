@@ -12,6 +12,7 @@
 
             $query = "SELECT * FROM users WHERE client_code = '$code'";
             $user = $con->query($query) or die($con->error);
+            $doctorName = "NO RECORDS";
             if($userRow = $user->fetch_assoc()){
                 echo 'client code already exists';
             }else{
@@ -53,7 +54,7 @@
                     'attending_vet' => $doctorName
                 );
 
-                echo json_encode($userRow);
+                echo json_encode($response);
             }
         }
     }else{

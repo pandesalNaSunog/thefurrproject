@@ -1,6 +1,7 @@
 <?php
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
         include('connection.php');
+
         $con = connect();
         if(isset($_POST)){
             $soaId = $_POST['soa_id'];
@@ -14,6 +15,28 @@
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
+            $doctorName = "";
+
+            $query = "SELECT medication, doctor_id FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
+            $medRecord = $con->query($query) or die($con->error);
+            if($medRow = $medRecord->fetch_assoc()){
+                $doctorId = $medRow['doctor_id'];
+                $query = "SELECT name FROM users WHERE id = '$doctorId'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+
+                $doctorName = $doctorRow['name'];
+                if($medRow['medication'] != ""){
+                    $medication = $medRow['medication'];
+
+                }else{
+                    $medication = "NONE";
+                }
+                
+            }else{
+                $medication = "NONE";
+            }
+
 
             $userId = $petRow['user_id'];
             $query = "SELECT * FROM users WHERE id = '$userId'";
@@ -54,13 +77,26 @@
                 }
             }
 
+            $query = "SELECT amount_renderred, balance FROM payments WHERE soa_id = '$soaId' ORDER BY created_at DESC";
+            $payment = $con->query($query) or die($con->error);
+            $paymentHistory = array();
+            while($paymentRow = $payment->fetch_assoc()){
+                
+                $paymentHistory[] = $paymentRow;
+            }
+            
+            
+
             echo json_encode(
                 array(
                     'soa' => $statementOfAccounts,
+                    'payments_history' => $paymentHistory,
                     'client_name' => $clientName,
                     'patient_name' => $petName,
                     'client_code' => $clientCode,
-                    'total_amount' => $totalAmount
+                    'total_amount' => $totalAmount,
+                    'medication' => $medication,
+                    'attending_vet' => $doctorName
                 )
             );
         }

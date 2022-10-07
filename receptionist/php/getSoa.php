@@ -3,7 +3,7 @@
         include('connection.php');
         $con = connect();
 
-        $query = "SELECT * FROM statement_of_accounts";
+        $query = "SELECT * FROM statement_of_accounts ORDER BY created_at DESC";
         $soa = $con->query($query) or die($con->error);
         $soas = array();
         while($soaRow = $soa->fetch_assoc()){
