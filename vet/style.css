@@ -36,6 +36,10 @@
     background-color: blue;
 }
 
+.rounded-button:disabled, .rounded-outline-button:disabled, #log-in:disabled{
+    opacity: 50%;
+}
+
 #loading-screen{
     width: 100%;
     height: 100%;

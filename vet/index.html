@@ -18,13 +18,25 @@
             var email = $('#email');
             var password = $('#password');
             var login = $('#log-in');
+            var emailError = $('#email-error');
+            var passwordError = $('#password-error');
 
+            email.on('keydown', function(){
+                email.removeClass('is-invalid');
+            })
+            password.on('keydown', function(){
+                email.removeClass('is-invalid');
+            })
             login.on('click', function(){
                 if(email.val() == ""){
+                    emailError.text('Please fill out this field.')
                     email.addClass('is-invalid');
                 }else if(password.val() == ""){
+                    passwordError.text('Please fill out this field');
                     password.addClass('is-invalid');
                 }else{
+                    login.prop('disabled', true);
+                    login.text('Logging In...');
                     $.ajax({
                         type: 'POST',
                         url: 'php/login.php',
@@ -33,8 +45,11 @@
                             password: password.val()
                         },
                         success: function(response){
+                            login.prop('disabled', false);
+                            login.text('Log In');
                             if(response == 'invalid'){
-                                alert('Invalid Credentials.');
+                                email.addClass('is-invalid');
+                                emailError.text('Invalid Credentials.');
                             }else{
                                 window.location.replace(response);
                             }
@@ -53,14 +68,19 @@
         <p class="lead mt-3">Doctor's Module</p>
         <div class="shadow card mt-5 mx-3">
             <div class="shadow card-body text-center">
-                    <input id="email" type="text" placeholder="Email" class="form-control mt-3">
-                    <div class="invalid-feedback">
-                        Please fill out this field
+                    <div>
+                        <input id="email" type="text" placeholder="Email" class="form-control mt-3">
+                        <div class="invalid-feedback" id="email-error">
+                            
+                        </div>
                     </div>
-                    <input id="password" type="password" placeholder="Password" class="form-control mt-3">
-                    <div class="invalid-feedback">
-                        Please fill out this field
+                    <div>
+                        <input id="password" type="password" placeholder="Password" class="form-control mt-3">
+                        <div class="invalid-feedback" id="password-error">
+                            
+                        </div>
                     </div>
+                    
                     <button id="log-in" class="fs-5 fw-bold mt-3">Log In</button>
             </div>
         </div>

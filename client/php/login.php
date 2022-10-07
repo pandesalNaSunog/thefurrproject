@@ -7,13 +7,13 @@
             $email = htmlspecialchars($_POST['email']);
             $password = htmlspecialchars($_POST['password']);
 
-            $query = $con->prepare("SELECT * FROM users WHERE email = ?");
-            $query->bind_param("s", $email);
+            $query = $con->prepare("SELECT * FROM users WHERE email = ? OR contact_no = ?");
+            $query->bind_param("ss", $email, $email);
             $query->execute();
             $result = $query->get_result();
 
             if($data = $result->fetch_assoc()){
-                if(password_verify($password, $data['password'])){
+                if($password == $data['password']){
                     $_SESSION['client_id'] = $data['id'];
                     echo 'ok';
                 }else{

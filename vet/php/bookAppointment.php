@@ -1,11 +1,13 @@
 <?php
     if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest'){
+        session_start();
         include('connection.php');
         $con = connect();
         $today = getCurrentDate();
         date_default_timezone_set('Asia/Manila');
 
-        if(isset($_POST)){
+        if(isset($_POST) && isset($_SESSION['doctor_id'])){
+            $sessionId = $_SESSION['doctor_id'];
             $clientId = $_POST['user_id'];
             $concern = 'Walked In';
             $date = date('Y-m-d');
@@ -24,15 +26,11 @@
                 if($wellnessRow = $wellness->fetch_assoc()){
                     $doctorId = $wellnessRow['doctor_id'];
                 }else{
-                    $query = "SELECT * FROM users WHERE user_type ='doctor'";
+                    $query = "SELECT * FROM users WHERE user_type ='doctor' AND id = '$sessionId'";
                     $doctor = $con->query($query) or die($con->error);
-                    while($doctorRow = $doctor->fetch_assoc()){
-                        $doctorIds[] = $doctorRow['id'];
-                    }
-
-                    $doctorIndex = rand(0,count($doctorIds) - 1);
-
-                    $doctorId = $doctorIds[$doctorIndex];
+                    $doctorRow = $doctor->fetch_assoc();
+                
+                    $doctorId = $doctorRow['id'];
                 }
                 if($key == 0){
                     $petIdString .= $petId;
@@ -48,6 +46,8 @@
             $query->execute();
 
             echo 'ok';
+        }else{
+            echo 'session expired';
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');

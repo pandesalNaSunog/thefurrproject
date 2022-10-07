@@ -8,23 +8,33 @@
             $amount = $_POST['amount'];
 
             $totalAmount = 0;
-            $balance = 0;
 
-            $query = "SELECT * FROM statement_of_accounts WHERE id = '$soaId'";
-            $soaQuery = $con->query($query) or die($con->error);
-            $soaRow = $soaQuery->fetch_assoc();
+            $query = "SELECT * FROM payments WHERE soa_id = '$soaId' ORDER BY created_at DESC";
+            $payment = $con->query($query) or die($con->error);
+            if($paymentRow = $payment->fetch_assoc()){
+                $balance = $paymentRow['balance'];
+                $totalAmount = $balance;
+            }else{
+                $balance = 0;
+                $query = "SELECT * FROM statement_of_accounts WHERE id = '$soaId'";
+                $soaQuery = $con->query($query) or die($con->error);
+                $soaRow = $soaQuery->fetch_assoc();
 
-            $soaDetails = $soaRow['details'];
+                $soaDetails = $soaRow['details'];
 
-            $soaDetailsArray = explode("**", $soaDetails);
+                $soaDetailsArray = explode("**", $soaDetails);
 
-            foreach($soaDetailsArray as $soaDetailsItem){
-                if($soaDetailsItem != ""){
-                    $soaDetailsBreakdown = explode("*", $soaDetailsItem);
-                    $discounted = $soaDetailsBreakdown[3];
-                    $totalAmount += $discounted;
+                foreach($soaDetailsArray as $soaDetailsItem){
+                    if($soaDetailsItem != ""){
+                        $soaDetailsBreakdown = explode("*", $soaDetailsItem);
+                        $discounted = $soaDetailsBreakdown[3];
+                        $totalAmount += $discounted;
+                    }
                 }
             }
+           
+
+            
 
 
             $change = $amount - $totalAmount;

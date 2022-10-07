@@ -149,6 +149,14 @@
             var labRequestError = $('#lab-request-error');
             var yesterdayAppointmentsList = $('#yesterday-appointment-list');
             var tomorrowAppointmentsList = $('#tomorrow-appointment-list');
+            var soaClientName = $('#soa-client-name');
+            var soaPatientName = $('#soa-patient-name');
+            var soaClientCode = $('#soa-client-code');
+            var medication = $('#medication');
+            var totalAmount = $('#total-amount');
+            var paymentsTable = $('#payments-table');
+            var soaAttendingVet = $('#soa-attending-vet');
+
 
 
             newPassword.on('keydown', function(){
@@ -732,7 +740,7 @@
                                                 <p><em>${date} ${time}</em></p>
                                                 <p><em>Concern: ${thisConcern}</em></p>
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body appointment-card">
                                                 <h4 class="fw-bold">Pets</h4>
                                                 <hr>
                                                 <div class="pets-list mt-3">
@@ -747,10 +755,11 @@
                     var petsList = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.pets-list');
                     var markAsDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-done');
                     var markAsUnDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-undone');
-
+                    var appointmentCard = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.appointment-card');
                     if(isDone == "yes"){
-                    markAsUnDone.show()
-                    markAsDone.hide()
+                        appointmentCard.attr("style", "background-color: #d2ffd2");
+                        markAsUnDone.show()
+                        markAsDone.hide()
                     }else{
                         markAsDone.show()
                         markAsUnDone.hide()
@@ -771,6 +780,7 @@
                                     if(response == 'ok'){
                                         markAsDone.show()
                                         markAsUnDone.hide()
+                                        appointmentCard.removeAttr('style');
                                     }
                                 }
                             })
@@ -778,6 +788,7 @@
                     });
                     markAsDone.on('click', function(){
                         var appointmentId = $(this).val();
+                        
                         if(confirm('Mark this appointment as done?') == true){
                             $.ajax({
                                 type: 'POST',
@@ -790,6 +801,7 @@
                                     if(response == 'ok'){
                                         markAsDone.hide()
                                         markAsUnDone.show()
+                                        appointmentCard.attr("style", "background-color: #d2ffd2");
                                     }
                                 }
                             })
@@ -1415,14 +1427,16 @@
                     }
                 })
             }
+            addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount)
 
-            function addToSoaDetailsTable(index, service, base_price, discounted_price, quantity, discount_rate){
+            function addToSoaDetailsTable(index, service, base_price, amount, quantity, discounted, discount){
                 soaDetailsTable.append(`<tr>
                                             <td>${service}</td>
                                             <td>&#8369; ${base_price}</td>
-                                            <td>&#8369; ${discounted_price}</td>
+                                            <td>&#8369; ${amount}</td>
                                             <td>${quantity}</td>
-                                            <td>${discount_rate}%</td>
+                                            <td>&#8369; ${discounted}</td>
+                                            <td>${discount}%</td>
                                         </tr>`)
             }
 
@@ -1437,39 +1451,64 @@
 
                     var soaNumber = laboratoryList.children().eq(laboratoryList.children().length - 1).find('.soa-number');
 
-                    soaNumber.on('click', function(){
-                        var thisSoaNumber = $(this).text();
-                        soaDetailsTable.children().remove()
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/getSoa.php',
-                            data:{
-                                soa_number: thisSoaNumber,
-                            },
-                            success: function(response){
-                                var data = JSON.parse(response)
-                                balance.text(data.balance);
-                                $(data.details).each(function(index, value){
-                                    addToSoaDetailsTable(index, value.service, value.base_price, value.discounted_price, value.quantity, value.discount_rate)
-                                })
-                            }
-                        })
-                    })
+                    getSoaDetails(soaNumber);
                 }else if(category == "emergency"){
                     emergencyList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
+                                                <td><button class="btn btn-link soa-number" data-bs-target="#soa-details-modal" data-bs-toggle="modal">${soaNo}</button></td>
                                             </tr>`)
+                    
+                    var soaNumber = emergencyList.children().eq(emergencyList.children().length - 1).find('.soa-number');
+                    getSoaDetails(soaNumber);
+                    
                 }else if(category == "surgery"){
                     surgeryList.append(`<tr>
                                                 <td>${date}</td>
                                                 <td>${service}</td>
                                                 <td>${labTech}</td>
-                                                <td><button class="btn btn-link soa-number">${soaNo}</button></td>
+                                                <td><button class="btn btn-link soa-number" data-bs-target="#soa-details-modal" data-bs-toggle="modal">${soaNo}</button></td>
                                             </tr>`)
+                    var soaNumber = surgeryList.children().eq(surgeryList.children().length - 1).find('.soa-number');
+
+                    getSoaDetails(soaNumber);
                 }
+            }
+
+            function getSoaDetails(soaNumber){
+                soaNumber.on('click', function(){
+                    console.log($(this));
+                    var thisSoaNumber = $(this).text();
+                    soaDetailsTable.children().remove()
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/getSoa.php',
+                        data:{
+                            soa_number: thisSoaNumber,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response)
+                            
+                            soaClientName.text(data.client_name)
+                            soaPatientName.text(data.patient_name)
+                            soaClientCode.text(data.client_code)
+                            medication.text(data.medication)
+                            totalAmount.text(data.total_amount)
+                            
+                            soaAttendingVet.text(data.attending_vet)
+                            
+
+                            $(data.soa).each(function(index, value){
+                                addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount)
+                            })
+
+                            $(data.payments_history).each(function(index, value){
+                                paymentsTable.append(`<tr><td>&#8369; ${value.amount_renderred}</td><td>&#8369; ${value.balance}</td></tr>`)
+                            })
+                        }
+                    })
+                })
             }
         })
     </script>
@@ -2053,23 +2092,51 @@
                     </div>
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
+                <div class="modal-body" id="print-me">
+                    <div class="bg-light rounded-3 p-3" id="client-info">
+                        <p>Client Name: <span class="fw-bold" id="soa-client-name"></span></p>
+                        <p>Patient Name: <span class="fw-bold" id="soa-patient-name"></span></p>
+                        <p>Client Code: <span class="fw-bold" id="soa-client-code"></span></p>
+                        <br>
+                        <p class="fw-bold" id="medication-rx">Medication/Rx:</p>
+                        <p id="medication"></p>
+                    </div>
+
+                    <div class="table-responsive mt-5">
                         <table class="table table-striped">
                             <thead>
                                 <th scope="col">Service</th>
                                 <th scope="col">Base Price</th>
-                                <th scope="col">Discount Price</th>
                                 <th scope="col">Quantity</th>
-                                <th scope="col">Discount Rate</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Amount(Discounted)</th>
+                                <th scope="col">Discount</th>
                             </thead>
                             <tbody id="soa-details-table">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="total-amount-p">Total: &#8369 <span class="fw-bold" id="total-amount"></span></p>
+                    <br>
+
+                    <h5 class="fw-bold">Payment History</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Amount</th>
+                                <th scope="col">balance</th>
+                            </thead>
+                            <tbody id="payments-table">
 
                             </tbody>
                         </table>
                     </div>
-
-                    <p>Active Balance: <span class="fw-bold" id="balance"></span></p>
+                    <p class="text-center" id="footer">
+                        <span class="fw-bold" id="attending-veterinarian">Attending Veterinarian</span><br>
+                        <span id="soa-attending-vet"></span>
+                    </p>
+                    
                 </div>
             </div>
         </div>

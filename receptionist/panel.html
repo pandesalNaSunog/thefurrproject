@@ -47,7 +47,9 @@
             var groomingPrice = $('#grooming-price');
             var logout = $('#logout');
             var medication = $('#medication');
-
+            var balanceText = $('#balance');
+            var soaAttendingVet = $('#soa-attending-vet');
+            var paymentsTable = $('#payments-table');
             
 
             logout.on('click', function(){
@@ -241,7 +243,7 @@
                         success: function(response){
                             var data = JSON.parse(response);
                             $(data).each(function(index, value){
-                                addToSoaTable(index, value.id, value.client_name, value.patient_name, value.soa_number, value.date)
+                                addToSoaTable(index, value.id, value.client_name, value.patient_name, value.soa_number, value.date, value.balance)
                             })
                         }
                     })
@@ -268,6 +270,7 @@
                                 alert('Transaction Successful.');
                                 amount.val('');
                                 viewSoaDetailsModal.modal('hide');
+                                getSoas();
                             }
                         }
                     })
@@ -380,6 +383,7 @@
                 viewSoaDetails.on('click', function(){
                     var thisViewSoaDetails = $(this);
                     soaDetailsTable.children().remove();
+                    paymentsTable.children().remove();
                     globalSoaId = thisViewSoaDetails.val();
                     $.ajax({
                         type: 'POST',
@@ -394,12 +398,30 @@
                             soaClientCode.text(data.client_code);
                             totalAmount.text(data.total_amount);
                             medication.text(data.medication);
+                            balanceText.text(data.balance);
+                            soaAttendingVet.text(data.attending_vet);
+
+                            
+                            
                             $(data.soa).each(function(index, value){
                                 addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount);
+                            })
+
+                            $(data.payments_history).each(function(index, value){
+                                addToPaymentsTable(index, value.amount_renderred, value.balance,value.date)
                             })
                         }
                     })
                 })
+            }
+
+            function addToPaymentsTable(index, amount, balance, date){
+                paymentsTable.append(`<tr>
+                                        <td>&#8369;${amount}</td>
+                                        <td>&#8369; ${balance}</td>
+                                        <td>${date}</td>
+                                    </tr>
+                    `)
             }
 
             function addToSoaDetailsTable(index, service, basePrice, amount, quantity, discounted, discount){
@@ -569,7 +591,7 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="print-me">
-                    <div class="bg-light rounded-3 p-3">
+                    <div class="bg-light rounded-3 p-3" id="client-info">
                         <p>Client Name: <span class="fw-bold" id="soa-client-name"></span></p>
                         <p>Patient Name: <span class="fw-bold" id="soa-patient-name"></span></p>
                         <p>Client Code: <span class="fw-bold" id="soa-client-code"></span></p>
@@ -593,7 +615,27 @@
                             </tbody>
                         </table>
                     </div>
-                    <p>Total: &#8369 <span class="fw-bold" id="total-amount"></span></p>
+                    <p id="total-amount-p">Total: &#8369 <span class="fw-bold" id="total-amount"></span></p>
+                    <br>
+
+                    <h5 class="fw-bold">Payment History</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col">Date and Time</th>
+                            </thead>
+                            <tbody id="payments-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-center" id="footer">
+                        <span class="fw-bold" id="attending-veterinarian">Attending Veterinarian</span><br>
+                        <span id="soa-attending-vet"></span>
+                    </p>
+                    
                 </div>
                 
                 <div class="modal-footer">
@@ -609,7 +651,7 @@
                         
                     </div>
 
-                    <button class="btn btn-primary" id="print">Print SOA</button>
+                    <button class="btn btn-primary w-100 mt-3" id="print">Print SOA</button>
                     <script>
                         var print = $('#print');
                         
@@ -627,7 +669,7 @@
                                                                 *{
                                                                     font-family: sans-serif
                                                                 }
-                                                                span{
+                                                                .fw-bold{
                                                                     font-weight: bold
                                                                 }
                                                                 table{
@@ -662,11 +704,40 @@
                                                                 #medication-rx{
                                                                     font-weight: bold;
                                                                 }
-                                                                
+                                                                #soa-title{
+                                                                    letter-spacing: 5px;
+                                                                    text-align: center;
+                                                                }
+                                                                #total-amount-p{
+                                                                    margin-top: 30px;
+                                                                }
+
+                                                                #total-amount-p, #balance-p{
+                                                                    text-align: right;
+                                                                }
+
+                                                                #client-info{
+                                                                    margin-top: 50px;
+                                                                }
+
+                                                                #attending-veterinarian{
+                                                                    font-size: 20px;
+                                                                }
+
+                                                                #footer{
+                                                                    margin-top: 50px;
+                                                                    text-align: center;
+                                                                    line-height: 1.5;
+                                                                }
                                                             }
                                                         </style>
-                                                    </head><h1>The Furr Project Veterinary Clinic & Pharmacy</h3>`+printMe.innerHTML)
+                                                    </head>
+                                                    <h1>The Furr Project Veterinary Clinic & Pharmacy</h1>
+                                                    <h3 id="soa-title">STATEMENT OF ACCOUNTS</h3>
+                                                    `+printMe.innerHTML)
                             printArea.print()
+                            printArea.close()
+                            window.focus()
                         })
                     </script>
                 </div>
