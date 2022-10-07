@@ -23,12 +23,16 @@
                     $record = $con->query($query) or die($con->error);
                     if($recordRow = $record->fetch_assoc()){
                         $doctorId = $recordRow['doctor_id'];
-
-                        $query = "SELECT * FROM users WHERE id = '$doctorId'";
-                        $doctor = $con->query($query) or die($con->error);
-                        $doctorRow = $doctor->fetch_assoc();
-
-                        $doctorName = $doctorRow['name'];
+                        if($doctorId == 0){
+                            $doctorName = "NO RECORDS";
+                        }else{
+                            $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                            $doctor = $con->query($query) or die($con->error);
+                            $doctorRow = $doctor->fetch_assoc();
+    
+                            $doctorName = $doctorRow['name'];
+                        }
+                        
                     }else{
                         $doctorName = "NO RECORDS";
                     }

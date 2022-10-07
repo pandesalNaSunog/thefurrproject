@@ -6,7 +6,7 @@
         if(isset($_SESSION['client_id'])){
             $clientId = $_SESSION['client_id'];
 
-            $query = "SELECT * FROM appointments WHERE user_id = '$clientId'";
+            $query = "SELECT * FROM appointments WHERE user_id = '$clientId' ORDER BY date ASC";
             $appointmentQuery = $con->query($query) or die($con->error);
             $response = array();
             while($appointmentRow = $appointmentQuery->fetch_assoc()){
