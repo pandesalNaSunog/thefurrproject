@@ -384,7 +384,15 @@
                     var thisViewSoaDetails = $(this);
                     soaDetailsTable.children().remove();
                     paymentsTable.children().remove();
+                    medication.text('NONE');
+                    balanceText.text('');
+                    totalAmount.text('');
+                    soaClientCode.text('');
+                    soaClientName.text('');
+                    soaPatientName.text('');
                     globalSoaId = thisViewSoaDetails.val();
+                    soaAttendingVet.text('');
+                    
                     $.ajax({
                         type: 'POST',
                         url: 'php/getSoaDetails.php',
@@ -732,7 +740,7 @@
                                                             }
                                                         </style>
                                                     </head>
-                                                    <h1>The Furr Project Veterinary Clinic & Pharmacy</h1>
+                                                    <h1>The Furr Project Animal Clinic & Vet Pharmacy</h1>
                                                     <h3 id="soa-title">STATEMENT OF ACCOUNTS</h3>
                                                     `+printMe.innerHTML)
                             printArea.print()
