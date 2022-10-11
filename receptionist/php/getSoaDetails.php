@@ -15,27 +15,38 @@
             $query = "SELECT * FROM pets WHERE id = '$petId'";
             $pet = $con->query($query) or die($con->error);
             $petRow = $pet->fetch_assoc();
-            $doctorName = "";
+            $doctorName = "NONE";
 
-            $query = "SELECT medication, doctor_id FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
-            $medRecord = $con->query($query) or die($con->error);
-            if($medRow = $medRecord->fetch_assoc()){
-                $doctorId = $medRow['doctor_id'];
-                $query = "SELECT name FROM users WHERE id = '$doctorId'";
-                $doctor = $con->query($query) or die($con->error);
-                $doctorRow = $doctor->fetch_assoc();
+            
+            $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId' ORDER BY created_at DESC";
+            $record = $con->query($query) or die($con->error);
+            $recordRow = $record->fetch_assoc();
 
-                $doctorName = $doctorRow['name'];
-                if($medRow['medication'] != ""){
-                    $medication = $medRow['medication'];
+            $recordDoctorId = $recordRow['doctor_id'];
 
+            if($recordDoctorId != 0){
+                $query = "SELECT medication, doctor_id FROM medical_records WHERE pet_id = '$petId' ORDER BY id DESC";
+                $medRecord = $con->query($query) or die($con->error);
+                if($medRow = $medRecord->fetch_assoc()){
+                    $doctorId = $medRow['doctor_id'];
+                    $query = "SELECT name FROM users WHERE id = '$doctorId'";
+                    $doctor = $con->query($query) or die($con->error);
+                    $doctorRow = $doctor->fetch_assoc();
+                    $doctorName = $doctorRow['name'];
+                    if($medRow['medication'] != ""){
+                        $medication = $medRow['medication'];
+    
+                    }else{
+                        $medication = "NONE";
+                    }
+                    
                 }else{
                     $medication = "NONE";
                 }
-                
             }else{
                 $medication = "NONE";
             }
+            
 
 
             $userId = $petRow['user_id'];
