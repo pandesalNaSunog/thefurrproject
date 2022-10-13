@@ -1629,6 +1629,7 @@
                     console.log($(this));
                     var thisSoaNumber = $(this).text();
                     soaDetailsTable.children().remove()
+                    paymentsTable.children().remove()
                     $.ajax({
                         type: 'POST',
                         url: 'php/getSoa.php',
