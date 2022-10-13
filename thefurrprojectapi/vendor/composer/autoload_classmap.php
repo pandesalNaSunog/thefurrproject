@@ -20,6 +20,8 @@ return array(
     'App\\Http\\Middleware\\TrustProxies' => $baseDir . '/app/Http/Middleware/TrustProxies.php',
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Models\\Appointment' => $baseDir . '/app/Models/Appointment.php',
+    'App\\Models\\Confinement' => $baseDir . '/app/Models/Confinement.php',
+    'App\\Models\\ConfinementRecord' => $baseDir . '/app/Models/ConfinementRecord.php',
     'App\\Models\\InitialCheckup' => $baseDir . '/app/Models/InitialCheckup.php',
     'App\\Models\\LabRequest' => $baseDir . '/app/Models/LabRequest.php',
     'App\\Models\\LabResult' => $baseDir . '/app/Models/LabResult.php',

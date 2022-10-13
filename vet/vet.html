@@ -12,6 +12,11 @@
 
     <script>
         $(document).ready(function(){
+            var globalConfinementId = 0;
+            var addConfinementStatusError = $('#add-confinement-status-error');
+            var addConfinementStatus = $('#add-confinement-status');
+            var confirmAddConfinementStatus = $('#confirm-add-confinement-status');
+            var confinedPetsTable = $('#confined-pets-table');
             var globalPetId = 0;
             var globalUserId = 0;
             var globalVetTechId = 0;
@@ -156,8 +161,45 @@
             var totalAmount = $('#total-amount');
             var paymentsTable = $('#payments-table');
             var soaAttendingVet = $('#soa-attending-vet');
+            var confinementLink = $('#confinement-link');
+            var confinementSection = $('#confinement-section');
+            var confinementCLientName = $('#confinement-client-name');
+            var confinementContact = $('#confinement-contact');
+            var confinementPetName = $('#confinement-pet-name');
+            var confinementSpecies = $('#confinement-species');
+            var confinementBreed = $('#confinement-breed');
+            var confinementBirthDate = $('#confinement-birthdate');
+            var confinementSex = $('#confinement-sex');
+            var confinementTypeOfFluid = $('#confinement-type-of-fluid');
+            var confinementDripRate = $('#confinement-drip-rate');
+            var confinementDurationofFluid = $('#confinement-duration-of-fluid');
+            var confinementTempDef = $('#confinement-temp-def');
+            var viewConfinementDetailsModal = $('#view-confinement-details-modal');
+            var confinementStatusTable = $('#confinement-status-table');
 
 
+            confirmAddConfinementStatus.on('click', function(){
+                if(addConfinementStatus.val() == ""){
+                    addConfinementStatusError.text('Please fill out this field');
+                    addConfinementStatus.addClass('is-invalid');
+                }else{
+                    confirmAddConfinementStatus.prop('disabled', true);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addConfinementStatus.php',
+                        data:{
+                            confinement_id: globalConfinementId,
+                            status: addConfinementStatus.val()
+                        },
+                        success: function(response){
+                            confirmAddConfinementStatus.prop('disabled', false);
+                            addConfinementStatus.val('');
+                            var data = JSON.parse(response);
+                            addToConfinementStatusTable(confinementStatusTable.children().length, data.status, data.date);
+                        }
+                    })
+                }
+            })
 
             newPassword.on('keydown', function(){
                 newPassword.removeClass('is-invalid');
@@ -813,13 +855,41 @@
                                                 <h5 class="fw-bold align-self-center">${value.name}</h5>
                                                 <div>
                                                     <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
-                                                    
+                                                    <button value="${value.id}" class="confine btn btn-outline-primary">Subject for Confinement</button>
                                                 </div>
                                             </div>
                                         </div>`)
 
                         var services = petsList.children().eq(index).find('.services');
-                        
+                        var confine = petsList.children().eq(index).find('.confine');
+
+
+                        confine.on('click', function(){
+                            var thisConfineBUtton = $(this);
+                            if(confirm("Subject this pet for confinement?") == true){
+                                thisConfineBUtton.prop('disabled', true);
+
+                                var confinementPetId = $(this).val();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: 'php/confine.php',
+                                    data:{
+                                        pet_id: confinementPetId
+                                    },
+                                    success: function(response){
+                                        thisConfineBUtton.prop('disabled', false);
+                                        if(response == 'ok'){
+                                            alert("This pet has been added to Confinement data.");
+                                        }else if(response = 'confinement exists'){
+                                            alert("This pet is already subjected for confinement.");
+                                        }else{
+                                            alert("Somethin went wrong.");
+                                        }
+                                    }
+                                })
+                            }
+                            
+                        })
                         services.on('click', function(){
                             globalVetTechId = 0;
                             var servicesValue = $(this).val();
@@ -999,6 +1069,7 @@
             appointmentSection.hide();
             servicesSection.hide();
             labRequestSection.hide();
+            confinementSection.hide();
 
             function getClients(){
                 loadingScreen.show()
@@ -1269,6 +1340,7 @@
                 appointmentSection.hide();
                 clientSection.hide();
                 servicesSection.hide();
+                confinementSection.hide();
                 getVetLabRequests();
             })
 
@@ -1277,6 +1349,7 @@
                 clientSection.show();
                 servicesSection.hide();
                 labRequestSection.hide();
+                confinementSection.hide();
                 getClients();
                 getProfile();
             })
@@ -1286,6 +1359,7 @@
                 clientSection.hide();
                 appointmentSection.show()
                 servicesSection.hide();
+                confinementSection.hide()
                 getAppointments();
             })
             servicesLink.on('click', function(){
@@ -1297,7 +1371,81 @@
                 laboratoryList.children().remove();
                 emergencyList.children().remove();
                 surgeryList.children().remove();
+                confinementSection.hide();
             })
+
+            confinementLink.on('click', function(){
+                labRequestSection.hide();
+                servicesSection.hide();
+                clientSection.hide();
+                appointmentSection.hide()
+                confinementSection.show();
+
+                getConfinedPets();
+            })
+
+            function getConfinedPets(){
+                confinedPetsTable.children().remove();
+                loadingScreen.show();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/confinedPets.php',
+                    success: function(response){
+                        loadingScreen.hide();
+                        var data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            addToConfinementTable(index, value.name, value.id);
+                        })
+                    }
+                })
+            }
+
+            function addToConfinementTable(index, name, id){
+                confinedPetsTable.append(`<tr>
+                                            <td>${name}</td>
+                                            <td>
+                                                <button value="${id}" data-bs-toggle="modal" data-bs-target="#view-confinement-details-modal" class="view-confinement-details normal-outline-button">View Details</button>
+                                            </td>
+                                        </tr>`)
+                var viewConfinementDetails = confinedPetsTable.children().eq(index).find('.view-confinement-details');
+
+                viewConfinementDetails.on('click', function(){
+                    confinementStatusTable.children().remove();
+                    //viewConfinementDetailsModal.children().find('span').text('');
+                    var thisConfinementId = $(this).val();
+                    globalConfinementId = thisConfinementId;
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/confinementDetails.php',
+                        data:{
+                            confinement_id: thisConfinementId,
+                        },
+                        success: function(response){
+                            var data = JSON.parse(response);
+                            confinementCLientName.text(data.client_name);
+                            confinementContact.text(data.contact_no);
+                            confinementPetName.text(data.pet_name);
+                            confinementSpecies.text(data.species);
+                            confinementBreed.text(data.breed);
+                            confinementBirthDate.text(data.date_of_birth);
+                            confinementSex.text(data.sex);
+                            confinementTypeOfFluid.text(data.type_of_fluid);
+                            confinementDripRate.text(data.drip_rate);
+                            confinementTempDef.text(data.temp_def_diagnosis);
+                            confinementDurationofFluid.text(data.duration);
+
+                            $(data.status).each(function(index, value){
+                                addToConfinementStatusTable(index, value.status, value.date);
+                            })
+                        }
+                    })
+                })
+            }
+
+            function addToConfinementStatusTable(index, status, date){
+                confinementStatusTable.append(`<tr><td>${status}</td><td>${date}</td></tr>`);
+            }
 
             loadingScreen.hide();
             function getVetLabRequests(){
@@ -1427,7 +1575,7 @@
                     }
                 })
             }
-            addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount)
+            // addToSoaDetailsTable(index, value.service, value.base_price, value.amount, value.quantity, value.discounted, value.discount)
 
             function addToSoaDetailsTable(index, service, base_price, amount, quantity, discounted, discount){
                 soaDetailsTable.append(`<tr>
@@ -1536,6 +1684,10 @@
                     </li>
                     <li>
                         <a id="appointment-link" class="navigation nav-link" href="#">Appointments</a>
+                    </li>
+
+                    <li>
+                        <a id="confinement-link" class="navigation nav-link" href="#">Confinement</a>
                     </li>
 
                     <li>
@@ -2417,6 +2569,83 @@
                         </div>
                     </div>
                     
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="confinement-section">
+        <div class="container">
+            <div class="card shadow col-lg-6 mx-auto mt-5 rounded-3">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Confinement
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <th scope="col">Name</th>
+                            <th scope="col">Action</th>
+                        </thead>
+                        <tbody id="confined-pets-table">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" data-bs-backdrop="static" id="view-confinement-details-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p></p>Client Name: <span class="fw-bold" id="confinement-client-name"></span><br>
+                    Contact Number: <span class="fw-bold" id="confinement-contact"></span><br>
+                    Pet Name: <span class="fw-bold" id="confinement-pet-name"></span><br>
+                    Species: <span class="fw-bold" id="confinement-species"></span><br>
+                    Breed: <span class="fw-bold" id="confinement-breed"></span><br>
+                    Date of Birth: <span class="fw-bold" id="confinement-birthdate"></span><br>
+                    Sex: <span class="fw-bold" id="confinement-sex"></span><br>
+                    Type of Fluid: <span class="fw-bold" id="confinement-type-of-fluid"></span><br>
+                    Drip Rate/Ratio: <span class="fw-bold" id="confinement-drip-rate"></span><br>
+                    Duration of Fluid Therapy/Day: <span class="fw-bold" id="confinement-duration-of-fluid"></span><br>
+                    Temp./Def. Diagnosis: <span class="fw-bold" id="confinement-temp-def"></span></p>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date</th>
+                            </thead>
+                            <tbody id="confinement-status-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class="mt-3 fw-bold">
+                        Add Status
+                    </h3>
+                    <hr>
+                    <div>
+                        <input type="text" id="add-confinement-status" placeholder="Add Confinement Status" class="form-control">
+                        <div class="invalid-feedback" id="add-confinement-status-error">
+
+                        </div>
+                    </div>
+                    
+                    <button class="rounded-button mt-3" id="confirm-add-confinement-status">Confirm</button>
                 </div>
             </div>
         </div>
