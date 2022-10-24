@@ -16,14 +16,19 @@
         $(window).scroll(function(){
             var navbar = $('#navbar');
             var navigationLink = $('.navigation-link');
+            var navToggler = $('#nav-toggler');
             if($(window).scrollTop() == 0){
                 navbar.removeClass('bg-light')
                 navbar.removeClass('shadow')
                 navigationLink.css('color', 'white');
+                navToggler.addClass('navbar-dark');
+                navToggler.removeClass('navbar-light');
             }else{
                 navbar.addClass('bg-light');
                 navbar.addClass('shadow')
                 navigationLink.css('color', 'black');
+                navToggler.removeClass('navbar-dark');
+                navToggler.addClass('navbar-light');
             }
         })
         $(document).ready(function(){
@@ -51,7 +56,7 @@
             <div class="navbar-brand">
                 <img src="images/thefurrproject.PNG" style="height: auto; width: 200px" alt="" class="shadow rounded-3 img-fluid">
             </div>
-            <button class="navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navmenu">
+            <button id="nav-toggler" class="navbar-dark navbar-toggler" data-bs-toggle="offcanvas" data-bs-target="#navmenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse">
@@ -64,6 +69,9 @@
                     </li>
                     <li class="nav-item">
                         <a href="#" class="navigation-link nav-link me-5">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="navigation-link nav-link me-5">Contact Us</a>
                     </li>
                 </ul>
             </div>
