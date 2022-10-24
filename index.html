@@ -34,14 +34,9 @@
         $(document).ready(function(){
             var navigationLink = $('.navigation-link');
             var navbar = $('#navbar');
-            var offCanvas = $('#navmenu');
-
-            var offCanvasLink = $('.offcanvas-link');
 
 
-            offCanvasLink.on('click', function(){
-                offCanvas.offcanvas('hide');
-            })
+            
             navbar.removeClass('bg-light')
             navbar.removeClass('shadow')
             navigationLink.css('color', 'white');
