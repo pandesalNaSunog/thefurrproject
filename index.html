@@ -40,6 +40,27 @@
             navbar.removeClass('bg-light')
             navbar.removeClass('shadow')
             navigationLink.css('color', 'white');
+
+            const elementObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry =>{
+                    if(entry.isIntersecting && entry.target.classList.contains('right')){
+                        entry.target.classList.add('fromRight');
+                        return;
+                    }else if(entry.isIntersecting && entry.target.classList.contains('left')){
+                        entry.target.classList.add('fromLeft');
+                        return;
+                    }
+                    entry.target.classList.remove('fromRight');
+                    entry.target.classList.remove('fromLeft');
+                })     
+            },
+            )
+            document.querySelectorAll('.left').forEach(function callback(value, index){
+                elementObserver.observe(document.querySelectorAll('.left')[index]);
+            })
+            document.querySelectorAll('.right').forEach(function callback(value, index){
+                elementObserver.observe(document.querySelectorAll('.right')[index]);
+            })
         })
 
         
@@ -111,8 +132,8 @@
     <div id="header-section">
         <div class="container d-flex align-items-center text-light" style="height: 100%">
             <div class="text-center w-100">
-                <h1 class="fw-bold" id="header-title">The Furr Project Animal Clinic & Vet Pharmacy</h1>
-                <p class="lead" id="header-description">Committed to Responsible Pet Ownership</p>
+                <h1 class="fw-bold left" id="header-title">The Furr Project Animal Clinic & Vet Pharmacy</h1>
+                <p class="lead right" id="header-description">Committed to Responsible Pet Ownership</p>
                 <a type="button" href="#about-us-section" class="blue-button">Know About Us</a>
             </div>
             
@@ -127,12 +148,12 @@
             <hr>
 
             <div class="row row-cols-1 row-cols-lg-2" id="about-us-info">
-                <div class="col text-center text-lg-start">
+                <div class="col text-center text-lg-start left">
                     <h3 class="fw-bold">Lorem ipsum dolor sit.</h3>
                     <p class="lead">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima consectetur exercitationem omnis voluptas. Rerum aliquam quae id laboriosam quam eius eaque ut facere similique praesentium. Eligendi consequatur recusandae tempore optio.</p>
                 </div>
                 
-                <div class="col">
+                <div class="col right">
                     <img id="about-us-image" src="images/header.jpg" style="width: 100%; height: auto" alt="" class="img-fluid">
                 </div>
             </div>
@@ -180,7 +201,7 @@
             </h2>
             <hr>
             <div class="row row-cols-1 row-cols-lg-2">
-                <div class="col">
+                <div class="col left">
                     <div class="accordion accordion-flush">
                         <div class="accordion-item">
                             <h2 class="accordion-header">
@@ -229,7 +250,7 @@
                     </div>
                 </div>
 
-                <div class="col">
+                <div class="col right">
                     <img src="images/header.jpg" alt="" class="img-fluid">
                 </div>
             </div>
@@ -240,7 +261,7 @@
 
     <div id="footer-section">
         <div class="container">
-            <div class="row row-cols-1 row-cols-lg-4">
+            <div class="row row-cols-1 row-cols-lg-5">
                 <div class="col">
                     <h4 class="fw-bold">Lorem, ipsum.</h4>
                     <p class="mt-5" style="opacity: 50%; font-size: 20px; line-height: 30px">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis non sit delectus rerum dignissimos, ipsam aspernatur iusto eius sunt adipisci?</p>
@@ -252,15 +273,35 @@
                     <h4 class="fw-bold">Quick Links</h4>
                     <ul style="padding: 0;list-style-type: none" class="mt-5">
                         <li class="footer-item">
-                            <a href="#" class="footer-link">About Us</a>.
+                            <a href="#" class="footer-link">About Us</a>
                         </li>
                         <li class="footer-item">
-                            <a href="#" class="footer-link">Veterinarians</a>.
+                            <a href="#" class="footer-link">Veterinarians</a>
                         </li>
                         <li class="footer-item">
-                            <a href="#" class="footer-link">Contact Us</a>.
+                            <a href="#" class="footer-link">Contact Us</a>
                         </li>
                     </ul>
+                </div>
+
+                <div class="col">
+                    <h4 class="fw-bold">
+                        Contact Us
+                    </h4>
+                    <div class="mt-5" style="opacity: 50%">
+                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                          </svg><span class="ms-3">(02) 87329979</span></p>
+        
+                        <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                            <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/>
+                            <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                          </svg><span class="ms-3">+63 969 0583197</span><span style="font-size: 10px"> (SMART)</span></p>
+                          <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-phone" viewBox="0 0 16 16">
+                            <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H5z"/>
+                            <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                          </svg><span class="ms-3">+63 927 9415099</span><span style="font-size: 10px"> (GLOBE)</span></p>
+                    </div>
                 </div>
                 
                 <div class="col">
