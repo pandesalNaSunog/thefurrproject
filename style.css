@@ -1,3 +1,33 @@
+@keyframes fromLeft{
+    from{
+        opacity: 0%;
+        transform: translateX(-200px);
+    }to{
+        opacity: 100%;
+        transform: translateX(0px);
+    }
+}
+
+@keyframes fromRight{
+    from{
+        opacity: 0%;
+        transform: translateX(200px)
+    }to{
+        opacity: 100%;
+        transform: translateX(0px)
+    }
+}
+.fromLeft{
+    animation-name: fromLeft;
+    animation-duration: .7s;
+    animation-timing-function: ease-out;
+}
+
+.fromRight{
+    animation-name: fromRight;
+    animation-duration: .7s;
+    animation-timing-function: ease-out;
+}
 .nav-font{
     font-family: sans-serif;
     letter-spacing: 5px;
@@ -27,11 +57,17 @@
     font-weight: bold;
 }
 
+
+
 #header-description{
     font-size: 15px;
 }
 
-
+#contact-us-section{
+    padding-top:80px;
+    background-color: skyblue;
+    padding-bottom: 30px;
+}
 
 #header-section::before{
     z-index: -1;
@@ -77,6 +113,7 @@
 .blue-button:hover{
     background-color: blue;
     color:white;
+    transform: scale(1.06);
 }
 
 #veterinarians-section{
@@ -123,6 +160,10 @@
     color: white;
     opacity: 50%;
 }
+.footer-link:hover{
+    color:white;
+    opacity: 100%;
+}
 
 .footer-item{
     padding-top:5px;
@@ -158,6 +199,8 @@
 }
 
 #about-us-image{
+    border-top-left-radius: 40px;
+    border-bottom-right-radius: 40px;
     transition-duration: 0.2s;
 }
 
