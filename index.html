@@ -34,6 +34,14 @@
         $(document).ready(function(){
             var navigationLink = $('.navigation-link');
             var navbar = $('#navbar');
+            var offCanvas = $('#navmenu');
+
+            var offCanvasLink = $('.offcanvas-link');
+
+
+            offCanvasLink.on('click', function(){
+                offCanvas.offcanvas('hide');
+            })
             navbar.removeClass('bg-light')
             navbar.removeClass('shadow')
             navigationLink.css('color', 'white');
@@ -62,13 +70,13 @@
             <div class="collapse navbar-collapse">
                 <ul class="nav-font navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a href="#" class="navigation-link nav-link me-5">Home</a>
+                        <a href="#header-section" class="navigation-link nav-link me-5">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="navigation-link nav-link me-5">Veterinarians</a>
+                        <a href="#veterinarians-section" class="navigation-link nav-link me-5">Veterinarians</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="navigation-link nav-link me-5">About Us</a>
+                        <a href="#about-us-section" class="navigation-link nav-link me-5">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="navigation-link nav-link me-5">Contact Us</a>
@@ -90,16 +98,16 @@
         <div class="offcanvas-body">
             <ul class="offcanvas-navigation">
                 <li class="offcanvas-item">
-                    <a href="#" class="offcanvas-link" data-bs-dismiss="offcanvas">HOME</a>
+                    <a href="#header-section" class="offcanvas-link">HOME</a>
                 </li>
                 <li class="offcanvas-item">
-                    <a href="#" class="offcanvas-link" data-bs-dismiss="offcanvas">VETERINARIANS</a>
+                    <a href="#veterinarians-section" class="offcanvas-link">VETERINARIANS</a>
                 </li>
                 <li class="offcanvas-item">
-                    <a href="#" class="offcanvas-link" data-bs-dismiss="offcanvas">ABOUT US</a>
+                    <a href="#about-us-section" class="offcanvas-link">ABOUT US</a>
                 </li>
                 <li class="offcanvas-item">
-                    <a href="#" class="offcanvas-link" data-bs-dismiss="offcanvas">CONTACT US</a>
+                    <a href="#footer-section" class="offcanvas-link">CONTACT US</a>
                 </li>
             </ul>
         </div>
