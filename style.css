@@ -91,14 +91,29 @@
 }
 .offcanvas-link{
     text-decoration: none;
-    color: gray;
+    color: white;
     font-size: 20px;
     letter-spacing: 5px;
+    opacity: 50%;
 }
 
 .offcanvas-item{
     padding-top:10px;
     padding-bottom:10px;
+}
+
+.footer-navigation{
+    list-style-type: none;
+}
+.footer-link{
+    text-decoration: none;
+    color: white;
+    opacity: 50%;
+}
+
+.footer-item{
+    padding-top:5px;
+    padding-bottom: 5px;
 }
 
 @media (min-width: 768px){
@@ -133,4 +148,8 @@
     background-color: #343434;
     color: white;
     font-weight: lighter
+}
+
+.offcanvas-link:hover{
+    opacity: 100%;
 }
