@@ -1,112 +1,136 @@
-#navbar{
-    transition-duration: 0.3s;
-}
-
-.sticky-nav{
-    position: fixed;
-    top:0;
-    bottom:90;
-    right:0;
-    left:0;
-}
-
-#book-appointment{
-    text-decoration: none;
-    background-color: darkblue;
-    border-radius: 50px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    padding-left: 50px;
-    padding-right: 50px;
-    border:none;
-    color: white;
+.nav-font{
     font-family: sans-serif;
+    letter-spacing: 5px;
+    font-size: 16px;
     font-weight: bold;
-    transition-duration: 0.3s;
-}
-
-#our-story{
-    margin: 20px;
-    background-color: darkblue; 
-    border-top-left-radius: 100px; 
-    border-bottom-right-radius: 100px;
-    padding-top:20px; 
-    padding-bottom:20px;
-    color: white
 }
 
 .navigation-link{
-    text-decoration: none;
-    color: white;
-    transition-duration: 0.3s;
+    border-bottom: 2px solid transparent;
 }
-
 .navigation-link:hover{
-    background-color: red;
-    color: white;
-}
-
-#commited-to{
-    font-size: 20px;
-}
-
-#responsible{
-    font-size: 40px;
+    color: orange;
+    border-bottom: 2px solid orange;
 }
 
 #header-section{
-    position:relative;
-}
-@media(min-width: 768px){
-    #commited-to{
-        font-size: 30px;
-    }
-    #responsible{
-        font-size: 70px;
-    }
+    margin-top: -1in;
+    top: 0;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    
 }
 
-@media(min-width: 570px){
-    #commited-to{
-        font-size: 30px;
-    }
-    #responsible{
-        font-size: 70px;
-    }
+#header-title{
+    font-size: 50px;
+    font-weight: bold;
 }
 
-#book-appointment:hover{
-    background-color: blue;
-    transform: scale(1.1) ;
+#header-description{
+    font-size: 15px;
 }
 
-#black-background{
-    height: 70vh;
-    position:absolute;
-    background-color: black;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-}
+
+
 #header-section::before{
     z-index: -1;
     content: '';
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    background-image: url('header.jpg');
-    background-size: cover;
-    background-position: center;
-    opacity: 30%;
+    background-color: black;
     position: absolute;
-}
-#pet-ownership{
-    font-size: 30px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url('images/header.jpg');
+    background-position: center;
+    background-size: cover;
+    opacity: 20%;
 }
 
+#navbar{
+    transition-duration: .3s;
+}
 
-#header{
-    height: 70vh;
+.blue-button{
+    background-color: darkblue;
+    color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 50px;
+    border-style: none;
+    font-weight: bold;
+    transition-duration: 0.2s;
+}
+
+.blue-button:hover{
+    background-color: blue;
+}
+
+#veterinarians-section{
+    background-color: lightcyan;
+    padding-bottom: 30px;
+}
+
+*{
+    margin: 0px;
+    font-family: sans-serif;
+}
+.section-title{
+    letter-spacing: 5px;
+    font-weight: bold;
+    font-size: 40px;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.offcanvas-navigation{
+    list-style-type: none;
+}
+.offcanvas-link{
+    text-decoration: none;
+    color: gray;
+    font-size: 20px;
+    letter-spacing: 5px;
+}
+
+.offcanvas-item{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+@media (min-width: 768px){
+    #header-title{
+        font-size: 100px;
+    }
+    #header-description{
+        font-size: 20px;
+    }
+}
+
+#about-us-section{
+    background-color: lightblue;
+    padding-bottom: 80px;
+}
+
+#about-us-info{
+    margin-top: 80px;
+}
+
+#about-us-image{
+    transition-duration: 0.2s;
+}
+
+#about-us-image:hover{
+    box-shadow: 5px 5px 10px black;
+}
+
+#footer-section{
+    padding-top: 120px;
+    padding-bottom: 200px;
+    background-color: #343434;
+    color: white;
+    font-weight: lighter
 }
