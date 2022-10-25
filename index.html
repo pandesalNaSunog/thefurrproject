@@ -35,6 +35,21 @@
             var navigationLink = $('.navigation-link');
             var navbar = $('#navbar');
 
+            var loadingScreen = $('#loading-screen');
+            load();
+
+            function load(){
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/load.php',
+                    success: function(response){
+                        if(response == 'done'){
+                            loadingScreen.fadeOut();
+                            navbar.removeAttr('style');
+                        }
+                    }
+                })
+            }
 
             
             navbar.removeClass('bg-light')
@@ -75,7 +90,7 @@
         </div>
     </div> -->
 
-    <nav class="sticky-top navbar navbar-expand-lg shadow py-3 bg-light" id="navbar">
+    <nav class="sticky-top navbar navbar-expand-lg shadow py-3 bg-light" id="navbar" style="z-index: -2">
         <div class="container">
             <div class="navbar-brand">
                 <img src="images/thefurrproject.PNG" style="height: auto; width: 200px" alt="" class="shadow rounded-3 img-fluid">
@@ -261,15 +276,15 @@
 
     <div id="footer-section">
         <div class="container">
-            <div class="row row-cols-1 row-cols-lg-5">
-                <div class="col">
+            <div class="row row-cols-1 row-cols-lg-5 text-lg-start text-center">
+                <div class="col mt-lg-0 mt-4">
                     <h4 class="fw-bold">Lorem, ipsum.</h4>
                     <p class="mt-5" style="opacity: 50%; font-size: 20px; line-height: 30px">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis non sit delectus rerum dignissimos, ipsam aspernatur iusto eius sunt adipisci?</p>
                 </div>
                 <div class="col">
                     
                 </div>
-                <div class="col">
+                <div class="col mt-lg-0 mt-4">
                     <h4 class="fw-bold">Quick Links</h4>
                     <ul style="padding: 0;list-style-type: none" class="mt-5">
                         <li class="footer-item">
@@ -284,7 +299,7 @@
                     </ul>
                 </div>
 
-                <div class="col">
+                <div class="col mt-lg-0 mt-4">
                     <h4 class="fw-bold">
                         Contact Us
                     </h4>
@@ -304,7 +319,7 @@
                     </div>
                 </div>
                 
-                <div class="col">
+                <div class="col mt-lg-0 mt-4">
                     <h4 class="fw-bold">Follow Us</h4>
                     <ul style="padding: 0;list-style-type: none" class="mt-5">
                         <li class="footer-item">
@@ -325,6 +340,14 @@
 
             <p style="text-align: center; opacity: 40%">&copy; 2022 The Furr Project Animal Clinic and Vet Pharmacy. All Rights Reserved</p>
         </div>
+    </div>
+
+
+    <div id="loading-screen">
+        <div id="spinner">
+            
+        </div>
+        <img id="loading-image" src="images/furr.jpg" alt="">
     </div>
         
 </body>

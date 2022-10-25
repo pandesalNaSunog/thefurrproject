@@ -17,6 +17,23 @@
         transform: translateX(0px)
     }
 }
+
+
+@keyframes spinner{
+    from{
+        transform: rotate(0deg);
+        border-color: red red red transparent;
+    }to{
+        transform: rotate(360deg);
+        border-color: blue blue blue transparent
+    }
+}
+
+#loading-image{
+    position: absolute;
+    height: 160px;
+    width: 160px;
+}
 .fromLeft{
     animation-name: fromLeft;
     animation-duration: .7s;
@@ -79,9 +96,38 @@
     left: 0;
     right: 0;
     background-image: url('images/header.jpg');
+    background-attachment: fixed;
     background-position: center;
     background-size: cover;
     opacity: 20%;
+}
+
+#loading-screen{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    position: fixed;
+    top:0;
+    left:0;
+}
+
+#spinner{
+    width: 200px;
+    height: 200px;
+    border-width: 2px;
+    border-color: white;
+    border-bottom-color: blue;
+    border-left-color: blue;
+    border-right-color: blue;
+    border-style: solid;
+    border-radius: 50%;
+    animation-name: spinner;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: .9s;
 }
 
 #navbar{
