@@ -18,6 +18,16 @@
     }
 }
 
+@keyframes fromBottom{
+    from{
+        opacity: 0%;
+        transform: translateY(-200px)
+    }to{
+        opacity: 100%;
+        transform: translateY(0px)
+    }
+}
+
 
 @keyframes spinner{
     from{
@@ -29,6 +39,99 @@
     }
 }
 
+@keyframes dropdown{
+    from{
+        opacity: 0%;
+        transform: translateY(30px);
+    }to{
+        opacity: 100%;
+        transform: translateY(0px);
+    }
+}
+
+.my-dropdown{
+    display: inline-block;
+    position: relative;
+}
+
+.my-dropdown-content{
+    display: none;
+    position: absolute;
+    color: black;
+    letter-spacing: 0px;
+    transition-duration: .2s;
+    background-color: white;
+    max-width: 150px;
+    box-shadow: 2px 2px 10px black;
+}
+.my-dropdown-link{
+    color: black;
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    border-bottom: 1px solid gray;
+}
+.my-dropdown-link:hover{
+    background-color: lightblue;
+    color: black;
+}
+
+.my-dropdown:hover .my-dropdown-content{
+    display: block;
+    animation-name: dropdown;
+    animation-duration: .1s;
+    animation-timing-function: ease-out;
+}
+
+
+.ghost-white-button{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border: 2px solid white;
+    border-radius: 50px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition-duration: .2s;
+}
+.service-card{
+    padding: 20px;
+    text-align: center;
+    transition-duration: 0.3s;
+    
+}
+.fade-out{
+    opacity: 0%;
+}
+
+.fromBottom{
+    animation-name: fromBottom;
+    animation-duration: .5s;
+    animation-timing-function: ease-out;
+}
+
+.service-card:hover{
+    transform: scale(1.06);
+    box-shadow: 2px 2px 10px black;
+}
+.service-image{
+    width: 100%; 
+    height: 300px; 
+    object-fit: cover;
+    box-shadow: 10px 10px white;
+}
+
+.ghost-white-button:hover{
+    background-color: white;
+    color: darkblue;
+    transform:scale(1.06);
+}
+#services-section{
+    background-color: skyblue;
+    padding-bottom: 30px;
+}
 #loading-image{
     position: absolute;
     height: 160px;
@@ -103,7 +206,7 @@
 }
 
 #loading-screen{
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -112,11 +215,18 @@
     position: fixed;
     top:0;
     left:0;
+    right:0;
+    bottom: 0;
+}
+body{
+    margin: 0;
+    padding: 0;
 }
 
 #spinner{
     width: 200px;
     height: 200px;
+
     border-width: 2px;
     border-color: white;
     border-bottom-color: blue;

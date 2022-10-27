@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('confinements', function (Blueprint $table) {
+        Schema::create('antibiotics', function (Blueprint $table) {
             $table->id();
-            $table->integer('pet_id');
-            $table->integer('doctor_id');
-            $table->decimal('pet_weight');
+            $table->integer('confinement_id');
+            $table->integer('tick');
+            $table->string('antibiotic');
+            $table->decimal('price');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('confinements');
+        Schema::dropIfExists('antibiotics');
     }
 };

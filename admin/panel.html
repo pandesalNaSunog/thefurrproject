@@ -108,6 +108,9 @@
             var addReceptionistEmail = $('#add-receptionist-email');
             var confirmAddReceptionist = $('#confirm-add-receptionist');
             var receptionistTable = $('#receptionist-table');
+            var addNurseModal = $('#add-nurse-modal');
+
+
 
 
             confirmAddReceptionist.on('click', function(){
@@ -282,8 +285,10 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
-
-                            addToVetNurseTable(nurseTable.children().length - 1, data.id, data.name, data.email);
+                            addNurseEmail.val('');
+                            addNurseName.val('');
+                            addNurseModal.modal('hide');
+                            addToVetNurseTable(nurseTable.children().length, data.id, data.name, data.email);
                         }
                     })
                 }
@@ -577,6 +582,7 @@
             session();
 
             function getVetNurses(){
+                nurseTable.children().remove();
                 $.ajax({
                     type: 'GET',
                     url: 'php/getVetNurses.php',
@@ -592,8 +598,33 @@
             function addToVetNurseTable(index, id, name, email){
                 nurseTable.append(`<tr>
                                         <td>${name}</td>
-                                        <td>${email}</tr>
+                                        <td>${email}</td>
+                                        <td>
+                                            <button value="${id}" class="edit-nurse btn btn-outline-danger">Edit</button>
+                                            <button value="${id}" class="delete-nurse btn btn-outline-danger">Delete</button>
+                                        </td>
                                     </tr>`)
+                var deleteNurse = nurseTable.children().eq(index).find('.delete-nurse')
+
+                deleteNurse.on('click', function(){
+                    if(confirm('Are your sure you want to delete this account?') == true){
+                        var userId = $(this).val();
+                        var thisDelete = $(this);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteUser.php',
+                            data:{
+                                user_id: userId,
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove();
+                                }
+                            }
+                        })
+                    }
+                    
+                })
             }
 
             function addLabTech(name, email){
