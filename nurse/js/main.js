@@ -39,6 +39,16 @@ $(document).ready(function(){
     let addLaboratory = $("#add-laboratory");
     let foodTable = $('#food-table');
     let addFood = $('#add-food');
+    let ivCanullaTable = $('#iv-canulla-table');
+    let addIvCanulla = $('#add-iv-canulla');
+    let ivLineTable = $('#iv-line-table');
+    let addIvLine = $('#add-iv-line');
+    let ivFluidTable = $('#iv-fluid-table');
+    let addIvFluid = $('#add-iv-fluid');
+    let underpadsTable = $('#underpads-table');
+    let addUnderpads = $('#add-underpads');
+    let nebulizationTable = $('#nebulization-table');
+    let addNebulization = $('#add-nebulization');
     getConfinements()
     
 
@@ -54,6 +64,100 @@ $(document).ready(function(){
             input.removeClass('is-invalid');
         })
     }
+
+    addIvCanulla.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addIvCanulla.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addIvCanulla.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addIvCanulla.prop('disabled', false)
+                    addToIvCanulla(ivCanullaTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+
+    addNebulization.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addNebulization.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addNebulization.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addNebulization.prop('disabled', false)
+                    addToNebulization(nebulizationTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+    addUnderpads.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addUnderpads.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addUnderpads.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addUnderpads.prop('disabled', false)
+                    addToUnderpadsTable(underpadsTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+
+    addIvFluid.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addIvFluid.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addIvFluid.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addIvFluid.prop('disabled', false)
+                    addToIvFluidTable(ivFluidTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+
+    addIvLine.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addIvLine.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addIvLine.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addIvLine.prop('disabled', false)
+                    addToIvLineTable(ivLineTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
 
     addFood.on('click', function(){
         if(confirm('Please Confirm') == true){
@@ -336,7 +440,7 @@ $(document).ready(function(){
 
                 $.ajax({
                     type: 'POST',
-                    url: 'php/deleteLaboratory.php',
+                    url: 'php/deleteFood.php',
                     data:{
                         food_id: foodId
                     },
@@ -349,6 +453,157 @@ $(document).ready(function(){
             }
         })
     }
+    function addToNebulization(index, id, date){
+        nebulizationTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = nebulizationTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let nebulizationId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteNebulization.php',
+                    data:{
+                        nebulization_id: nebulizationId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+    function addToUnderpadsTable(index, id, date){
+        underpadsTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = underpadsTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let underpadId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteUnderpad.php',
+                    data:{
+                        underpad_id: underpadId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+    function addToIvLineTable(index, id, date){
+        ivLineTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = ivLineTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let ivCanullaId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deletIvLine.php',
+                    data:{
+                        iv_line_id: ivCanullaId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+    function addToIvCanulla(index, id, date){
+        ivCanullaTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = ivCanullaTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let ivCanullaId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteIvCanulla.php',
+                    data:{
+                        iv_canulla_id: ivCanullaId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+    function addToIvFluidTable(index, id, date){
+        ivFluidTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = ivFluidTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let ivFLuidId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deletIvLine.php',
+                    data:{
+                        iv_fluid_id: ivFluidId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
 
     function addToLaboratoryTable(index, id, laboratory, date){
         laboratoryTable.append(`<tr>
@@ -559,6 +814,12 @@ $(document).ready(function(){
             specialMedicinesTable.children().remove()
             otherMedicinesTable.children().remove()
             laboratoryTable.children().remove()
+            foodTable.children().remove()
+            ivCanullaTable.children().remove()
+            ivLineTable.children().remove()
+            ivFluidTable.children().remove()
+            underpadsTable.children().remove()
+            nebulizationTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -603,6 +864,28 @@ $(document).ready(function(){
                     })
                     $(data.laboratories).each(function(index, value){
                         addToLaboratoryTable(index, value.id, value.laboratory, value.date);
+                    })
+
+                    $(data.food).each(function(index, value){
+                        addToFoodTable(index, value.id, value.date);
+                    })
+                    $(data.iv_canullas).each(function(index, value){
+                        addToIvCanulla(index, value.id, value.date);
+                    })
+                    $(data.iv_lines).each(function(index, value){
+                        addToIvLineTable(index, value.id, value.date);
+                    })
+
+                    $(data.iv_fluids).each(function(index, value){
+                        addToIvFluidTable(index, value.id, value.date);
+                    })
+
+                    $(data.underpads).each(function(index, value){
+                        addToUnderpadsTable(index, value.id, value.date);
+                    })
+
+                    $(data.nebulizations).each(function(index, value){
+                        addToNebulization(index, value.id, value.date);
                     })
 
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)

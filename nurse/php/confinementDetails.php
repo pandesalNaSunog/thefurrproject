@@ -145,6 +145,75 @@
             );
         }
 
+        //food
+        $query = "SELECT * FROM food WHERE confinement_id = '$confinementId'";
+        $foods = array();
+
+        $food = $con->query($query) or die($con->error);
+        while($foodRow = $food->fetch_assoc()){
+            $foods[] = array(
+                'id' => $foodRow['id'],
+                'date' => date_format(date_create($foodRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //iv canulla
+        $query = "SELECT * FROM i_v_canullas WHERE confinement_id = '$confinementId'";
+        $ivCanullas = array();
+
+        $ivCanulla = $con->query($query) or die($con->error);
+        while($ivCanullaRow = $ivCanulla->fetch_assoc()){
+            $ivCanullas[] = array(
+                'id' => $ivCanullaRow['id'],
+                'date' => date_format(date_create($ivCanullaRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+
+        $query = "SELECT * FROM i_v_lines WHERE confinement_id = '$confinementId'";
+        $ivLines = array();
+
+        $ivLine = $con->query($query) or die($con->error);
+        while($ivLineRow = $ivLine->fetch_assoc()){
+            $ivLines[] = array(
+                'id' => $ivLineRow['id'],
+                'date' => date_format(date_create($ivLineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM i_v_fluids WHERE confinement_id = '$confinementId'";
+        $ivFluids = array();
+
+        $ivFluid = $con->query($query) or die($con->error);
+        while($ivFLuidRow = $ivFluid->fetch_assoc()){
+            $ivFluids[] = array(
+                'id' => $ivFLuidRow['id'],
+                'date' => date_format(date_create($ivFLuidRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM underpads WHERE confinement_id = '$confinementId'";
+        $underpads = array();
+
+        $underpad = $con->query($query) or die($con->error);
+        while($underpadRow = $underpad->fetch_assoc()){
+            $underpads[] = array(
+                'id' => $underpadRow['id'],
+                'date' => date_format(date_create($underpadRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM nebulizations WHERE confinement_id = '$confinementId'";
+        $nebulizations = array();
+
+        $nebulization = $con->query($query) or die($con->error);
+        while($nebulizationRow = $nebulization->fetch_assoc()){
+            $nebulizations[] = array(
+                'id' => $nebulizationRow['id'],
+                'date' => date_format(date_create($nebulizationRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -165,6 +234,12 @@
             'special_medicines' => $specialMedicines,
             'other_medicines' => $otherMedicines,
             'laboratories' => $laboratories,
+            'food' => $foods,
+            'iv_canullas' => $ivCanullas,
+            'iv_lines' => $ivLines,
+            'iv_fluids' => $ivFluids,
+            'underpads' => $underpads,
+            'nebulizations' => $nebulizations,
             'date' => $date
         );
 
