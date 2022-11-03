@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/jquery.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>The Furr Project</title>
+
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-expand-lg sticky-top shadow" style="background-color: darkblue">
+        <div class="container">
+            <div class="navbar-brand">
+                <img src="../images/thefurrproject.PNG" style="width: 200px; height: auto; border-radius: 10px;" class="shadow" alt="">
+            </div>
+
+            <button class="navbar-toggler" data-bs-target="#navmenu" data-bs-toggle="collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="ms-auto navbar-nav">
+                    <li class="nav-item">
+                        <a href="#" id="confinement-link" class="nav-link active">Confinement</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </nav>
+
+    <section id="confinement-section">
+        <div class="container">
+            <div class="card shadow rounded-3 col-lg-8 mx-auto mt-5">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Confinement
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Pet Name</th>
+                                <th scope="col">Pet Weight</th>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Attending Vet</th>
+                                <th scope="col">Confinement Date</th>
+                            </thead>
+
+                            <tbody id="confinements-table">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" data-bs-backdrop="static" id="confinement-charges-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card shadow rounded-3">
+                        <div id="patient-details" class="card-body">
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Confinement</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="confinement-record-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="pet-is-confined" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">ICU</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="icus-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="pet-is-in-icu" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Infusion Pump</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="infusion-pumps-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="tick-infusion-pump" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="loading-screen">
+        <div class="card mx-auto">
+            <div class="card-body p-5">
+                <span class="spinner-border text-primary"></span>
+                <p id="loading-text"></p>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

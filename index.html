@@ -64,9 +64,13 @@
                     }else if(entry.isIntersecting && entry.target.classList.contains('left')){
                         entry.target.classList.add('fromLeft');
                         return;
+                    }else if(entry.isIntersecting && entry.target.classList.contains('service-card')){
+                        entry.target.classList.add('fromBottom');
+                        return;
                     }
                     entry.target.classList.remove('fromRight');
                     entry.target.classList.remove('fromLeft');
+                    entry.target.classList.remove('fromBottom')
                 })     
             },
             )
@@ -75,6 +79,10 @@
             })
             document.querySelectorAll('.right').forEach(function callback(value, index){
                 elementObserver.observe(document.querySelectorAll('.right')[index]);
+            })
+
+            document.querySelectorAll('.service-card').forEach(function callback(value, index){
+                elementObserver.observe(document.querySelectorAll('.service-card')[index]);
             })
         })
 
@@ -107,7 +115,17 @@
                         <a href="#veterinarians-section" class="navigation-link nav-link me-5">Veterinarians</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#about-us-section" class="navigation-link nav-link me-5">About Us</a>
+                        <div class="my-dropdown">
+                            <a href="#about-us-section" class="navigation-link nav-link me-5" id="about-us-link">About Us<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                            </svg></a>
+
+                            <div class="my-dropdown-content">
+                                <a href="#services-section" class="my-dropdown-link">Our Services</a>
+                                <a href="#faqs-section" class="my-dropdown-link">FAQs</a>
+                            </div>
+                        </div>
+                        
                     </li>
                     <li class="nav-item">
                         <a href="#" class="navigation-link nav-link me-5">Contact Us</a>
@@ -150,6 +168,7 @@
                 <h1 class="fw-bold left" id="header-title">The Furr Project Animal Clinic & Vet Pharmacy</h1>
                 <p class="lead right" id="header-description">Committed to Responsible Pet Ownership</p>
                 <a type="button" href="#about-us-section" class="blue-button">Know About Us</a>
+                <a type="button" href="client/index.html" class="ghost-white-button">Book Appointment</a>
             </div>
             
         </div>
@@ -173,6 +192,53 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="services-section">
+        <div class="container">
+            <h3 class="section-title">
+                Our Services
+            </h3>
+            <hr>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                <div class="col">
+                    <div class="service-card">
+                        <img src="images/service1.jpg" class="img-fluid service-image" alt="">
+                        <p class="fw-bold mt-5">Consultation and Check Ups</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit a explicabo qui nihil aspernatur maiores?</p>
+                        <button class="blue-button">Read More</button>
+
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="service-card">
+                        <img src="images/service1.jpg" class="img-fluid service-image" alt="">
+                        <p class="fw-bold mt-5">Consultation and Check Ups</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit a explicabo qui nihil aspernatur maiores?</p>
+                        <button class="blue-button">Read More</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="service-card">
+                        <img src="images/service1.jpg" class="img-fluid service-image" alt="">
+                        <p class="fw-bold mt-5">Consultation and Check Ups</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit a explicabo qui nihil aspernatur maiores?</p>
+                        <button class="blue-button">Read More</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="service-card">
+                        <img src="images/service1.jpg" class="img-fluid service-image" alt="">
+                        <p class="fw-bold mt-5">Consultation and Check Ups</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit a explicabo qui nihil aspernatur maiores?</p>
+                        <button class="blue-button">Read More</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
     </div>
 
     <div id="veterinarians-section">

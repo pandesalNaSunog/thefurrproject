@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('confinements', function (Blueprint $table) {
+        Schema::create('confinement_records', function (Blueprint $table) {
             $table->id();
-            $table->integer('pet_id');
-            $table->integer('doctor_id');
-            $table->decimal('pet_weight');
+            $table->integer('confinement_id');
+            $table->integer('tick');
+            $table->integer('price');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('confinements');
+        Schema::dropIfExists('confinement_records');
     }
 };
