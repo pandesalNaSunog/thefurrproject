@@ -49,6 +49,8 @@ $(document).ready(function(){
     let addUnderpads = $('#add-underpads');
     let nebulizationTable = $('#nebulization-table');
     let addNebulization = $('#add-nebulization');
+    let laserTable = $('#laser-table');
+    let addLaser= $('#add-laser');
     getConfinements()
     
 
@@ -79,6 +81,25 @@ $(document).ready(function(){
                     let data = JSON.parse(response)
                     addIvCanulla.prop('disabled', false)
                     addToIvCanulla(ivCanullaTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+
+    addLaser.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addLaser.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addLaser.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addLaser.prop('disabled', false)
+                    addToLaserTable(laserTable.children().length, data.id, data.date);
                 }
             })
         }
@@ -573,6 +594,37 @@ $(document).ready(function(){
             }
         })
     }
+
+    function addToLaserTable(index, id, date){
+        laserTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = laserTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let laserId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteLaser.php',
+                    data:{
+                        laser_id: laserId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
     function addToIvFluidTable(index, id, date){
         ivFluidTable.append(`<tr>
                                     <td>${date}</td>
@@ -820,6 +872,7 @@ $(document).ready(function(){
             ivFluidTable.children().remove()
             underpadsTable.children().remove()
             nebulizationTable.children().remove()
+            laserTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -886,6 +939,10 @@ $(document).ready(function(){
 
                     $(data.nebulizations).each(function(index, value){
                         addToNebulization(index, value.id, value.date);
+                    })
+
+                    $(data.laser_therapies).each(function(index, value){
+                        addToLaserTable(index, value.id, value.date);
                     })
 
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)

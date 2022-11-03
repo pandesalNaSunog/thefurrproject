@@ -214,6 +214,17 @@
             );
         }
 
+        $query = "SELECT * FROM laser_therapies WHERE confinement_id = '$confinementId'";
+        $lasers = array();
+
+        $laser = $con->query($query) or die($con->error);
+        while($laserRow = $laser->fetch_assoc()){
+            $lasers[] = array(
+                'id' => $laserRow['id'],
+                'date' => date_format(date_create($laserRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -240,6 +251,7 @@
             'iv_fluids' => $ivFluids,
             'underpads' => $underpads,
             'nebulizations' => $nebulizations,
+            'laser_therapies' => $lasers,
             'date' => $date
         );
 
