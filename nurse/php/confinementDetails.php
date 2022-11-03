@@ -80,6 +80,45 @@
             );
         }
 
+        //antibiotics
+        $query = "SELECT * FROM antibiotics WHERE confinement_id = '$confinementId'";
+        $antibiotics = array();
+
+        $antibiotic = $con->query($query) or die($con->error);
+        while($antibioticRow = $antibiotic->fetch_assoc()){
+            $antibiotics[] = array(
+                'id' => $antibioticRow['id'],
+                'antibiotic' => $antibioticRow['antibiotic'],
+                'date' => date_format(date_create($antibioticRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //antibiotics
+        $query = "SELECT * FROM vitamins WHERE confinement_id = '$confinementId'";
+        $vitamins = array();
+
+        $vitamin = $con->query($query) or die($con->error);
+        while($vitaminRow = $vitamin->fetch_assoc()){
+            $vitamins[] = array(
+                'id' => $vitaminRow['id'],
+                'vitamins' => $vitaminRow['vitamin'],
+                'date' => date_format(date_create($vitaminRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //special medicines
+        $query = "SELECT * FROM special_medicines WHERE confinement_id = '$confinementId'";
+        $specialMedicines = array();
+
+        $specialMedicine = $con->query($query) or die($con->error);
+        while($specialMedicineRow = $specialMedicine->fetch_assoc()){
+            $specialMedicines[] = array(
+                'id' => $specialMedicineRow['id'],
+                'special_medicine' => $specialMedicineRow['special_medicine'],
+                'date' => date_format(date_create($specialMedicineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -94,6 +133,10 @@
             'icus' => $icus,
             'confinement_records' => $confinementRecords,
             'infusion_pumps' => $infusionPumps,
+            'syringe_pumps' => $syringePumps,
+            'antibiotics' => $antibiotics,
+            'vitamins' => $vitamins,
+            'special_medicines' => $specialMedicines,
             'date' => $date
         );
 

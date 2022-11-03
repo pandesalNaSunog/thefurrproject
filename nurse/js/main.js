@@ -15,10 +15,215 @@ $(document).ready(function(){
     let patientDetails = $('#patient-details');
     let infusionPumpsTable = $('#infusion-pumps-table');
     let tickInfusionPump = $('#tick-infusion-pump');
+    let tickSyringePump = $('#tick-syringe-pump');
+    let syrignePumpsTable = $('#syringe-pumps-table');
+    let addAntibiotic = $('#add-antibiotic');
+    let antibioticInput = $('#antibiotic-input')
+    let antibioticInputError = $('#antibiotic-input-error')
+    let antibioticsTable = $('#antibiotics-table');
+    let vitaminsTable = $('#vitamins-table');
+    let vitaminsInput = $('#vitamins-input');
+    let vitaminsInputError = $('#vitamins-input-error');
+    let addVitamins = $('#add-vitamins');
+    let specialMedicinesTable = $('#special-medicines-table');
+    let specialMedicineInput = $('#special-medicine-input');
+    let specialMedicineInputError = $('#special-medicine-input-error');
+    let addSpecialMedicine = $('#add-special-medicine');
     getConfinements()
-
     
 
+
+    vitaminsInput.on('keydown', function(){
+        vitaminsInput.removeClass('is-invalid');
+    });
+
+    specialMedicineInput.on('keydown', function(){
+        specialMedicineInput.removeClass('is-invalid');
+    })
+
+    addSpecialMedicine.on('click', function(){
+        if(specialMedicineInput.val() == ""){
+            specialMedicineInput.addClass('is-invalid');
+            specialMedicineInputError.text('Please fill out this field')
+        }else{
+            addSpecialMedicine.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addSpecialMedicine.php',
+                data:{
+                    special_medicine: specialMedicineInput.val(),
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addSpecialMedicine.prop('disabled', false)
+                    specialMedicineInput.val('')
+                    addToSpecialMedicinesTable(specialMedicinesTable.children().length, data.id, data.special_medicine, data.date);
+                }
+            })
+        }
+    })
+
+        
+
+    addVitamins.on('click', function(){
+        if(vitaminsInput.val() == ""){
+            vitaminsInput.addClass('is-invalid');
+            vitaminsInputError.text('Please fill out this field')
+        }else{
+            addVitamins.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addVitamins.php',
+                data:{
+                    vitamins: vitaminsInput.val(),
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addVitamins.prop('disabled', false)
+                    vitaminsInput.val('')
+                    addToVitaminsTable(vitaminsTable.children().length, data.id, data.vitamins, data.date);
+                }
+            })
+        }
+    })
+
+    addAntibiotic.on('click', function(){
+        if(antibioticInput.val() == ""){
+            antibioticInput.addClass('is-invalid');
+            antibioticInputError.text('Please fill out this field')
+        }else{
+            addAntibiotic.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addAntibiotic.php',
+                data:{
+                    antibiotic: antibioticInput.val(),
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addAntibiotic.prop('disabled', false)
+                    antibioticInput.val('')
+                    addToAntibioticsTable(antibioticsTable.children().length, data.id, data.antibiotic, data.date);
+                }
+            })
+        }
+    })
+
+    function addToAntibioticsTable(index, id, antibiotic, date){
+        antibioticsTable.append(`<tr>
+                                    <td>${antibiotic}</td>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = antibioticsTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let antibioticId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteAntibiotic.php',
+                    data:{
+                        antibiotic_id: antibioticId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToVitaminsTable(index, id, vitamins, date){
+        vitaminsTable.append(`<tr>
+                                    <td>${vitamins}</td>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = antibioticsTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let vitaminsId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteVitamins.php',
+                    data:{
+                        vitamins_id: vitaminsId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToSpecialMedicinesTable(index, id, specialMedicine, date){
+        specialMedicinesTable.append(`<tr>
+                                    <td>${specialMedicine}</td>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = specialMedicinesTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let specialMedicineId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteSpecialMedicine.php',
+                    data:{
+                        special_medicine_id: specialMedicineId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+    tickSyringePump.on('click', function(){
+        tickInfusionPump.prop('disabled', true);
+        if(confirm('Please Confirm.') == true){
+            $.ajax({
+                type: 'POST',
+                url: 'php/tickSyringePump.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    tickInfusionPump.prop('disabled', false)
+                    let data = JSON.parse(response)
+                    addToSyringePumpsTable(infusionPumpsTable.children().length, data.date, data.id)
+                }
+            })
+        }
+    })
     tickInfusionPump.on('click', function(){
         tickInfusionPump.prop('disabled', true);
         if(confirm('Please Confirm.') == true){
@@ -174,6 +379,10 @@ $(document).ready(function(){
             confinementRecordTable.children().remove()
             infusionPumpsTable.children().remove()
             patientDetails.children().remove()
+            syrignePumpsTable.children().remove()
+            antibioticsTable.children().remove()
+            vitaminsTable.children().remove()
+            specialMedicinesTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -199,6 +408,22 @@ $(document).ready(function(){
                         addToInfusionPumpsTable(index, value.date, value.id)
                     })
 
+                    $(data.syringe_pumps).each(function(index, value){
+                        addToSyringePumpsTable(index, value.date, value.id)
+                    })
+
+                    $(data.antibiotics).each(function(index, value){
+                        addToAntibioticsTable(index, value.id, value.antibiotic, value.date);
+                    })
+                    $(data.vitamins).each(function(index, value){
+                        addToVitaminsTable(index, value.id, value.vitamins, value.date);
+                    })
+
+                    $(data.special_medicines).each(function(index, value){
+                        addToSpecialMedicinesTable(index, value.id, value.special_medicine, value.date);
+                    })
+                    
+
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)
                 }
             })
@@ -223,6 +448,35 @@ $(document).ready(function(){
                     url: 'php/deleteInfusionPump.php',
                     data:{
                         infusion_pump_id: thisDelete.val()
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToSyringePumpsTable(index, date, id){
+        syrignePumpsTable.append(`<tr>
+                            <td>${date}</td>
+                            <td>
+                                <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                            </td>
+                        </tr>`);
+        let deleteRecord = syrignePumpsTable.children().eq(index).find('.delete');
+
+        deleteRecord.on('click', function(){
+            let thisDelete = $(this)
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true)
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteSyringePump.php',
+                    data:{
+                        syringe_pump_id: thisDelete.val()
                     },
                     success: function(response){
                         if(response == 'ok'){
