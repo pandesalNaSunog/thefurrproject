@@ -51,7 +51,7 @@
 
         $infusionPump = $con->query($query) or die($con->error);
         while($infusionPumpRow = $infusionPump->fetch_assoc()){
-            $infusionPUmps[] = array(
+            $infusionPumps[] = array(
                 'id' => $infusionPumpRow['id'],
                 'date' => date_format(date_create($infusionPumpRow['created_at']), 'M d, Y h:i A')
             );
@@ -68,6 +68,19 @@
             );
         }
 
+        //confinement records
+        $query = "SELECT * FROM confinement_records WHERE confinement_id = '$confinementId'";
+        $confinementRecords = array();
+
+        $confinementRecord = $con->query($query) or die($con->error);
+        while($confinementRecordRow = $confinementRecord->fetch_assoc()){
+            $confinementRecords[] = array(
+                'id' => $confinementRecordRow['id'],
+                'date' => date_format(date_create($confinementRecordRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+
 
 
 
@@ -79,6 +92,8 @@
             'client_name' => $clientName,
             'attending_vet' => $doctorName,
             'icus' => $icus,
+            'confinement_records' => $confinementRecords,
+            'infusion_pumps' => $infusionPumps,
             'date' => $date
         );
 

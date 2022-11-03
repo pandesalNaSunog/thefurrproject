@@ -75,16 +75,69 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 class="fw-bold">ICU</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <th scope="col">Date</th>
-                        </table>
-                        <tbody id="icus-table">
-
-                        </tbody>
+                    <div class="card shadow rounded-3">
+                        <div id="patient-details" class="card-body">
+                        
+                        </div>
                     </div>
-                    <button id="pet-is-in-icu" class="btn btn-primary w-100 rounded-pill fw-bold">Pet is in ICU</button>
+                    
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Confinement</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="confinement-record-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="pet-is-confined" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
+                    
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">ICU</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="icus-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="pet-is-in-icu" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Infusion Pump</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="infusion-pumps-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="tick-infusion-pump" class="btn btn-primary w-100 rounded-pill fw-bold">Tick</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
