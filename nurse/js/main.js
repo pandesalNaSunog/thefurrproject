@@ -29,16 +29,95 @@ $(document).ready(function(){
     let specialMedicineInput = $('#special-medicine-input');
     let specialMedicineInputError = $('#special-medicine-input-error');
     let addSpecialMedicine = $('#add-special-medicine');
+    let otherMedicinesTable = $('#other-medicines-table');
+    let otherMedicineInput = $('#other-medicine-input');
+    let otherMedicineInputErro = $('#other-medicine-input-error');
+    let addOtherMedicine = $('#add-other-medicine');
+    let laboratoryTable = $('#laboratory-table');
+    let laboratoryInput = $('#laboratory-input');
+    let laboratoryInputError = $('#laboratory-input-error');
+    let addLaboratory = $("#add-laboratory");
+    let foodTable = $('#food-table');
+    let addFood = $('#add-food');
     getConfinements()
     
 
+    removeErrorFromInputs(antibioticInput)
+    removeErrorFromInputs(vitaminsInput)
+    removeErrorFromInputs(specialMedicineInput)
+    removeErrorFromInputs(otherMedicineInput)
+    removeErrorFromInputs(laboratoryInput)
+    
 
-    vitaminsInput.on('keydown', function(){
-        vitaminsInput.removeClass('is-invalid');
-    });
+    function removeErrorFromInputs(input){
+        input.on('keydown', function(){
+            input.removeClass('is-invalid');
+        })
+    }
 
-    specialMedicineInput.on('keydown', function(){
-        specialMedicineInput.removeClass('is-invalid');
+    addFood.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addFood.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addFood.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addFood.prop('disabled', false)
+                    addToFoodTable(foodTable.children().length, data.id, data.date);
+                }
+            })
+        }
+    })
+
+    addLaboratory.on('click', function(){
+        if(laboratoryInput.val() == ""){
+            laboratoryInput.addClass('is-invalid');
+            laboratoryInputError.text('Please fill out this field')
+        }else{
+            addLaboratory.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addLaboratory.php',
+                data:{
+                    lab: laboratoryInput.val(),
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addLaboratory.prop('disabled', false)
+                    laboratoryInput.val('')
+                    addToLaboratoryTable(laboratoryTable.children().length, data.id, data.laboratory, data.date);
+                }
+            })
+        }
+    })
+
+    addOtherMedicine.on('click', function(){
+        if(otherMedicineInput.val() == ""){
+            otherMedicineInput.addClass('is-invalid');
+            otherMedicineInputErro.text('Please fill out this field')
+        }else{
+            addOtherMedicine.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addOtherMedicine.php',
+                data:{
+                    other_medicine: otherMedicineInput.val(),
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addOtherMedicine.prop('disabled', false)
+                    otherMedicineInput.val('')
+                    addToOtherMedicinesTable(otherMedicinesTable.children().length, data.id, data.other_medicine, data.date);
+                }
+            })
+        }
     })
 
     addSpecialMedicine.on('click', function(){
@@ -197,6 +276,101 @@ $(document).ready(function(){
                     url: 'php/deleteSpecialMedicine.php',
                     data:{
                         special_medicine_id: specialMedicineId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToOtherMedicinesTable(index, id, otherMedicine, date){
+        otherMedicinesTable.append(`<tr>
+                                    <td>${otherMedicine}</td>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = otherMedicinesTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let otherMedicineId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteOtherMedicine.php',
+                    data:{
+                        other_medicine_id: otherMedicineId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToFoodTable(index, id, date){
+        foodTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = foodTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let foodId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteLaboratory.php',
+                    data:{
+                        food_id: foodId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    function addToLaboratoryTable(index, id, laboratory, date){
+        laboratoryTable.append(`<tr>
+                                    <td>${laboratory}</td>
+                                    <td>${date}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = laboratoryTable.children().eq(index).find('.delete');
+
+        thisDelete.on('click', function(){
+            let laboratoryId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteLaboratory.php',
+                    data:{
+                        laboratory_id: laboratoryId
                     },
                     success: function(response){
                         if(response == 'ok'){
@@ -383,6 +557,8 @@ $(document).ready(function(){
             antibioticsTable.children().remove()
             vitaminsTable.children().remove()
             specialMedicinesTable.children().remove()
+            otherMedicinesTable.children().remove()
+            laboratoryTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -422,7 +598,12 @@ $(document).ready(function(){
                     $(data.special_medicines).each(function(index, value){
                         addToSpecialMedicinesTable(index, value.id, value.special_medicine, value.date);
                     })
-                    
+                    $(data.other_medicines).each(function(index, value){
+                        addToOtherMedicinesTable(index, value.id, value.other_medicine, value.date);
+                    })
+                    $(data.laboratories).each(function(index, value){
+                        addToLaboratoryTable(index, value.id, value.laboratory, value.date);
+                    })
 
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)
                 }

@@ -119,6 +119,32 @@
             );
         }
 
+        //special medicines
+        $query = "SELECT * FROM other_medicines WHERE confinement_id = '$confinementId'";
+        $otherMedicines = array();
+
+        $otherMedicine = $con->query($query) or die($con->error);
+        while($otherMedicineRow = $otherMedicine->fetch_assoc()){
+            $otherMedicines[] = array(
+                'id' => $otherMedicineRow['id'],
+                'other_medicine' => $otherMedicineRow['other_medicine'],
+                'date' => date_format(date_create($otherMedicineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //laboratories
+        $query = "SELECT * FROM confinement_lab_requests WHERE confinement_id = '$confinementId'";
+        $laboratories = array();
+
+        $laboratory = $con->query($query) or die($con->error);
+        while($laboratoryRow = $laboratory->fetch_assoc()){
+            $laboratories[] = array(
+                'id' => $laboratoryRow['id'],
+                'laboratory' => $laboratoryRow['laboratory'],
+                'date' => date_format(date_create($laboratoryRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -137,6 +163,8 @@
             'antibiotics' => $antibiotics,
             'vitamins' => $vitamins,
             'special_medicines' => $specialMedicines,
+            'other_medicines' => $otherMedicines,
+            'laboratories' => $laboratories,
             'date' => $date
         );
 

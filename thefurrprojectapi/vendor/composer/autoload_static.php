@@ -546,6 +546,7 @@ class ComposerStaticInitde08cd6c95ee4ad5833af69112a5e7b4
         'App\\Models\\Antibiotic' => __DIR__ . '/../..' . '/app/Models/Antibiotic.php',
         'App\\Models\\Appointment' => __DIR__ . '/../..' . '/app/Models/Appointment.php',
         'App\\Models\\Confinement' => __DIR__ . '/../..' . '/app/Models/Confinement.php',
+        'App\\Models\\ConfinementLabRequest' => __DIR__ . '/../..' . '/app/Models/ConfinementLabRequest.php',
         'App\\Models\\ConfinementRecord' => __DIR__ . '/../..' . '/app/Models/ConfinementRecord.php',
         'App\\Models\\Food' => __DIR__ . '/../..' . '/app/Models/Food.php',
         'App\\Models\\IVCanulla' => __DIR__ . '/../..' . '/app/Models/IVCanulla.php',
