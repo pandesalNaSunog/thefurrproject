@@ -50,8 +50,10 @@
             var balanceText = $('#balance');
             var soaAttendingVet = $('#soa-attending-vet');
             var paymentsTable = $('#payments-table');
-            
-
+            var confinementChargesLink = $('#confinement-charges-link');
+            var confinementChargesSection = $('#confinement-charges-section');
+            var confinementChargesTable = $('#confinement-charges-table')
+            confinementChargesSection.hide();
             logout.on('click', function(){
                 if(confirm('Are your sure you want to Log Out?')){
                     $.ajax({
@@ -277,17 +279,25 @@
                 }
             })
 
-
+            confinementChargesLink.on('click', function(){
+                appointmentsSection.hide();
+                clientSection.hide();
+                soaSection.hide();
+                confinementChargesSection.show()
+                getConfinementSoas()
+            })
             soaLink.on('click', function(){
                 appointmentsSection.hide();
                 clientSection.hide();
                 soaSection.show();
+                confinementChargesSection.hide()
                 getSoas();
             });
             appointmentsLink.on('click', function(){
                 appointmentsSection.show();
                 soaSection.hide();
                 clientSection.hide();
+                confinementChargesSection.hide()
                 getTodaysAppointments();
             })
 
@@ -295,9 +305,36 @@
                 appointmentsSection.hide();
                 soaSection.hide();
                 clientSection.show();
-
+                confinementChargesSection.hide()
                 getClients();
             })
+
+            function getConfinementSoas(){
+                confinementChargesTable.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/confinementSoas.php',
+                    success: function(response){
+                        let data = JSON.parse(response);
+
+                        $(data).each(function(index, value){
+                            addToConfinementChargesTable(index, value.client_name, value.pet_name, value.soa_number, value.balance, value.date);
+                        })
+                    }
+                })
+            }
+
+            function addToConfinementChargesTable(index, clientName, petName, soaNumber, balance, date){
+
+                confinementChargesTable.append(`<tr>
+                                                    <td>${clientName}</td>
+                                                    <td>${petName}</td>
+                                                    <td>${soaNumber}</td>
+                                                    <td>${date}</td>
+                                                    <td>&#8369; ${balance}</td>
+                                                    
+                                            </tr>`)
+            }
 
             function getClients(){
                 clientsTable.children().remove();
@@ -474,6 +511,12 @@
                             Statement of Accounts
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="confinement-charges-link" class="navigation nav-link">
+                            Confinement Charges
+                        </a>
+                    </li>
                     
                     <li class="nav-item">
                         <a id="logout" href="#" class="nav-link">
@@ -579,6 +622,35 @@
                                 <th scope="col">Patient Name</th>
                             </thead>
                             <tbody id="todays-appointment-table">
+    
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="confinement-charges-section">
+        <div class="container">
+            <div class="card mt-5 col-lg-6 mx-auto shadow rounded-4">
+                <div class="card-header">
+                    <h3 class="fw-bold">
+                        Confinement Charges
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Client Name</th>
+                                <th scope="col">Patient Name</th>
+                                <th scope="col">SOA #</th>
+                                <th scope="col">Date and Time</th>
+                                <th scope="col">Balance</th>
+                            </thead>
+                            <tbody id="confinement-charges-table">
     
                             </tbody>
                         </table>

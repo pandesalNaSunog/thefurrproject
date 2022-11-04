@@ -225,6 +225,18 @@
             );
         }
 
+        $query = "SELECT * FROM oxygens WHERE confinement_id = '$confinementId'";
+        $oxygens = array();
+
+        $oxygen = $con->query($query) or die($con->error);
+        while($oxygenRow = $oxygen->fetch_assoc()){
+            $oxygens[] = array(
+                'id' => $oxygenRow['id'],
+                'stopped_at' => date_format(date_create($oxygenRow['stopped_at']), 'M d, Y h:i A'),
+                'date' => date_format(date_create($oxygenRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -252,6 +264,7 @@
             'underpads' => $underpads,
             'nebulizations' => $nebulizations,
             'laser_therapies' => $lasers,
+            'oxygens' => $oxygens,
             'date' => $date
         );
 

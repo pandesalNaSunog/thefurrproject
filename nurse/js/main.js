@@ -51,6 +51,8 @@ $(document).ready(function(){
     let addNebulization = $('#add-nebulization');
     let laserTable = $('#laser-table');
     let addLaser= $('#add-laser');
+    let oxygenTable = $('#oxygen-table');
+    let addOxygen = $('#add-oxygen');
     getConfinements()
     
 
@@ -66,6 +68,26 @@ $(document).ready(function(){
             input.removeClass('is-invalid');
         })
     }
+
+
+    addOxygen.on('click', function(){
+        if(confirm('Please Confirm') == true){
+           
+            addOxygen.prop('disabled', true);
+            $.ajax({
+                type: 'POST',
+                url: 'php/addOxygen.php',
+                data:{
+                    confinement_id: globalConfinementId
+                },
+                success: function(response){
+                    let data = JSON.parse(response)
+                    addOxygen.prop('disabled', false)
+                    addToOxygenTable(oxygenTable.children().length, data.id, data.date, data.stopped_at);
+                }
+            })
+        }
+    })
 
     addIvCanulla.on('click', function(){
         if(confirm('Please Confirm') == true){
@@ -595,6 +617,58 @@ $(document).ready(function(){
         })
     }
 
+    function addToOxygenTable(index, id, date, stoppedAt){
+        oxygenTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td class="stopped-at">${stoppedAt}</td>
+                                    <td>
+                                        <button value="${id}" class="btn btn-outline-primary stop">Stop</button>
+                                        <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
+                                    </td>
+                                </tr>`)
+
+        let thisDelete = oxygenTable.children().eq(index).find('.delete');
+        let thisStop = oxygenTable.children().eq(index).find('.stop');
+        let thisDate = oxygenTable.children().eq(index).find('.stopped-at');
+        thisStop.on('click', function(){
+            let oxygenId = $(this).val()
+            if(confirm('Please Confirm') == true){
+                thisStop.prop('disabled',true);
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/stopOxygen.php',
+                    data:{
+                        oxygen_id: oxygenId
+                    },
+                    success: function(response){
+                        thisStop.prop('disabled', false);
+                        let data = JSON.parse(response);
+                        thisDate.text(data.stopped_at);
+                    }
+                })
+            }
+        })
+        thisDelete.on('click', function(){
+            let ivCanullaId = $(this).val()
+            if(confirm('Delete this record?') == true){
+                thisDelete.prop('disabled', true);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/deleteIvCanulla.php',
+                    data:{
+                        iv_canulla_id: ivCanullaId
+                    },
+                    success: function(response){
+                        if(response == 'ok'){
+                            thisDelete.parent().parent().remove()
+                        }
+                    }
+                })
+            }
+        })
+    }
+
     function addToLaserTable(index, id, date){
         laserTable.append(`<tr>
                                     <td>${date}</td>
@@ -873,6 +947,7 @@ $(document).ready(function(){
             underpadsTable.children().remove()
             nebulizationTable.children().remove()
             laserTable.children().remove()
+            oxygenTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -943,6 +1018,9 @@ $(document).ready(function(){
 
                     $(data.laser_therapies).each(function(index, value){
                         addToLaserTable(index, value.id, value.date);
+                    })
+                    $(data.oxygens).each(function(index, value){
+                        addToOxygenTable(index, value.id, value.date, value.stopped_at);
                     })
 
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)

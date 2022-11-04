@@ -176,31 +176,26 @@
             var confinementTempDef = $('#confinement-temp-def');
             var viewConfinementDetailsModal = $('#view-confinement-details-modal');
             var confinementStatusTable = $('#confinement-status-table');
-
-
-            confirmAddConfinementStatus.on('click', function(){
-                if(addConfinementStatus.val() == ""){
-                    addConfinementStatusError.text('Please fill out this field');
-                    addConfinementStatus.addClass('is-invalid');
-                }else{
-                    confirmAddConfinementStatus.prop('disabled', true);
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/addConfinementStatus.php',
-                        data:{
-                            confinement_id: globalConfinementId,
-                            status: addConfinementStatus.val()
-                        },
-                        success: function(response){
-                            confirmAddConfinementStatus.prop('disabled', false);
-                            addConfinementStatus.val('');
-                            var data = JSON.parse(response);
-                            addToConfinementStatusTable(confinementStatusTable.children().length, data.status, data.date);
-                        }
-                    })
-                }
-            })
-
+            var icusTable = $('#icus-table');
+            var infusionPumpsTable = $('#infusion-pumps-table');
+            var syringePumpsTable = $('#syringe-pumps-table');
+            var antibioticsTable = $('#antibiotics-table');
+            var vitaminsTable = $('#vitamins-table');
+            var otherMedicinesTable = $('#other-medicines-table');
+            var specialMedicinesTable = $('#special-medicines-table');
+            var laboratoryTable = $('#laboratory-table');
+            var foodTable = $('#food-table');
+            var ivCanullaTable = $('#iv-canulla-table');
+            var ivLineTable = $('#iv-line-table');
+            var ivFluidTable = $('#iv-fluid-table');
+            var underpadsTable = $('#underpads-table');
+            var nebulizationTable = $('#nebulization-table');
+            var laserTable = $('#laser-table');
+            var oxygenTable = $('#oxygen-table');
+            var confinementRecordTable = $('#confinement-record-table')
+            var confinementPatientDetails = $('#confinement-patient-details')
+            var confinementChargesModal = $("#confinement-charges-modal");
+            var generateConfinementSoa = $('#generate-confinement-soa');
             newPassword.on('keydown', function(){
                 newPassword.removeClass('is-invalid');
             })
@@ -209,6 +204,23 @@
                 retypeNewPassword.removeClass('is-invalid');
             })
 
+
+            generateConfinementSoa.on('click', function(){
+                generateConfinementSoa.prop('disabled', true)
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/generateConfinementSoa.php',
+                    data: {
+                        confinement_id: globalConfinementId
+                    },
+                    success: function(response){
+                        generateConfinementSoa.prop('disabled', false)
+                        if(response == 'ok'){
+                            alert('Confinement Charges has been generated');
+                        }
+                    }
+                })
+            })
             confirmNewPassword.on('click', function(){
                 if(newPassword.val() == ""){
                     newPasswordError.text('Please fill out this field');
@@ -593,6 +605,43 @@
                 }
                 
             })
+
+
+            function addToSpecialMedicinesTable(index,id,specialMedicine, price, date){
+                specialMedicinesTable.append(`<tr>
+                                    <td>${specialMedicine}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${date}</td>
+                                    
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = specialMedicinesTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteSpecialMedicine.php',
+                            data:{
+                                special_medicine_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            
             function addToServicesList(index, category, service){
                 servicesList.append(`<li>
                                         <button value="${category}" class="service dropdown-item">${service}</button>
@@ -767,6 +816,526 @@
             }
 
 
+            function addToOtherMedicinesTable(index,id,otherMedicine, price, date){
+                otherMedicinesTable.append(`<tr>
+                                    <td>${otherMedicine}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${date}</td>
+                                    
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = otherMedicinesTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteOtherMedicines.php',
+                            data:{
+                                icu_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToLaboratoryTable(index,id,laboratory, price, date){
+                laboratoryTable.append(`<tr>
+                                    <td>${laboratory}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${date}</td>
+                                    
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = laboratoryTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteLaboratory.php',
+                            data:{
+                                icu_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToVitaminsTable(index,id,vitamins, price, date){
+                vitaminsTable.append(`<tr>
+                                    <td>${vitamins}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${date}</td>
+                                    
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = vitaminsTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteVitamins.php',
+                            data:{
+                                icu_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToICUSTable(index,date, price, id){
+                icusTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = icusTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteIcuRecord.php',
+                            data:{
+                                icu_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToIvCanulla(index,id, price, date){
+                ivCanullaTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = ivCanullaTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteIVCanulla.php',
+                            data:{
+                                iv_canulla_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToIvLineTable(index,id, price, date){
+                ivLineTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = ivLineTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteIvLine.php',
+                            data:{
+                                iv_line_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToIvFluidTable(index,id, price, date){
+                ivFluidTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = ivFluidTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteIvFluid.php',
+                            data:{
+                                iv_fluid_table: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToUnderpadsTable(index,id, price, date){
+                underpadsTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = underpadsTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteUnderpad.php',
+                            data:{
+                                underpad_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+            function addToNebulization(index,id, price, date){
+                nebulizationTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = nebulizationTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteNebulization.php',
+                            data:{
+                                id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToLaserTable(index,id, price, date){
+                laserTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = laserTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteLaser.php',
+                            data:{
+                                id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToOxygenTable(index,id,date, price, stoppedAt){
+                oxygenTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${stoppedAt}</td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = oxygenTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteOxygen.php',
+                            data:{
+                                id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToFoodTable(index,id, price, date){
+                foodTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = foodTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteFood.php',
+                            data:{
+                                food_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToConfinementRecordTable(index,date, price, id){
+                confinementRecordTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = confinementRecordTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteConfinementRecord.php',
+                            data:{
+                                icu_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToSyringePumpsTable(index,date, price, id){
+                syringePumpsTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = syringePumpsTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteSyringePump.php',
+                            data:{
+                                syringe_pump_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+            function addToAntibioticsTable(index,id, antibiotic,price, date){
+                antibioticsTable.append(`<tr>
+                                    <td>${antibiotic}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>${date}</td>
+                                    
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = antibioticsTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteAntibiotic.php',
+                            data:{
+                                syringe_pump_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+            function addToInfusionPumpsTable(index,date, price, id){
+                infusionPumpsTable.append(`<tr>
+                                    <td>${date}</td>
+                                    <td>
+                                        <input class="form-control" placeholder="Price" value="${price}">
+                                    </td>
+                                    <td>
+                                        <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
+                                    </td>
+                                </tr>`);
+                let deleteRecord = infusionPumpsTable.children().eq(index).find('.delete');
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this)
+                    if(confirm('Delete this record?') == true){
+                        thisDelete.prop('disabled', true)
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteInfusionPump.php',
+                            data:{
+                                infusion_pump_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
+            }
+
+
 
             function addToAppointmentsList(index, day, id, clientName, date, time, pets,concern, isDone){
                 var thisConcern = "";
@@ -853,16 +1422,28 @@
                         petsList.append(`<div class="card shadow rounded-4 mb-3">
                                             <div class="card-body d-flex justify-content-between">
                                                 <h5 class="fw-bold align-self-center">${value.name}</h5>
-                                                <div>
-                                                    <button value="${value.id}*${id}" class="services btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
-                                                    <button value="${value.id}" class="confine btn btn-outline-primary">Subject for Confinement</button>
+                                                <div class="row row-cols-2">
+                                                    <div class="col-4">
+
+                                                        <button value="${value.id}*${id}" class="services btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#create-patient-records-modal">Services</button>
+                                                    </div>
+                                                    <div class="col-8">
+
+                                                        <div class="input-group">
+                                                            
+                                                            <input class="pet-weight form-control" placeholder="Pet Weight (For Confinement)">
+                                                            
+                                                            
+                                                            <button value="${value.id}" class="confine btn btn-outline-primary">Confine</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>`)
 
                         var services = petsList.children().eq(index).find('.services');
                         var confine = petsList.children().eq(index).find('.confine');
-
+                        var petWeight = petsList.children().eq(index).find('.pet-weight');
 
                         confine.on('click', function(){
                             var thisConfineBUtton = $(this);
@@ -874,7 +1455,8 @@
                                     type: 'POST',
                                     url: 'php/confine.php',
                                     data:{
-                                        pet_id: confinementPetId
+                                        pet_id: confinementPetId,
+                                        pet_weight: petWeight.val()
                                     },
                                     success: function(response){
                                         thisConfineBUtton.prop('disabled', false);
@@ -1405,42 +1987,118 @@
                 confinedPetsTable.append(`<tr>
                                             <td>${name}</td>
                                             <td>
-                                                <button value="${id}" data-bs-toggle="modal" data-bs-target="#view-confinement-details-modal" class="view-confinement-details normal-outline-button">View Details</button>
+                                                <button value="${id}" class="view-confinement-details normal-outline-button">View Details</button>
                                             </td>
                                         </tr>`)
                 var viewConfinementDetails = confinedPetsTable.children().eq(index).find('.view-confinement-details');
 
                 viewConfinementDetails.on('click', function(){
-                    confinementStatusTable.children().remove();
-                    //viewConfinementDetailsModal.children().find('span').text('');
-                    var thisConfinementId = $(this).val();
-                    globalConfinementId = thisConfinementId;
+                    icusTable.children().remove()
+                    confinementRecordTable.children().remove()
+                    infusionPumpsTable.children().remove()
+                    confinementPatientDetails.children().remove()
+                    syringePumpsTable.children().remove()
+                    antibioticsTable.children().remove()
+                    vitaminsTable.children().remove()
+                    specialMedicinesTable.children().remove()
+                    otherMedicinesTable.children().remove()
+                    laboratoryTable.children().remove()
+                    foodTable.children().remove()
+                    ivCanullaTable.children().remove()
+                    ivLineTable.children().remove()
+                    ivFluidTable.children().remove()
+                    underpadsTable.children().remove()
+                    nebulizationTable.children().remove()
+                    laserTable.children().remove()
+                    oxygenTable.children().remove()
+                    let confinementId = $(this).val();
+                    globalConfinementId = confinementId;
+                    confinementChargesModal.modal('show');
+                    loadingScreen.show();
                     $.ajax({
                         type: 'POST',
                         url: 'php/confinementDetails.php',
                         data:{
-                            confinement_id: thisConfinementId,
+                            confinement_id: confinementId
                         },
                         success: function(response){
+                            loadingScreen.hide()
                             var data = JSON.parse(response);
-                            confinementCLientName.text(data.client_name);
-                            confinementContact.text(data.contact_no);
-                            confinementPetName.text(data.pet_name);
-                            confinementSpecies.text(data.species);
-                            confinementBreed.text(data.breed);
-                            confinementBirthDate.text(data.date_of_birth);
-                            confinementSex.text(data.sex);
-                            confinementTypeOfFluid.text(data.type_of_fluid);
-                            confinementDripRate.text(data.drip_rate);
-                            confinementTempDef.text(data.temp_def_diagnosis);
-                            confinementDurationofFluid.text(data.duration);
-
-                            $(data.status).each(function(index, value){
-                                addToConfinementStatusTable(index, value.status, value.date);
+                            $(data.icus).each(function(index, value){
+                                addToICUSTable(index,value.date,value.price,value.id);
                             })
+
+                            $(data.confinement_records).each(function(index, value){
+                                addToConfinementRecordTable(index, value.date, value.price, value.id)
+                            })
+
+                            $(data.infusion_pumps).each(function(index, value){
+                                addToInfusionPumpsTable(index, value.date, value.price, value.id)
+                            })
+
+                            $(data.syringe_pumps).each(function(index, value){
+                                addToSyringePumpsTable(index, value.date, value.price, value.id)
+                            })
+
+                            $(data.antibiotics).each(function(index, value){
+                                addToAntibioticsTable(index, value.id, value.antibiotic, value.price, value.date);
+                            })
+                            $(data.vitamins).each(function(index, value){
+                                addToVitaminsTable(index, value.id, value.vitamins,value.price, value.date);
+                            })
+
+                            $(data.special_medicines).each(function(index, value){
+                                addToSpecialMedicinesTable(index, value.id, value.special_medicine,value.price, value.date);
+                            })
+                            $(data.other_medicines).each(function(index, value){
+                                addToOtherMedicinesTable(index, value.id, value.other_medicine,value.price, value.date);
+                            })
+                            $(data.laboratories).each(function(index, value){
+                                addToLaboratoryTable(index, value.id, value.laboratory,value.price, value.date);
+                            })
+
+                            $(data.food).each(function(index, value){
+                                addToFoodTable(index, value.id,value.price, value.date);
+                            })
+                            $(data.iv_canullas).each(function(index, value){
+                                addToIvCanulla(index, value.id,value.price, value.date);
+                            })
+                            $(data.iv_lines).each(function(index, value){
+                                addToIvLineTable(index, value.id,value.price, value.date);
+                            })
+
+                            $(data.iv_fluids).each(function(index, value){
+                                addToIvFluidTable(index, value.id,value.price, value.date);
+                            })
+
+                            $(data.underpads).each(function(index, value){
+                                addToUnderpadsTable(index, value.id,value.price, value.date);
+                            })
+
+                            $(data.nebulizations).each(function(index, value){
+                                addToNebulization(index, value.id,value.price, value.date);
+                            })
+
+                            $(data.laser_therapies).each(function(index, value){
+                                addToLaserTable(index, value.id,value.price, value.date);
+                            })
+                            $(data.oxygens).each(function(index, value){
+                                addToOxygenTable(index, value.id, value.date,value.price, value.stopped_at);
+                            })
+
+                            displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)
                         }
                     })
+                    
                 })
+            }
+
+            function displayPatientDetails(petName, petWeight, clientName, attendingVet, date){
+                confinementPatientDetails.append(`<p>Pet Name: <span class="fw-bold">${petName}</span><br>
+                                        Pet Weight: <span class="fw-bold">${petWeight}</span><br>
+                                        Client Name: <span class="fw-bold">${clientName}</span><br>
+                                        Attending Vet: <span class="fw-bold">${attendingVet}</span><br>
+                                        Date: <span class="fw-bold">${date}</span><br></p>`)
             }
 
             function addToConfinementStatusTable(index, status, date){
@@ -2600,7 +3258,7 @@
     </section>
 
 
-    <div class="modal fade" data-bs-backdrop="static" id="view-confinement-details-modal">
+    <div class="modal fade" data-bs-backdrop="static" id="confinement-charges-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2611,42 +3269,345 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p></p>Client Name: <span class="fw-bold" id="confinement-client-name"></span><br>
-                    Contact Number: <span class="fw-bold" id="confinement-contact"></span><br>
-                    Pet Name: <span class="fw-bold" id="confinement-pet-name"></span><br>
-                    Species: <span class="fw-bold" id="confinement-species"></span><br>
-                    Breed: <span class="fw-bold" id="confinement-breed"></span><br>
-                    Date of Birth: <span class="fw-bold" id="confinement-birthdate"></span><br>
-                    Sex: <span class="fw-bold" id="confinement-sex"></span><br>
-                    Type of Fluid: <span class="fw-bold" id="confinement-type-of-fluid"></span><br>
-                    Drip Rate/Ratio: <span class="fw-bold" id="confinement-drip-rate"></span><br>
-                    Duration of Fluid Therapy/Day: <span class="fw-bold" id="confinement-duration-of-fluid"></span><br>
-                    Temp./Def. Diagnosis: <span class="fw-bold" id="confinement-temp-def"></span></p>
-
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <th scope="col">Status</th>
-                                <th scope="col">Date</th>
-                            </thead>
-                            <tbody id="confinement-status-table">
-
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <h5 class="mt-3 fw-bold">
-                        Add Status
-                    </h3>
-                    <hr>
-                    <div>
-                        <input type="text" id="add-confinement-status" placeholder="Add Confinement Status" class="form-control">
-                        <div class="invalid-feedback" id="add-confinement-status-error">
-
+                    <div class="card shadow rounded-3">
+                        <div id="confinement-patient-details" class="card-body">
+                        
                         </div>
                     </div>
                     
-                    <button class="rounded-button mt-3" id="confirm-add-confinement-status">Confirm</button>
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Confinement</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="confinement-record-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">ICU</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="icus-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Infusion Pump</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="infusion-pumps-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Syringe Pump</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="syringe-pumps-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Antibiotics</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Antibiotic</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="antibiotics-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Vitamins/Supplements</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Vitamin/Supplement</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="vitamins-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Special Medicines</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Special Medicine</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="special-medicines-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Other Medicines</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Medicine</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="other-medicines-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Additional Laboratories</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Lab Procedure</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="laboratory-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Food</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="food-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">IV Canulla</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="iv-canulla-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">IV Line</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="iv-line-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">IV Fluid</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="iv-fluid-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Underpads</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="underpads-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Nebulization</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="nebulization-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Laser Therapy</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="laser-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow rounded-3 mt-3">
+                        <div class="card-body">
+                            <h3 class="fw-bold">Oxygen</h3>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stopped At</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    
+                                    <tbody id="oxygen-table">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="mt-3 rounded-button" id="generate-confinement-soa">Generate SOA</button>
                 </div>
             </div>
         </div>
