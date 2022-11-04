@@ -10,7 +10,7 @@
             $request = htmlspecialchars($_POST['request']);
             $labTechId = $_POST['vet_tech_id'];
             $timeLimit = $_POST['time_limit'];
-
+            $appointmentId = $_POST['appointment_id'];
             if($labTechId == 0){
                 $labTechId = $doctorId;
             }
@@ -20,8 +20,8 @@
             $petRow = $pet->fetch_assoc();
             $hasResult = "No";
             $clientId = $petRow['user_id'];
-            $query = $con->prepare("INSERT INTO lab_requests(has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at,time_limit)VALUES(?,?,?,?,?,?,?,?,?)");
-            $query->bind_param("siiiisssi",$hasResult, $clientId, $petId, $doctorId, $labTechId, $request, $today, $today, $timeLimit);
+            $query = $con->prepare("INSERT INTO lab_requests(appointment_id,has_result,client_id,pet_id,doctor_id,lab_tech_id,request,created_at,updated_at,time_limit)VALUES(?,?,?,?,?,?,?,?,?,?)");
+            $query->bind_param("isiiiisssi",$appointmentId,$hasResult, $clientId, $petId, $doctorId, $labTechId, $request, $today, $today, $timeLimit);
             $query->execute();
 
             $query = "SELECT * FROM lab_requests WHERE id = LAST_INSERT_ID()";

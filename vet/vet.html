@@ -717,6 +717,7 @@
                             request: labRequest.val(),
                             vet_tech_id: globalVetTechId,
                             time_limit: timeLimit.val(),
+                            appointment_id: globalApppointmentId
                         },
                         success: function(response){
                             confirmLabRequest.prop('disabled', false)
@@ -1476,6 +1477,7 @@
                             globalVetTechId = 0;
                             var servicesValue = $(this).val();
                             globalPetId = servicesValue.split("*")[0];
+                            globalApppointmentId = servicesValue.split("*")[1];
                             $.ajax({
                                 type: 'POST',
                                 url: 'php/getPetOwner.php',
@@ -1485,7 +1487,6 @@
                                 success: function(response){
                                     var data = JSON.parse(response);
                                     globalUserId = data.client_id;
-                                    globalApppointmentId = data.appointment_id;
                                     patientOwnerName.text(data.name);
                                     if(data.has_medical_record == true){
                                         patientName.text(data.pet_name);
@@ -1519,7 +1520,8 @@
                     type: 'POST',
                     url: 'php/getPetLabRequests.php',
                     data:{
-                        pet_id: globalPetId
+                        pet_id: globalPetId,
+                        appointment_id: globalApppointmentId
                     },
                     success: function(response){
                         refreshSpinner.hide()
