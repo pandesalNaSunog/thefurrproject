@@ -7,7 +7,7 @@
             $petId = $_POST['pet_id'];
             $query = "SELECT * FROM medical_records WHERE pet_id = '$petId'";
             $record = $con->query($query) or die($con->error);
-            $response = array();
+            $records = array();
             while($recordRow = $record->fetch_assoc()){
 
                 $doctorId = $recordRow['doctor_id'];
@@ -28,27 +28,26 @@
                     'vet_nurse' => $recordRow['vet_nurse'],
                     'created_at' => date_format(date_create($recordRow['created_at']), "M d, Y h:i A")
                 );
-
-                $query = "SELECT * FROM pets WHERE id = '$petId'";
-                $pet = $con->query($query) or die($con->error);
-                $petRow = $pet->fetch_assoc();
-
-                $petName = $petRow['name'];
-                $clientId = $petRow['user_id'];
-
-                $query = "SELECT * FROM users WHERE id = '$clientId'";
-                $client = $con->query($query) or die($con->error);
-                $clientROw = $client->fetch_assoc();
-                $clientName = $clientROw['name'];
-                $clientCode = $clientROw['client_code'];
-
-                $response[] = array(
-                    'client_name' => $clientName,
-                    'client_code' => $clientCode,
-                    'pet_name' => $petName,
-                    'records' => $records
-                );
             }
+            $query = "SELECT * FROM pets WHERE id = '$petId'";
+            $pet = $con->query($query) or die($con->error);
+            $petRow = $pet->fetch_assoc();
+
+            $petName = $petRow['name'];
+            $clientId = $petRow['user_id'];
+
+            $query = "SELECT * FROM users WHERE id = '$clientId'";
+            $client = $con->query($query) or die($con->error);
+            $clientROw = $client->fetch_assoc();
+            $clientName = $clientROw['name'];
+            $clientCode = $clientROw['client_code'];
+
+            $response = array(
+                'client_name' => $clientName,
+                'client_code' => $clientCode,
+                'pet_name' => $petName,
+                'records' => $records
+            );
 
             echo json_encode($response);
         }else{

@@ -196,6 +196,85 @@
             var confinementPatientDetails = $('#confinement-patient-details')
             var confinementChargesModal = $("#confinement-charges-modal");
             var generateConfinementSoa = $('#generate-confinement-soa');
+            var editClientName = $('#edit-client-name');
+            var editClientNameError = $("#edit-client-name-error");
+            var editClientEmail = $('#edit-client-email');
+            var editClientEmailError = $('#edit-client-email-error');
+            var editClientCode = $('#edit-client-code');
+            var editClientCodeError = $('#edit-client-code-error');
+            var editClientContact = $('#edit-client-contact');
+            var editClientContactError = $('#edit-client-contact-error');
+            var confirmEditClient = $('#confirm-edit-client');
+            var editPetName = $('#edit-pet-name');
+            var editPetBreed = $('#edit-pet-breed');
+            var editPetSpecies = $('#edit-pet-species');
+            var editPetSex = $('#edit-pet-sex');
+            var editPetBirthDate = $('#edit-pet-birth-date');
+            var confirmEditPet = $("#confirm-edit-pet");
+            var editPetModal = $('#edit-pet-modal');
+            var petsModal = $('#pets-modal');
+
+            confirmEditPet.on('click', function(){
+                confirmEditPet.prop('disabled', true)
+                confirmEditPet.text('Please Wait');
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/editPet.php',
+                    data:{
+                        pet_id: globalPetId,
+                        name: editPetName.val(),
+                        breed: editPetBreed.val(),
+                        species: editPetSpecies.val(),
+                        sex: editPetSex.val(),
+                        birth_date: editPetBirthDate.val(),
+                    },
+                    success: function(response){
+                        confirmEditPet.prop('disabled', false)
+                        confirmEditPet.text('Confirm')
+
+                        editPetModal.modal('hide');
+                        petsModal.modal('show');
+                        if(response == 'ok'){
+                            getClientPets()
+                        }
+                    }
+                })
+            })
+
+
+            
+            confirmEditClient.on('click', function(){
+
+                if(editClientName.val() == ""){
+                    editClientName.addClass('is-invalid');
+                    editClientError.text('Please fill out this field')
+                }else if(editClientCode.val() == ""){
+                    editClientCode.addClass('is-invalid');
+                    editClientCodeError.text('Please fill out this field')
+                }else{
+                    confirmEditClient.prop('disabled', true);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/editClient.php',
+                        data:{
+                            client_name: editClientName.val(),
+                            email: editClientEmail.val(),
+                            contact: editClientContact.val(),
+                            client_code: editClientCode.val(),
+                            client_id: globalClientId
+                        },
+                        success: function(response){
+                            confirmEditClient.prop('disabled', false);
+                            if(response == 'ok'){
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+                
+            })
+            
             newPassword.on('keydown', function(){
                 newPassword.removeClass('is-invalid');
             })
@@ -1712,25 +1791,58 @@
 
                                             <button class="normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
 
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <button value="${clientId}" class="book dropdown-item" data-bs-toggle="modal" data-bs-target="#client-booking-modal">Book</button>
-                                                    </li>
-                                                        
-                                                    <li>
-                                                        <button value="${clientId}" class="view-pets dropdown-item" data-bs-toggle="modal" data-bs-target="#pets-modal">View Pets</button>
-                                                    </li>
-                                                </ul>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <button value="${clientId}" class="book dropdown-item" data-bs-toggle="modal" data-bs-target="#client-booking-modal">Book</button>
+                                                </li>
+                                                    
+                                                <li>
+                                                    <button value="${clientId}" class="view-pets dropdown-item" data-bs-toggle="modal" data-bs-target="#pets-modal">View Pets</button>
+                                                </li>
+                                                <li>
+                                                    <button value="${clientId}" class="edit dropdown-item" data-bs-toggle="modal" data-bs-target="#edit-client-modal">Edit</button>
+                                                </li>
+                                                <li>
+                                                    <button value="${clientId}" class="delete dropdown-item">Delete</button>
+                                                </li>
+                                            </ul>
                                                 
-                                            
-                                            
-                                                
-                                            
+
                                         </td>
                                     </tr>`)
                 var viewPets = clientsTable.children().eq(index).find('.view-pets');
                 var book = clientsTable.children().eq(index).find('.book');
+                var edit = clientsTable.children().eq(index).find('.edit');
+                var deleteButton = clientsTable.children().eq(index).find('.delete')
 
+                edit.on('click', function(){
+                    globalClientId = $(this).val()
+                    console.log(globalClientId);
+
+                    editClientName.val(name);
+                    editClientCode.val(code);
+                    editClientContact.val(contact);
+                })
+
+                deleteButton.on('click', function(){
+                    let thisDelete = $(this);
+                    if(confirm('Delete client?') == true){
+                        loadingScreen.show();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteClient.php',
+                            data:{
+                                client_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                loadingScreen.hide()
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
                 book.on('click', function(){
                     globalUserId = $(this).val()
                     clientPetsList.children().remove()
@@ -1750,26 +1862,31 @@
                 })
                 viewPets.on('click', function(){
                     globalUserId = $(this).val();
-                    petsTable.children().remove();
+                    getClientPets()
+                })
+            }
+            
 
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/getClientPets.php',
-                        data:{
-                            client_id: globalUserId,
-                        },
-                        success: function(response){
-                            if(response != 'invalid session'){
-                                var data = JSON.parse(response);
-                                petsClientName.text("Client Name: " + data.client_name)
-                                $(data.pets).each(function(index, value){
-                                    addToPetsTable(index, value.pet_id, value.name, value.breed, value.species, value.sex, value.age)
-                                })
-                            }else{
-                                alert('Invalid Session.');
-                            }
+            function getClientPets(){
+                petsTable.children().remove();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/getClientPets.php',
+                    data:{
+                        client_id: globalUserId,
+                    },
+                    success: function(response){
+                        if(response != 'invalid session'){
+                            var data = JSON.parse(response);
+                            petsClientName.text("Client Name: " + data.client_name)
+                            $(data.pets).each(function(index, value){
+                                addToPetsTable(index, value.pet_id, value.name, value.breed, value.species, value.sex, value.age)
+                            })
+                        }else{
+                            alert('Invalid Session.');
                         }
-                    })
+                    }
                 })
             }
 
@@ -1790,6 +1907,12 @@
                                                 <li>
                                                     <button value="${petId}" class="view-medical-records dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">View Patient Medical Records</button>
                                                 </li>
+                                                <li>
+                                                    <button value="${petId}" class="view-medical-records dropdown-item edit-pet" data-bs-toggle="modal" data-bs-target="#edit-pet-modal">Edit</button>
+                                                </li>
+                                                <li>
+                                                    <button value="${petId}" class="view-medical-records dropdown-item delete-pet">Delete</button>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>
@@ -1797,7 +1920,38 @@
 
                 var viewInitalCheckup = petsTable.children().eq(index).find('.view-initial-checkup');
                 var viewMedicalRecords = petsTable.children().eq(index).find('.view-medical-records');
+                let editPet = petsTable.children().eq(index).find('.edit-pet');
+                let deletePet = petsTable.children().eq(index).find('.delete-pet');
 
+                editPet.on('click', function(){
+                    globalPetId = $(this).val();
+
+                    editPetName.val(name)
+                    editPetBreed.val(breed)
+                    editPetSpecies.val(species)
+                    editPetSex.val(sex)
+                    
+                })
+
+                deletePet.on('click', function(){
+                    let thisDelete = $(this);
+                    if(confirm('Delete this pet?') == true){
+                        loadingScreen.show();
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deletePet.php',
+                            data:{
+                                pet_id: thisDelete.val()
+                            },
+                            success: function(response){
+                                loadingScreen.hide();
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().parent().parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                })
                 viewMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
 
@@ -1812,27 +1966,26 @@
                         success: function(response){
                             if(response != 0){
                                 var data = JSON.parse(response);
-                                $(data).each(function(index, value){
-                                    medicalRecordClientName.text("Client Name: " + value.client_name);
-                                    medicalRecordClientCode.text("Client Code: " + value.client_code);
-                                    medicalRecordPetName.text("Patient Name: " + value.pet_name)
-                                    
-                                    $(value.records).each(function(index, values){
+
+                                medicalRecordClientName.text(data.client_name);
+                                medicalRecordClientCode.text(data.client_code);
+                                medicalRecordPetName.text(data.pet_name)
+                                $(data.records).each(function(index, value){
                                         
-                                        medicalRecordsTable.append(`<tr>
-                                                                        <td>${values.pet_weight}</td>
-                                                                        <td>${values.temp}</td>
-                                                                        <td>${values.hr}</td>
-                                                                        <td>${values.rr}</td>
-                                                                        <td>${values.tests}</td>
-                                                                        <td>${values.procedure}</td>
-                                                                        <td>${values.medication}</td>
-                                                                        <td>${values.case_closed}</td>
-                                                                        <td>${values.doctor_id}</td>
-                                                                        <td>${values.vet_nurse}</td>
-                                                                        <td>${values.created_at}</td>
-                                                                    </tr>`);
-                                    })
+                                    medicalRecordsTable.append(`<tr>
+                                                                    <td>${value.pet_weight}</td>
+                                                                    <td>${value.temp}</td>
+                                                                    <td>${value.hr}</td>
+                                                                    <td>${value.rr}</td>
+                                                                    <td>${value.tests}</td>
+                                                                    <td>${value.procedure}</td>
+                                                                    <td>${value.medication}</td>
+                                                                    <td>${value.case_closed}</td>
+                                                                    <td>${value.doctor_id}</td>
+                                                                    <td>${value.vet_nurse}</td>
+                                                                    <td>${value.created_at}</td>
+                                                                </tr>`);
+                                    
                                 })
                                 
                             }else{
@@ -2820,9 +2973,9 @@
                     <button class="btn-close" data-bs-target="#pets-modal" data-bs-toggle="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <h3 id="medical-record-client-name"></h3>
-                    <h3 id="medical-record-client-code"></h3>
-                    <h3 id="medical-record-pet-name"></h3>
+                    <h3>Client Name: <span class="fw-bold" id="medical-record-client-name"></span></h3> 
+                    <h3>Client Code: <span class="fw-bold" id="medical-record-client-code"></span></h3> 
+                    <h3>Client Pet: <span class="fw-bold" id="medical-record-pet-name"></span></h3> 
                     <div class="table-responsive">
                         <table class="table talbe-striped">
                             <thead>
@@ -3610,6 +3763,84 @@
                     </div>
 
                     <button class="mt-3 rounded-button" id="generate-confinement-soa">Generate SOA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="edit-pet-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-toggle="modal" data-bs-target="#pets-modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" placeholder="Pet Name" class="form-control" id="edit-pet-name">
+                        
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Pet Breed" class="form-control mt-3" id="edit-pet-breed">
+                        
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Pet Species" class="form-control mt-3" id="edit-pet-species">
+                        
+                    </div>
+
+                    
+
+                    <label class="mt-3">Pet Sex:</label>
+                    <select id="edit-pet-sex" class="form-select">
+                        <option value="MALE">MALE</option>
+                        <option value="FEMALE">FEMALE</option>
+                    </select>
+
+                    <div>
+                        <label class="mt-3">Birth Date:</label>
+                        <input type="date" placeholder="Birth Date" class="form-control" id="edit-pet-birth-date">
+                    </div>
+
+                    <button class="rounded-button mt-3" id="confirm-edit-pet">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="modal fade" id="edit-client-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="text" placeholder="Client Name" class="form-control" id="edit-client-name">
+                        <div id="edit-client-name-error" class="invalid-feedback"></div>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Client Email" class="form-control mt-3" id="edit-client-email">
+                        <div id="edit-client-email-error" class="invalid-feedback"></div>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Client Code" class="form-control mt-3" id="edit-client-code">
+                        <div id="edit-client-code-error" class="invalid-feedback"></div>
+                    </div>
+                    <div>
+                        <input type="number" placeholder="Client Email" class="form-control mt-3" id="edit-client-contact">
+                        <div id="edit-client-contact-error" class="invalid-feedback"></div>
+                    </div>
+
+                    <button class="rounded-button mt-3" id="confirm-edit-client">Confirm</button>
                 </div>
             </div>
         </div>

@@ -12,6 +12,7 @@
             $client = $con->query($query) or die($con->error);
             $clientRow = $client->fetch_assoc();
             $clientName = $clientRow['name'];
+            $clientCode = $clientRow['client_code'];
             $query = "SELECT * FROM pets WHERE user_id = '$clientId'";
             $pets = array();
             $pet = $con->query($query) or die($con->error);
@@ -45,7 +46,8 @@
             echo json_encode(
                 array(
                     'pets' => $pets,
-                    'client_name' => $clientName
+                    'client_name' => $clientName,
+                    'client_code' => $clientCode,
                 )
             );
            

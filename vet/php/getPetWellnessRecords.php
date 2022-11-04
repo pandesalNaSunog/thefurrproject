@@ -21,10 +21,15 @@
         $clientName = $clientRow['name'];
         while($row = $wellness->fetch_assoc()){
             $doctorId = $row['doctor_id'];
-            $query = "SELECT * FROM users WHERE id = '$doctorId'";
-            $doctor = $con->query($query) or die($con->error);
-            $doctorRow = $doctor->fetch_assoc();
-            $doctorName = $doctorRow['name'];
+            if($doctorId == 0){
+                $doctorName = "NO RECORD";
+            }else{
+                $query = "SELECT * FROM users WHERE id = '$doctorId'";
+                $doctor = $con->query($query) or die($con->error);
+                $doctorRow = $doctor->fetch_assoc();
+                $doctorName = $doctorRow['name'];
+            }
+            
             $remarks = $row['remarks'];
             $date = $row['date'];
             $date = date_create($date);
