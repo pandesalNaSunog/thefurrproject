@@ -80,6 +80,151 @@
             );
         }
 
+        //antibiotics
+        $query = "SELECT * FROM antibiotics WHERE confinement_id = '$confinementId'";
+        $antibiotics = array();
+
+        $antibiotic = $con->query($query) or die($con->error);
+        while($antibioticRow = $antibiotic->fetch_assoc()){
+            $antibiotics[] = array(
+                'id' => $antibioticRow['id'],
+                'antibiotic' => $antibioticRow['antibiotic'],
+                'date' => date_format(date_create($antibioticRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //antibiotics
+        $query = "SELECT * FROM vitamins WHERE confinement_id = '$confinementId'";
+        $vitamins = array();
+
+        $vitamin = $con->query($query) or die($con->error);
+        while($vitaminRow = $vitamin->fetch_assoc()){
+            $vitamins[] = array(
+                'id' => $vitaminRow['id'],
+                'vitamins' => $vitaminRow['vitamin'],
+                'date' => date_format(date_create($vitaminRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //special medicines
+        $query = "SELECT * FROM special_medicines WHERE confinement_id = '$confinementId'";
+        $specialMedicines = array();
+
+        $specialMedicine = $con->query($query) or die($con->error);
+        while($specialMedicineRow = $specialMedicine->fetch_assoc()){
+            $specialMedicines[] = array(
+                'id' => $specialMedicineRow['id'],
+                'special_medicine' => $specialMedicineRow['special_medicine'],
+                'date' => date_format(date_create($specialMedicineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //special medicines
+        $query = "SELECT * FROM other_medicines WHERE confinement_id = '$confinementId'";
+        $otherMedicines = array();
+
+        $otherMedicine = $con->query($query) or die($con->error);
+        while($otherMedicineRow = $otherMedicine->fetch_assoc()){
+            $otherMedicines[] = array(
+                'id' => $otherMedicineRow['id'],
+                'other_medicine' => $otherMedicineRow['other_medicine'],
+                'date' => date_format(date_create($otherMedicineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //laboratories
+        $query = "SELECT * FROM confinement_lab_requests WHERE confinement_id = '$confinementId'";
+        $laboratories = array();
+
+        $laboratory = $con->query($query) or die($con->error);
+        while($laboratoryRow = $laboratory->fetch_assoc()){
+            $laboratories[] = array(
+                'id' => $laboratoryRow['id'],
+                'laboratory' => $laboratoryRow['laboratory'],
+                'date' => date_format(date_create($laboratoryRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //food
+        $query = "SELECT * FROM food WHERE confinement_id = '$confinementId'";
+        $foods = array();
+
+        $food = $con->query($query) or die($con->error);
+        while($foodRow = $food->fetch_assoc()){
+            $foods[] = array(
+                'id' => $foodRow['id'],
+                'date' => date_format(date_create($foodRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        //iv canulla
+        $query = "SELECT * FROM i_v_canullas WHERE confinement_id = '$confinementId'";
+        $ivCanullas = array();
+
+        $ivCanulla = $con->query($query) or die($con->error);
+        while($ivCanullaRow = $ivCanulla->fetch_assoc()){
+            $ivCanullas[] = array(
+                'id' => $ivCanullaRow['id'],
+                'date' => date_format(date_create($ivCanullaRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+
+        $query = "SELECT * FROM i_v_lines WHERE confinement_id = '$confinementId'";
+        $ivLines = array();
+
+        $ivLine = $con->query($query) or die($con->error);
+        while($ivLineRow = $ivLine->fetch_assoc()){
+            $ivLines[] = array(
+                'id' => $ivLineRow['id'],
+                'date' => date_format(date_create($ivLineRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM i_v_fluids WHERE confinement_id = '$confinementId'";
+        $ivFluids = array();
+
+        $ivFluid = $con->query($query) or die($con->error);
+        while($ivFLuidRow = $ivFluid->fetch_assoc()){
+            $ivFluids[] = array(
+                'id' => $ivFLuidRow['id'],
+                'date' => date_format(date_create($ivFLuidRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM underpads WHERE confinement_id = '$confinementId'";
+        $underpads = array();
+
+        $underpad = $con->query($query) or die($con->error);
+        while($underpadRow = $underpad->fetch_assoc()){
+            $underpads[] = array(
+                'id' => $underpadRow['id'],
+                'date' => date_format(date_create($underpadRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM nebulizations WHERE confinement_id = '$confinementId'";
+        $nebulizations = array();
+
+        $nebulization = $con->query($query) or die($con->error);
+        while($nebulizationRow = $nebulization->fetch_assoc()){
+            $nebulizations[] = array(
+                'id' => $nebulizationRow['id'],
+                'date' => date_format(date_create($nebulizationRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
+        $query = "SELECT * FROM laser_therapies WHERE confinement_id = '$confinementId'";
+        $lasers = array();
+
+        $laser = $con->query($query) or die($con->error);
+        while($laserRow = $laser->fetch_assoc()){
+            $lasers[] = array(
+                'id' => $laserRow['id'],
+                'date' => date_format(date_create($laserRow['created_at']), 'M d, Y h:i A')
+            );
+        }
+
 
 
 
@@ -94,6 +239,19 @@
             'icus' => $icus,
             'confinement_records' => $confinementRecords,
             'infusion_pumps' => $infusionPumps,
+            'syringe_pumps' => $syringePumps,
+            'antibiotics' => $antibiotics,
+            'vitamins' => $vitamins,
+            'special_medicines' => $specialMedicines,
+            'other_medicines' => $otherMedicines,
+            'laboratories' => $laboratories,
+            'food' => $foods,
+            'iv_canullas' => $ivCanullas,
+            'iv_lines' => $ivLines,
+            'iv_fluids' => $ivFluids,
+            'underpads' => $underpads,
+            'nebulizations' => $nebulizations,
+            'laser_therapies' => $lasers,
             'date' => $date
         );
 
