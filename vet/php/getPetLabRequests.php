@@ -7,7 +7,8 @@
         if(isset($_POST) && isset($_SESSION['doctor_id'])){
             $doctorId = $_SESSION['doctor_id'];
             $petId = $_POST['pet_id'];
-            $query = "SELECT * FROM lab_requests WHERE pet_id = '$petId' AND doctor_id = '$doctorId'";
+            $appointmentId = $_POST['appointment_id'];
+            $query = "SELECT * FROM lab_requests WHERE pet_id = '$petId' AND doctor_id = '$doctorId' AND appointment_id = '$appointmentId'";
             $request = $con->query($query) or die($con->error);
             $requests = array();
 
