@@ -268,12 +268,9 @@
                             soa_id: globalSoaId
                         },
                         success: function(response){
-                            if(response == 'ok'){
-                                alert('Transaction Successful.');
-                                amount.val('');
-                                viewSoaDetailsModal.modal('hide');
-                                getSoas();
-                            }
+                            let data = JSON.parse(response);
+
+                            addToPaymentsTable(paymentsTable.children(), data.amount_renderred, data.balance, data.date);
                         }
                     })
                 }
@@ -671,6 +668,7 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="print-me">
+                    
                     <div class="bg-light rounded-3 p-3" id="client-info">
                         <p>Client Name: <span class="fw-bold" id="soa-client-name"></span></p>
                         <p>Patient Name: <span class="fw-bold" id="soa-patient-name"></span></p>
@@ -812,7 +810,10 @@
                                                             }
                                                         </style>
                                                     </head>
-                                                    <h1>The Furr Project Animal Clinic & Vet Pharmacy</h1>
+                                                    <div style="display: flex; justify-content: center">
+                                                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                                                    </div>
+                                                    <hr>
                                                     <h3 id="soa-title">STATEMENT OF ACCOUNTS</h3>
                                                     `+printMe.innerHTML)
                             printArea.print()

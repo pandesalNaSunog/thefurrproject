@@ -689,18 +689,60 @@
 
             function addToSpecialMedicinesTable(index,id,specialMedicine, price, date){
                 specialMedicinesTable.append(`<tr>
-                                    <td>${specialMedicine}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+                                        <input class="form-control special-medicine" placeholder="Special Medicine" value="${specialMedicine}">
+                                        <div class="invalid-feedback special-medicine-error"></div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="price form-control" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback price-error"></div>
                                     </td>
                                     <td>${date}</td>
                                     
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = specialMedicinesTable.children().eq(index).find('.delete');
+                let specialMedicineInput = specialMedicinesTable.children().eq(index).find('.special-medicine')
+                let specialMedicineError = specialMedicinesTable.children().eq(index).find('.special-medicine-error');
+                let priceError = specialMedicinesTable.children().eq(index).find('.price-error');
+                let priceInput = specialMedicinesTable.children().eq(index).find('.price');
+                let update = specialMedicinesTable.children().eq(index).find('.update');
 
+                removeInputError(priceInput);
+                removeInputError(specialMedicineInput)
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        priceError.text('Please Fill out this field');
+                    }else if(specialMedicineInput.val() == ""){
+                        specialMedicineInput.addClass('is-invalid');
+                        specialMedicineError.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateSpecialMedicine.php',
+                            data:{
+                                price: priceInput.val(),
+                                special_medicine: specialMedicineInput.val(),
+                                special_medicine_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)
                     if(confirm('Delete this record?') == true){
@@ -899,18 +941,60 @@
 
             function addToOtherMedicinesTable(index,id,otherMedicine, price, date){
                 otherMedicinesTable.append(`<tr>
-                                    <td>${otherMedicine}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+                                        <input class="form-control other-medicine" placeholder="Medicine" value="${otherMedicine}">
+                                        <div class="invalid-feedback other-medicine-error"></div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control price" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback price-error"></div>
                                     </td>
                                     <td>${date}</td>
                                     
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = otherMedicinesTable.children().eq(index).find('.delete');
+                let otherMedicineInput = otherMedicinesTable.children().eq(index).find('.other-medicine')
+                let otherMedicineError = otherMedicinesTable.children().eq(index).find('.other-medicine-error');
+                let priceError = otherMedicinesTable.children().eq(index).find('.price-error');
+                let priceInput = otherMedicinesTable.children().eq(index).find('.price');
+                let update = otherMedicinesTable.children().eq(index).find('.update');
 
+                removeInputError(priceInput);
+                removeInputError(otherMedicineInput)
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        priceError.text('Please Fill out this field');
+                    }else if(otherMedicineInput.val() == ""){
+                        otherMedicineInput.addClass('is-invalid');
+                        otherMedicineError.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateOtherMedicine.php',
+                            data:{
+                                price: priceInput.val(),
+                                other_medicine: otherMedicineInput.val(),
+                                other_medicine_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)
                     if(confirm('Delete this record?') == true){
@@ -933,17 +1017,61 @@
 
             function addToLaboratoryTable(index,id,laboratory, price, date){
                 laboratoryTable.append(`<tr>
-                                    <td>${laboratory}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+
+                                        <input class="form-control laboratory" placeholder="Price" value="${laboratory}">
+                                        <div class="invalid-feedback price-error"></div>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control price" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback price-error"></div>
                                     </td>
                                     <td>${date}</td>
                                     
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = laboratoryTable.children().eq(index).find('.delete');
+                let laboratoryInput = laboratoryTable.children().eq(index).find('.laboratory')
+                let laboratoryInputError = laboratoryTable.children().eq(index).find('.laboratory-error');
+                let priceError = laboratoryTable.children().eq(index).find('.price-error');
+                let priceInput = laboratoryTable.children().eq(index).find('.price');
+                let update = laboratoryTable.children().eq(index).find('.update');
+
+                removeInputError(priceInput);
+                removeInputError(laboratoryInput)
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        priceError.text('Please Fill out this field');
+                    }else if(laboratoryInput.val() == ""){
+                        laboratoryInput.addClass('is-invalid');
+                        laboratoryInputError.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateLaboratory.php',
+                            data:{
+                                price: priceInput.val(),
+                                laboratory: laboratoryInput.val(),
+                                laboratory_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
 
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)
@@ -967,18 +1095,60 @@
 
             function addToVitaminsTable(index,id,vitamins, price, date){
                 vitaminsTable.append(`<tr>
-                                    <td>${vitamins}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+                                        <input class="form-control vitamins" placeholder="Price" value="${vitamins}">
+                                        <div class="invalid-feedback vitamins-error"></div>
+                                    </td>
+                                    <td>
+                                        <input class="price form-control" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback price-error"></div>
                                     </td>
                                     <td>${date}</td>
                                     
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = vitaminsTable.children().eq(index).find('.delete');
+                let vitaminsInput = vitaminsTable.children().eq(index).find('.vitamins')
+                let vitaminsInputError = vitaminsTable.children().eq(index).find('.vitamins-error');
+                let priceError = vitaminsTable.children().eq(index).find('.price-error');
+                let priceInput = vitaminsTable.children().eq(index).find('.price');
+                let update = vitaminsTable.children().eq(index).find('.update');
 
+                removeInputError(priceInput);
+                removeInputError(vitaminsInput)
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        priceError.text('Please Fill out this field');
+                    }else if(vitaminsInput.val() == ""){
+                        vitaminsInput.addClass('is-invalid');
+                        vitaminsInputError.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateVitamins.php',
+                            data:{
+                                price: priceInput.val(),
+                                vitamins: vitaminsInput.val(),
+                                vitamins_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)
                     if(confirm('Delete this record?') == true){
@@ -1070,13 +1240,47 @@
                 ivCanullaTable.append(`<tr>
                                     <td>${date}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+                                        <input class="form-control price" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback"></div>
                                     </td>
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = ivCanullaTable.children().eq(index).find('.delete');
+                let priceInput = ivCanullaTable.children().eq(index).find('.price');
+                let update = ivCanullaTable.children().eq(index).find('.update');
+                let invalidFeedback = ivCanullaTable.children().eq(index).find('.invalid-feedback');
+                priceInput.on('keydown', function(){
+                    priceInput.removeClass('is-invalid');
+                })
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        invalidFeedback.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateIvCanulla.php',
+                            data:{
+                                price: priceInput.val(),
+                                iv_canulla_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
 
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)
@@ -1296,13 +1500,47 @@
                 foodTable.append(`<tr>
                                     <td>${date}</td>
                                     <td>
-                                        <input class="form-control" placeholder="Price" value="${price}">
+                                        <input class="form-control price" placeholder="Price" value="${price}">
+                                        <div class="invalid-feedback"></div>
                                     </td>
                                     <td>
+                                        <button value="${id}" class="update btn btn-outline-primary">Update</button>
                                         <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                     </td>
                                 </tr>`);
                 let deleteRecord = foodTable.children().eq(index).find('.delete');
+                let priceInput = foodTable.children().eq(index).find('.price');
+                let update = foodTable.children().eq(index).find('.update');
+                let invalidFeedback = foodTable.children().eq(index).find('.invalid-feedback');
+                priceInput.on('keydown', function(){
+                    priceInput.removeClass('is-invalid');
+                })
+                update.on('click', function(){
+                    let thisUpdate = $(this);
+                    if(priceInput.val() == ""){
+                        priceInput.addClass('is-invalid');
+                        invalidFeedback.text('Please Fill out this field');
+                    }else{
+                        thisUpdate.prop('disabled', true)
+                        thisUpdate.text('Updating...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/updateFood.php',
+                            data:{
+                                price: priceInput.val(),
+                                food_id: thisUpdate.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Successfully Updated.')
+                                    thisUpdate.prop('disabled', false);
+                                    thisUpdate.text('Update');
+                                }
+                            }
+                        })
+                    }
+                })
 
                 deleteRecord.on('click', function(){
                     let thisDelete = $(this)

@@ -52,8 +52,19 @@
 
             $query = "INSERT INTO payments(`soa_id`,`amount_renderred`,`change_renderred`,`balance`,`created_at`,`updated_at`)VALUES('$soaId','$amount','$change','$balance','$today','$today')";
             $con->query($query) or die($con->error);
+            
+            $query = "SELECT * FROM payments WHERE id = LAST_INSERT_ID()";
+            $paymentQuery = $con->query($query) or die($con->error);
+            $paymentRow = $paymentQuery->fetch_assoc();
 
-            echo 'ok';
+
+            $response = array(
+                'amount_renderred' => $paymentRow['amount_renderred'],
+                'balance' => $paymentRow['balance'],
+                'date' => date_format(date_create($paymentRow['created_at']), "M d, Y h:i A")
+            );
+
+            echo json_encode($response);
         }
     }else{
         echo header('HTTP/1.1 403 Forbidden');

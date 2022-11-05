@@ -33,7 +33,7 @@
                 $query = "INSERT INTO wellness_records(`pet_id`,`doctor_id`,`service`,`remarks`,`date`,`next_appointment`,`created_at`,`updated_at`,`pet_weight`)VALUES('$petId',0,'GROOMING','GROOMING','$date','$date','$today','$today','$thisWeight')";
                 $con->query($query) or die($con->error);
 
-                $thisSoaDetails = "grooming*grooming*".$price."*".$price."*1*0";
+                $thisSoaDetails = "Grooming*Grooming*".$price."*".$price."*1*0";
 
                 $query = "INSERT INTO statement_of_accounts(`pet_id`,`doctor_id`,`details`,`created_at`,`updated_at`)VALUES('$petId',0,'$thisSoaDetails','$today','$today')";
                 $con->query($query) or die($con->error);

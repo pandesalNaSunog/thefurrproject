@@ -88,7 +88,7 @@
                 }
             }
 
-            $query = "SELECT amount_renderred, balance, created_at FROM payments WHERE soa_id = '$soaId' ORDER BY created_at DESC";
+            $query = "SELECT amount_renderred, balance, created_at FROM payments WHERE soa_id = '$soaId'";
             $payment = $con->query($query) or die($con->error);
             $paymentHistory = array();
             while($paymentRow = $payment->fetch_assoc()){
