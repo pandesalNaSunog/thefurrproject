@@ -202,14 +202,14 @@
                             var data = JSON.parse(response);
 
                             $(data).each(function(index, value){
-                                addToPetsList(index, value.name, value.id);
+                                addToPetsList(index, value.name, value.id, value.breed, value.species);
                             })
                         }
                     })
                 })
             }
 
-            function addToPetsList(index, name, id){
+            function addToPetsList(index, name, id, breed, species){
                 petsList.append(`<div class="card shadow rounded-4 mt-3">
                                     <div class="card-body">
                                         <div class="form-check">
@@ -218,6 +218,8 @@
                                                 ${name}
                                             </label>
                                         </div>
+                                        <p>Species: <span class="fw-bold">${species}</span><br>
+                                            Breed: <span class="fw-bold">${breed}</span></p>
                                         <input class="weight form-control mt-3" placeholder="Weight">
                                     </div>
                                 </div>`)

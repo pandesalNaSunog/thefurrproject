@@ -11,6 +11,8 @@
             while($petRow = $pet->fetch_assoc()){
                 $response[] = array(
                     'name' => $petRow['name'],
+                    'species' => $petRow['species'],
+                    'breed' => $petRow['breed'],
                     'id' => $petRow['id'],
                 );
             }
