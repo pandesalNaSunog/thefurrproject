@@ -19,19 +19,7 @@
             $doctorIdString = "";
             $doctorIds = array();
             foreach($petIds as $key => $petId){
-
-                $query = "SELECT * FROM wellness_records WHERE pet_id = '$petId'";
-                $wellness = $con->query($query) or die($con->error);
-                $doctorId = 0;
-                if($wellnessRow = $wellness->fetch_assoc()){
-                    $doctorId = $wellnessRow['doctor_id'];
-                }else{
-                    $query = "SELECT * FROM users WHERE user_type ='doctor' AND id = '$sessionId'";
-                    $doctor = $con->query($query) or die($con->error);
-                    $doctorRow = $doctor->fetch_assoc();
-                
-                    $doctorId = $doctorRow['id'];
-                }
+                $doctorId = $_SESSION['doctor_id'];
                 if($key == 0){
                     $petIdString .= $petId;
                     $doctorIdString .= $doctorId;
