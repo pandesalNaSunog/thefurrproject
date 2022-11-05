@@ -83,7 +83,7 @@ $(document).ready(function(){
                 success: function(response){
                     let data = JSON.parse(response)
                     addOxygen.prop('disabled', false)
-                    addToOxygenTable(oxygenTable.children().length, data.id, data.date, data.stopped_at);
+                    addToOxygenTable(oxygenTable.children().length, data.id, data.date, data.hours);
                 }
             })
         }
@@ -379,7 +379,7 @@ $(document).ready(function(){
                                     </td>
                                 </tr>`)
 
-        let thisDelete = antibioticsTable.children().eq(index).find('.delete');
+        let thisDelete = vitaminsTable.children().eq(index).find('.delete');
 
         thisDelete.on('click', function(){
             let vitaminsId = $(this).val()
@@ -617,37 +617,16 @@ $(document).ready(function(){
         })
     }
 
-    function addToOxygenTable(index, id, date, stoppedAt){
+    function addToOxygenTable(index, id, date, hours){
         oxygenTable.append(`<tr>
                                     <td>${date}</td>
-                                    <td class="stopped-at">${stoppedAt}</td>
+                                    <td class="stopped-at">${hours}</td>
                                     <td>
-                                        <button value="${id}" class="btn btn-outline-primary stop">Stop</button>
                                         <button value="${id}" class="btn btn-outline-primary delete">Delete</button>
                                     </td>
                                 </tr>`)
 
         let thisDelete = oxygenTable.children().eq(index).find('.delete');
-        let thisStop = oxygenTable.children().eq(index).find('.stop');
-        let thisDate = oxygenTable.children().eq(index).find('.stopped-at');
-        thisStop.on('click', function(){
-            let oxygenId = $(this).val()
-            if(confirm('Please Confirm') == true){
-                thisStop.prop('disabled',true);
-                $.ajax({
-                    type: 'POST',
-                    url: 'php/stopOxygen.php',
-                    data:{
-                        oxygen_id: oxygenId
-                    },
-                    success: function(response){
-                        thisStop.prop('disabled', false);
-                        let data = JSON.parse(response);
-                        thisDate.text(data.stopped_at);
-                    }
-                })
-            }
-        })
         thisDelete.on('click', function(){
             let ivCanullaId = $(this).val()
             if(confirm('Delete this record?') == true){
@@ -716,9 +695,9 @@ $(document).ready(function(){
 
                 $.ajax({
                     type: 'POST',
-                    url: 'php/deletIvLine.php',
+                    url: 'php/deleteIvFluid.php',
                     data:{
-                        iv_fluid_id: ivFluidId
+                        iv_fluid_id: ivFLuidId
                     },
                     success: function(response){
                         if(response == 'ok'){
@@ -853,9 +832,14 @@ $(document).ready(function(){
                     confinement_id: globalConfinementId
                 },
                 success: function(response){
-                    let data = JSON.parse(response);
                     petIsInIcu.prop('disabled', false);
-                    addToICUSTable(icusTable.children().length, data.date, data.id);
+                    if(response != 'invalid'){
+                        let data = JSON.parse(response);
+                        addToICUSTable(icusTable.children().length, data.date, data.id);
+                    }
+                    
+                    
+                    
                 }
             })
         }
@@ -1020,7 +1004,7 @@ $(document).ready(function(){
                         addToLaserTable(index, value.id, value.date);
                     })
                     $(data.oxygens).each(function(index, value){
-                        addToOxygenTable(index, value.id, value.date, value.stopped_at);
+                        addToOxygenTable(index, value.id, value.date, value.hours);
                     })
 
                     displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)

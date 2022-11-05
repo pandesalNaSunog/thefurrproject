@@ -249,7 +249,7 @@
             $oxygens[] = array(
                 'id' => $oxygenRow['id'],
                 'price' => $oxygenRow['price'],
-                'stopped_at' => date_format(date_create($oxygenRow['stopped_at']), 'M d, Y h:i A'),
+                'hours' => $oxygenRow['hours'],
                 'date' => date_format(date_create($oxygenRow['created_at']), 'M d, Y h:i A')
             );
         }
