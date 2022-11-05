@@ -213,6 +213,7 @@
             var confirmEditPet = $("#confirm-edit-pet");
             var editPetModal = $('#edit-pet-modal');
             var petsModal = $('#pets-modal');
+            var clientDetails = $('#client-details');
 
             confirmEditPet.on('click', function(){
                 confirmEditPet.prop('disabled', true)
@@ -2031,6 +2032,7 @@
                 book.on('click', function(){
                     globalUserId = $(this).val()
                     clientPetsList.children().remove()
+                    clientDetails.children().remove()
                     $.ajax({
                         type: 'POST',
                         url: 'php/getClientPets.php',
@@ -2039,6 +2041,8 @@
                         },
                         success: function(response){
                             var data = JSON.parse(response);
+                            clientDetails.append(`<p>Client Name: <span class="fw-bold">${data.client_name}</span><br>
+                                                    Client Code: <span class="fw-bold">${data.client_code}</span></p>`)
                             $(data.pets).each(function(index, value){
                                 addToClientPetsList(index, value)
                             })
@@ -3328,6 +3332,12 @@
                     <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="client-details">
+
+                    </div>
+
+                    <h3 class="fw-bold">Pets List</h3>
+                    <hr>
                     <div id="client-pets-list">
 
                     </div>
