@@ -182,7 +182,7 @@
 
                 $oxygen = $con->query($query) or die($con->error);
                 while($oxygenRow = $oxygen->fetch_assoc()){
-                    $total += $oxygenRow['price'];
+                    $total += $oxygenRow['price'] * $oxygenRow['hours'];
                 }
                 
 
