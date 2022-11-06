@@ -629,7 +629,7 @@
                         customServiceAttendingLabTech.val(0);
                     }
                     addToSoaTable(index, customServiceAttendingLabTech.val(), customService.val(), customBasePrice.val(), customQuantity.val(), total);
-
+                    alert('Successfully added.');
                     serviceCategories.push(customServiceCategory.val());
                     customServiceAttendingLabTech.text('Choose Attending Vet Tech')
                     customServiceAttendingLabTech.val(0);
@@ -654,6 +654,7 @@
                         serviceAttendingLabTech.val(0);
                     }
                     addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
+                    alert('Successfully added.');
                     serviceCategories.push(chooseService.val());
                     basePrice.val('');
                     quantity.val('')
