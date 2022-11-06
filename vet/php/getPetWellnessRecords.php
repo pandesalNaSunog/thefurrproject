@@ -47,6 +47,7 @@
                 'remarks' => $remarks,
                 'date' => $date,
                 'next_appointment' => $nextAppointment,
+                'next_service' => $row['next_service'],
                 'pet_weight' => $row['pet_weight']
             );
         }

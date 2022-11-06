@@ -2735,7 +2735,7 @@
                         recordsPetName.text(data.pet_name);
                         recordsClientName.text(data.client_name);
                         $(data.records).each(function(index, value){
-                            addToWellnessRecordTable(index, value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
+                            addToWellnessRecordTable(index, value.next_service, value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
                         })
                     }
                 })
@@ -2763,7 +2763,7 @@
             }
 
 
-            function addToWellnessRecordTable(index, id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
+            function addToWellnessRecordTable(index,nextService, id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
                 wellnessRecordTable.append(`<tr>
                                                 <td>${service}</td>
                                                 <td>${petWeight}</td>
@@ -2771,6 +2771,7 @@
                                                 <td>${remarks}</td>
                                                 <td>${date}</td>
                                                 <td>${nextAppointment}</td>
+                                                <td>${nextService}</td>
                                                 <td>
                                                     <button value="${id}" class="edit normal-outline-button" data-bs-target="#edit-wellness-record-modal" data-bs-toggle="modal">Edit</button>
                                                     <button value="${id}" class="delete normal-outline-button">Delete</button>
@@ -3678,7 +3679,8 @@
                                 <th scope="col">Attending Vet</th>
                                 <th scope="col">Remarks</th>
                                 <th scope="col">Date</th>
-                                <th scope="col">Next Appointment</th>						
+                                <th scope="col">Next Appointment</th>
+                                <th scope="col">Next Service</th>						
                             </thead>
                             <tbody id="wellness-record-table">
     
