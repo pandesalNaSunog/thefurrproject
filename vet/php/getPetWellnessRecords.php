@@ -43,7 +43,7 @@
                 'id' => $row['id'],
                 'service' => $row['service'],
                 'doctor' => $doctorName,
-                'doctor_id' => $doctorRow['id'],
+                'doctor_id' => $doctorId,
                 'remarks' => $remarks,
                 'date' => $date,
                 'next_appointment' => $nextAppointment,

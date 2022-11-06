@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="style.css">
     <script src="../js/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    <!-- <script src="../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css"> -->
+    
+    
     <script>
         $(document).ready(function(){
+            var globalWellnessRecordId = 0;
             var globalConfinementId = 0;
             var addConfinementStatusError = $('#add-confinement-status-error');
             var addConfinementStatus = $('#add-confinement-status');
@@ -214,7 +219,37 @@
             var editPetModal = $('#edit-pet-modal');
             var petsModal = $('#pets-modal');
             var clientDetails = $('#client-details');
+            var editService = $('#edit-service');
+            var editPetWeight = $('#edit-pet-weight');
+            var editRemarks = $('#edit-remarks');
+            var editNextAppointment = $('#edit-next-appointment');
+            var confirmEditWellnessRecord = $('#confirm-edit-wellness-record');
+            var editWellnessRecordModal = $('#edit-wellness-record-modal')
+            var wellnessRecordModal = $('#wellness-record-modal');
 
+            
+            confirmEditWellnessRecord.on('click', function(){
+                confirmEditWellnessRecord.prop('disabled', true);
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/editWellnessRecord.php',
+                    data:{
+                        id: globalWellnessRecordId,
+                        service: editService.val(),
+                        pet_weight: editPetWeight.val(),
+                        remarks: editRemarks.val(),
+                        next_appointment: editNextAppointment.val(),
+                    },
+                    success: function(response){
+                        confirmEditWellnessRecord.prop('disabled', false);
+                        editWellnessRecordModal.modal('hide');
+                        wellnessRecordModal.modal('show');
+                        if(response == 'ok'){
+                            getPetWellnessRecords();
+                        }
+                    }
+                })
+            })
             confirmEditPet.on('click', function(){
                 confirmEditPet.prop('disabled', true)
                 confirmEditPet.text('Please Wait');
@@ -749,9 +784,9 @@
                         thisDelete.prop('disabled', true)
                         $.ajax({
                             type: 'POST',
-                            url: 'php/deleteSpecialMedicine.php',
+                            url: 'php/deleteSpecialMedicines.php',
                             data:{
-                                special_medicine_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1003,7 +1038,7 @@
                             type: 'POST',
                             url: 'php/deleteOtherMedicines.php',
                             data:{
-                                icu_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1081,7 +1116,7 @@
                             type: 'POST',
                             url: 'php/deleteLaboratory.php',
                             data:{
-                                icu_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1157,7 +1192,7 @@
                             type: 'POST',
                             url: 'php/deleteVitamins.php',
                             data:{
-                                icu_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1222,9 +1257,9 @@
                         thisDelete.prop('disabled', true)
                         $.ajax({
                             type: 'POST',
-                            url: 'php/deleteIcuRecord.php',
+                            url: 'php/deleteIcu.php',
                             data:{
-                                icu_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1288,9 +1323,9 @@
                         thisDelete.prop('disabled', true)
                         $.ajax({
                             type: 'POST',
-                            url: 'php/deleteIVCanulla.php',
+                            url: 'php/deleteIvCanulla.php',
                             data:{
-                                iv_canulla_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1355,7 +1390,7 @@
                             type: 'POST',
                             url: 'php/deleteIvLine.php',
                             data:{
-                                iv_line_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1761,7 +1796,7 @@
                             type: 'POST',
                             url: 'php/deleteFood.php',
                             data:{
-                                food_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1827,7 +1862,7 @@
                             type: 'POST',
                             url: 'php/deleteConfinementRecord.php',
                             data:{
-                                icu_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1894,7 +1929,7 @@
                             type: 'POST',
                             url: 'php/deleteSyringePump.php',
                             data:{
-                                syringe_pump_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -1970,7 +2005,7 @@
                             type: 'POST',
                             url: 'php/deleteAntibiotic.php',
                             data:{
-                                syringe_pump_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -2034,7 +2069,7 @@
                             type: 'POST',
                             url: 'php/deleteInfusionPump.php',
                             data:{
-                                infusion_pump_id: thisDelete.val()
+                                id: thisDelete.val()
                             },
                             success: function(response){
                                 if(response == 'ok'){
@@ -2540,10 +2575,10 @@
                                             <button value="${petId}" class="pet-medical-records normal-outline-button dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">View Previous Records</button>
+                                                    <button value="${petId}" class="dropdown-item view-initial-checkup" data-bs-toggle="modal" data-bs-target="#wellness-record-modal">Appointment Records</button>
                                                 </li>
                                                 <li>
-                                                    <button value="${petId}" class="view-medical-records dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">View Patient Medical Records</button>
+                                                    <button value="${petId}" class="view-medical-records dropdown-item" data-bs-toggle="modal" data-bs-target="#view-medical-records-modal">Patient Medical Records</button>
                                                 </li>
                                                 <li>
                                                     <button value="${petId}" class="view-medical-records dropdown-item edit-pet" data-bs-toggle="modal" data-bs-target="#edit-pet-modal">Edit</button>
@@ -2635,28 +2670,32 @@
                 })
                 viewInitalCheckup.on('click', function(){
                     globalPetId = $(this).val();
-                    $('#initial-checkups-modal').find('input').val('')
+                    $('#initial-checkups-modal').find('input').val('');
                     $('#initial-checkups-modal').find('textarea').val('');
-                    wellnessRecordTable.children().remove();
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/getPetWellnessRecords.php',
-                        data:{
-                            pet_id: globalPetId,
-                        },
-                        success: function(response){
-                            var data = JSON.parse(response);
-                            recordsPetName.text(data.pet_name);
-                            recordsClientName.text(data.client_name);
-                            $(data.records).each(function(index, value){
-                                addToWellnessRecordTable(value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
-                            })
-                        }
-                    })
+                    getPetWellnessRecords();
                 })
                 var petMedicalRecords = petsTable.children().eq(index).find('.pet-medical-records');
                 petMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
+                })
+            }
+
+            function getPetWellnessRecords(){
+                wellnessRecordTable.children().remove();
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/getPetWellnessRecords.php',
+                    data:{
+                        pet_id: globalPetId,
+                    },
+                    success: function(response){
+                        var data = JSON.parse(response);
+                        recordsPetName.text(data.pet_name);
+                        recordsClientName.text(data.client_name);
+                        $(data.records).each(function(index, value){
+                            addToWellnessRecordTable(index, value.id, value.service, value.doctor, value.doctor_id, value.remarks, value.date, value.next_appointment, value.pet_weight)
+                        })
+                    }
                 })
             }
 
@@ -2682,7 +2721,7 @@
             }
 
 
-            function addToWellnessRecordTable(id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
+            function addToWellnessRecordTable(index, id, service, doctor, doctorId, remarks, date, nextAppointment, petWeight){
                 wellnessRecordTable.append(`<tr>
                                                 <td>${service}</td>
                                                 <td>${petWeight}</td>
@@ -2690,7 +2729,42 @@
                                                 <td>${remarks}</td>
                                                 <td>${date}</td>
                                                 <td>${nextAppointment}</td>
+                                                <td>
+                                                    <button value="${id}" class="edit normal-outline-button" data-bs-target="#edit-wellness-record-modal" data-bs-toggle="modal">Edit</button>
+                                                    <button value="${id}" class="delete normal-outline-button">Delete</button>
+                                                </td>
                                             </tr>`)
+                let editRecord = wellnessRecordTable.children().eq(index).find('.edit');
+                let deleteRecord = wellnessRecordTable.children().eq(index).find('.delete');
+
+                editRecord.on('click', function(){
+                    globalWellnessRecordId = $(this).val();
+                    editService.val(service);
+                    editPetWeight.val(petWeight);
+                    editRemarks.val(remarks);
+                })
+
+                deleteRecord.on('click', function(){
+                    let thisDelete = $(this);
+                    if(confirm('Delete this record?') == true){
+                        deleteRecord.prop('disabled', true);
+                        deleteRecord.text('Deleting...');
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteWellnessRecord.php',
+                            data:{
+                                id: thisDelete.val()
+                            },
+                            success: function(response){
+                                deleteRecord.prop('disabled', false);
+                                deleteRecord.text('Delete');
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove();
+                                }
+                            }
+                        })
+                    }
+                })
             }
         
             logout.on('click', function(){
@@ -4485,6 +4559,38 @@
                     </div>
 
                     <button class="rounded-button mt-3" id="confirm-edit-client">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="edit-wellness-record-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-target="#wellness-record-modal" data-bs-toggle="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" placeholder="Service" class="form-control" id="edit-service">
+                        <label for="edit-service">Service</label>
+                    </div>
+                    <div class="form-floating mt-3">
+                        <input type="text" placeholder="Pet Weight" class="form-control" id="edit-pet-weight">
+                        <label for="edit-pet-weight">Pet Weight</label>
+                    </div>
+                    <div class="form-floating mt-3">
+                        <input type="text" placeholder="Remarks" class="form-control" id="edit-remarks">
+                        <label for="edit-remarks">Remarks</label>
+                    </div>
+                    <label class="mt-3" for="edit-next-appointment">Next Appointment</label>
+                    <input type="date" class="form-control" id="edit-next-appointment">
+                    
+
+                    <button class="rounded-button mt-3" id="confirm-edit-wellness-record">Confirm</button>
                 </div>
             </div>
         </div>

@@ -88,9 +88,8 @@
     transition: .3s;
 }
 
-.normal-outline-button:hover{
-    color: white;
-    background-color: darkblue;
+.normal-outline-button:disabled{
+    opacity: 50%;
 }
 
 #search{
