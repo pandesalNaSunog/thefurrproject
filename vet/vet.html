@@ -230,6 +230,51 @@
             var medicalRecordChiefComplain = $('#medical-record-chief-complain');
             var medicalRecordTDXDDXCase = $('#medical-record-tdx-ddx-case');
             var medicalRecordNextService = $('#medical-record-next-service');
+            var globalMedicalRecordId = 0;
+            var editMedicalRecordWeight = $('#edit-medical-record-weight');
+            var editMedicalRecordTemp = $('#edit-medical-record-temp');
+            var editMedicalRecordHr = $('#edit-medical-record-hr');
+            var editMedicalRecordRR = $('#edit-medical-record-rr');
+            var editMedicalRecordHistory = $('#edit-medical-record-history');
+            var editMedicalRecordChiefComplain = $('#edit-medical-record-chief-complain');
+            var editMedicalRecordTests = $('#edit-medical-record-tests');
+            var editMedicalRecordProcedures = $('#edit-medical-record-procedures');
+            var editMedicalRecordTdx = $('#edit-medical-record-tdx-ddx-case');
+            var editMedicalRecordMedication = $('#edit-medical-record-medication');
+            var confirmEditMedicalRecord = $('#confirm-edit-medical-record');
+            var editMedicalRecordModal = $('#edit-medical-record-modal');
+            var viewMedicalRecordsModal = $('#view-medical-records-modal');
+
+            confirmEditMedicalRecord.on('click', function(){
+                if(confirm("Please confirm.") == true){
+                    confirmEditMedicalRecord.prop('disabled', true)
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/updateMedicalRecord.php',
+                        data:{
+                            weight: editMedicalRecordWeight.val(),
+                            temp: editMedicalRecordTemp.val(),
+                            hr: editMedicalRecordHr.val(),
+                            rr: editMedicalRecordRR.val(),
+                            history: editMedicalRecordHistory.val(),
+                            chief_complain: editMedicalRecordChiefComplain.val(),
+                            tests: editMedicalRecordTests.val(),
+                            procedures: editMedicalRecordProcedures.val(),
+                            tdx: editMedicalRecordTdx.val(),
+                            medication: editMedicalRecordMedication.val(),
+                            id: globalMedicalRecordId
+                        },
+                        success: function(response){
+                            confirmEditMedicalRecord.prop('disabled', false);
+                            if(response == 'ok'){
+                                editMedicalRecordModal.modal('hide');
+                                viewMedicalRecordsModal.modal('show');
+                                getMedicalRecords()
+                            }
+                        }
+                    })
+                }
+            })
             confirmEditWellnessRecord.on('click', function(){
                 confirmEditWellnessRecord.prop('disabled', true);
                 $.ajax({
@@ -2636,33 +2681,7 @@
                 viewMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
 
-                    medicalRecordsTable.children().remove();
-
-                    $.ajax({
-                        type: 'POST',
-                        url: 'php/getMedicalRecords.php',
-                        data:{
-                            pet_id: globalPetId,
-                        },
-                        success: function(response){
-                            if(response != 0){
-                                var data = JSON.parse(response);
-
-                                medicalRecordClientName.text(data.client_name);
-                                medicalRecordClientCode.text(data.client_code);
-                                medicalRecordPetName.text(data.pet_name)
-                                $(data.records).each(function(index, value){
-                                    
-                                    addToMedicalRecordsTable(index, value.id, value.pet_weight, value.temp, value.hr, value.rr, value.medical_history, value.chief_complain, value.tests, value.procedure, value.tdx_ddx_case, value.medication, value.case_closed, value.doctor_id, value.vet_nurse, value.created_at)
-                                    
-                                })
-                                
-                            }else{
-                                alert('Invalid Session. Please log in to continue');
-                            }
-                            
-                        }
-                    })
+                    getMedicalRecords();
                 })
                 viewInitalCheckup.on('click', function(){
                     globalPetId = $(this).val();
@@ -2673,6 +2692,36 @@
                 var petMedicalRecords = petsTable.children().eq(index).find('.pet-medical-records');
                 petMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
+                })
+            }
+
+            function getMedicalRecords(){
+                medicalRecordsTable.children().remove();
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/getMedicalRecords.php',
+                    data:{
+                        pet_id: globalPetId,
+                    },
+                    success: function(response){
+                        if(response != 0){
+                            var data = JSON.parse(response);
+
+                            medicalRecordClientName.text(data.client_name);
+                            medicalRecordClientCode.text(data.client_code);
+                            medicalRecordPetName.text(data.pet_name)
+                            $(data.records).each(function(index, value){
+                                
+                                addToMedicalRecordsTable(index, value.id, value.pet_weight, value.temp, value.hr, value.rr, value.medical_history, value.chief_complain, value.tests, value.procedure, value.tdx_ddx_case, value.medication, value.case_closed, value.doctor_id, value.vet_nurse, value.created_at)
+                                
+                            })
+                            
+                        }else{
+                            alert('Invalid Session. Please log in to continue');
+                        }
+                        
+                    }
                 })
             }
             
@@ -2693,12 +2742,26 @@
                                                 <td>${vetNurse}</td>
                                                 <td>${createdAt}</td>
                                                 <td>
-                                                    <button value="${id}" class="edit normal-outline-button">Edit</button>
+                                                    <button value="${id}" class="edit normal-outline-button" data-bs-toggle="modal" data-bs-target="#edit-medical-record-modal">Edit</button>
                                                     <button value="${id}" class="delete normal-outline-button">Delete</button>
                                                 </td>
                                             </tr>`);
                 let deleteButton = medicalRecordsTable.children().eq(index).find('.delete');
+                let edit = medicalRecordsTable.children().eq(index).find('.edit');
 
+                edit.on('click', function(){
+                    globalMedicalRecordId = $(this).val();
+                    editMedicalRecordWeight.val(weight)
+                    editMedicalRecordTemp.val(temp)
+                    editMedicalRecordHr.val(hr)
+                    editMedicalRecordRR.val(rr)
+                    editMedicalRecordHistory.val(medicalHistory)
+                    editMedicalRecordChiefComplain.val(chiefComplain)
+                    editMedicalRecordTests.val(tests)
+                    editMedicalRecordProcedures.val(procedure)
+                    editMedicalRecordTdx.val(tdx)
+                    editMedicalRecordMedication.val(medication)
+                })
                 deleteButton.on('click', function(){
                     let thisDelete = $(this);
                     if(confirm('Delete this record?') == true){
@@ -3654,6 +3717,65 @@
                         <textarea id="take-home-meds" class="form-control mt-3" placeholder="Take Home Meds"></textarea>
                         <button id="confirm-insert-medical-record" class="rounded-outline-button mt-3">Confirm</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edit-medical-record-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-target="#view-medical-records-modal" data-bs-toggle="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input id="edit-medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
+                        <label>Weight</label>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <input id="edit-medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
+                        <label>Temp</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="edit-medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
+                        <label>HR</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="edit-medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
+                        <label>RR</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="edit-medical-record-history" type="text" placeholder="Medical History" class="form-control mt-3">
+                        <label>Medical History</label>
+                    </div>
+                    <div class="form-floating">
+                        <input id="edit-medical-record-chief-complain" type="text" placeholder="Chief Complain" class="form-control mt-3">
+                        <label>Chief Complain</label>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <textarea id="edit-medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
+                        <label>Tests</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea id="edit-medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
+                        <label>Procedures</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea id="edit-medical-record-tdx-ddx-case" class="form-control mt-3" placeholder="TDX/DDX/Case"></textarea>
+                        <label>TDX/DDX/Case</label>
+                    </div>
+                    <div class="form-floating">
+                        <textarea id="edit-medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
+                        <label>Medication/RX</label>
+                    </div>
+
+                    <button class="rounded-button" id="confirm-edit-medical-record">Confirm</button>
                 </div>
             </div>
         </div>
