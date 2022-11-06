@@ -624,7 +624,7 @@
                     var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
                     var index = soaTable.children().length;
                     if(customServiceAttendingLabTech.val() == ""){
-                        customServiceAttendingLabTech.va(0);
+                        customServiceAttendingLabTech.val(0);
                     }
                     addToSoaTable(index, customServiceAttendingLabTech.val(), customService.val(), customBasePrice.val(), customQuantity.val(), total);
 
