@@ -16,11 +16,15 @@
                 $doctorRow = $doctor->fetch_assoc();
                 $doctorName = $doctorRow['name'];
                 $records[] = array(
+                    'id' => $recordRow['id'],
                     'pet_weight' => $recordRow['pet_weight'],
                     'temp' => $recordRow['temp'],
                     'hr' => $recordRow['hr'],
                     'rr' => $recordRow['rr'],
                     'tests' => $recordRow['tests'],
+                    'medical_history' => $recordRow['medical_history'],
+                    'chief_complain' => $recordRow['chief_complain'],
+                    'tdx_ddx_case' => $recordRow['tdx_ddx_case'],
                     'procedure' => $recordRow['procedure'],
                     'medication' => $recordRow['medication'],
                     'case_closed' => $recordRow['case_closed'],

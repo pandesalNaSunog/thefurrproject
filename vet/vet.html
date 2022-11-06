@@ -226,8 +226,10 @@
             var confirmEditWellnessRecord = $('#confirm-edit-wellness-record');
             var editWellnessRecordModal = $('#edit-wellness-record-modal')
             var wellnessRecordModal = $('#wellness-record-modal');
-
-            
+            var medicalRecordMedicalHistory = $('#medical-record-history');
+            var medicalRecordChiefComplain = $('#medical-record-chief-complain');
+            var medicalRecordTDXDDXCase = $('#medical-record-tdx-ddx-case');
+            var medicalRecordNextService = $('#medical-record-next-service');
             confirmEditWellnessRecord.on('click', function(){
                 confirmEditWellnessRecord.prop('disabled', true);
                 $.ajax({
@@ -910,6 +912,10 @@
                         type:'POST',
                         url: 'php/addMedicalRecord.php',
                         data:{
+                            medical_history: medicalRecordMedicalHistory.val(),
+                            chief_complain: medicalRecordChiefComplain.val(),
+                            tdx_ddx_case: medicalRecordTDXDDXCase.val(),
+                            next_service: medicalRecordNextService.val(),
                             pet_id: globalPetId,
                             appointment_id: globalApppointmentId,
                             client_id: globalUserId,
@@ -2364,7 +2370,8 @@
                         surgery: surgery.val(),
                         out_patient: outPatient.val(),
                         take_home_meds: takeHomeMeds.val(),
-                        date: checkupDate.val()
+                        date: checkupDate.val(),
+                        
                     },
                     success: function(response){
                         var value = JSON.parse(response);
@@ -2644,20 +2651,8 @@
                                 medicalRecordClientCode.text(data.client_code);
                                 medicalRecordPetName.text(data.pet_name)
                                 $(data.records).each(function(index, value){
-                                        
-                                    medicalRecordsTable.append(`<tr>
-                                                                    <td>${value.pet_weight}</td>
-                                                                    <td>${value.temp}</td>
-                                                                    <td>${value.hr}</td>
-                                                                    <td>${value.rr}</td>
-                                                                    <td>${value.tests}</td>
-                                                                    <td>${value.procedure}</td>
-                                                                    <td>${value.medication}</td>
-                                                                    <td>${value.case_closed}</td>
-                                                                    <td>${value.doctor_id}</td>
-                                                                    <td>${value.vet_nurse}</td>
-                                                                    <td>${value.created_at}</td>
-                                                                </tr>`);
+                                    
+                                    addToMedicalRecordsTable(index, value.id, value.pet_weight, value.temp, value.hr, value.rr, value.medical_history, value.chief_complain, value.tests, value.procedure, value.tdx_ddx_case, value.medication, value.case_closed, value.doctor_id, value.vet_nurse, value.created_at)
                                     
                                 })
                                 
@@ -2677,6 +2672,52 @@
                 var petMedicalRecords = petsTable.children().eq(index).find('.pet-medical-records');
                 petMedicalRecords.on('click', function(){
                     globalPetId = $(this).val();
+                })
+            }
+            
+            function addToMedicalRecordsTable(index,id, weight, temp, hr, rr, medicalHistory, chiefComplain, tests, procedure, tdx, medication, caseClosed, doctorId, vetNurse, createdAt){
+                medicalRecordsTable.append(`<tr>
+                                                <td>${weight}</td>
+                                                <td>${temp}</td>
+                                                <td>${hr}</td>
+                                                <td>${rr}</td>
+                                                <td>${medicalHistory}</td>
+                                                <td>${chiefComplain}</td>
+                                                <td>${tests}</td>
+                                                <td>${procedure}</td>
+                                                <td>${tdx}</td>
+                                                <td>${medication}</td>
+                                                <td>${caseClosed}</td>
+                                                <td>${doctorId}</td>
+                                                <td>${vetNurse}</td>
+                                                <td>${createdAt}</td>
+                                                <td>
+                                                    <button value="${id}" class="edit normal-outline-button">Edit</button>
+                                                    <button value="${id}" class="delete normal-outline-button">Delete</button>
+                                                </td>
+                                            </tr>`);
+                let deleteButton = medicalRecordsTable.children().eq(index).find('.delete');
+
+                deleteButton.on('click', function(){
+                    let thisDelete = $(this);
+                    if(confirm('Delete this record?') == true){
+                        
+                        deleteButton.prop('disabled', true);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteMedicalRecord.php',
+                            data:{
+                                id: thisDelete.val()
+                            },
+                            success: function(response){
+                                deleteButton.prop('disabled', false)
+                                if(response == 'ok'){
+                                    thisDelete.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                    
                 })
             }
 
@@ -3689,19 +3730,23 @@
                     <h3>Client Code: <span class="fw-bold" id="medical-record-client-code"></span></h3> 
                     <h3>Client Pet: <span class="fw-bold" id="medical-record-pet-name"></span></h3> 
                     <div class="table-responsive">
-                        <table class="table talbe-striped">
+                        <table class="table table-striped" id="medical-record-table">
                             <thead>
                                 <th scope="col">Weight</th>
                                 <th scope="col">Temp</th>
                                 <th scope="col">HR</th>
                                 <th scope="col">RR</th>
+                                <th scope="col">Medical History</th>
+                                <th scope="col">Chief Complain</th>
                                 <th scope="col">Tests</th>
                                 <th scope="col">Procedure</th>
+                                <th scope="col">TDX/DDX/Case</th>
                                 <th scope="col">Medication</th>
                                 <th scope="col">Case Closed</th>
                                 <th scope="col">Attending Vet</th>
                                 <th scope="col">Attending Vet Nurse</th>
                                 <th scope="col">Date</th>
+                                <th scope="col">Action</th>
                             </thead>
                             <tbody id="medical-records-table">
 
@@ -3895,6 +3940,100 @@
                         <p>Client Code: <span id="client-code" class="fw-bold"></span></p>
                     </div>
 
+
+                    <div class="card rounded-4 shadow mt-5">
+                        <div class="card-header">
+                            <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-floating">
+                                <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
+                                <label>Weight</label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
+                                <label>Temp</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
+                                <label>HR</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
+                                <label>RR</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="medical-record-history" type="text" placeholder="Medical History" class="form-control mt-3">
+                                <label>Medical History</label>
+                            </div>
+                            <div class="form-floating">
+                                <input id="medical-record-chief-complain" type="text" placeholder="Chief Complain" class="form-control mt-3">
+                                <label>Chief Complain</label>
+                            </div>
+                            
+                            <div class="form-floating">
+                                <textarea id="medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
+                                <label>Tests</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea id="medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
+                                <label>Procedures</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea id="medical-record-tdx-ddx-case" class="form-control mt-3" placeholder="TDX/DDX/Case"></textarea>
+                                <label>TDX/DDX/Case</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea id="medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
+                                <label>Medication/RX</label>
+                            </div>
+                            <div class="form-floating">
+                                <textarea class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service"></textarea>
+                                <label>Service</label>
+                            </div>
+
+                            <div class="form-floating">
+                                <textarea class="form-control mt-3" id="medical-record-remarks" placeholder="Remarks"></textarea>
+                                <label>Remarks</label>
+                            </div>
+
+                            <div class="card shadow rounded-4 mt-3">
+                                <div class="card-header">
+                                    <h3 class="fw-bold text-center">NEXT APPOINTMENT / NEXT SERVICE</h3>
+                                </div>
+                                <div class="card-body">
+                                    <label>Case Closed</label>
+                                    <select id="medical-record-case-closed" class="form-select mt-3">
+                                        <option value="Yes">Yes</option>
+                                        <option value="Yes">No</option>
+                                    </select>
+                                    <label class="mt-3">Next Appointment:</label>
+                                    <input id="medical-record-next-appointment" type="date" class="form-control">
+
+                                    <div class="form-floating mt-3">
+                                        <input type="text" class="form-control" placeholder="Next Service" id="medical-record-next-service">
+                                        <label for="medical-record-next-service">Next Service</label>
+                                    </div>
+                
+                                    <label class="mt-3">Attending Vet Nurse:</label>
+                                    <select class="form-select" id="choose-vet-assistant">
+                                        
+                                    </select>
+                                    
+        
+                                    
+                                    
+                                </div>
+                            </div>
+                            
+                            <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
+                        </div>
+                    </div>
+
+                    
+                    
+
                     <div class="card mt-2 rounded-4 shadow">
                         <div class="card-header">
                             <h3 class="text-center fw-bold">LABORATORY REQUEST <span><button id="refresh-lab-requests" class="btn btn-outline-primary"><span id="refresh-spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span>Refresh</span></button></h3>
@@ -4033,73 +4172,6 @@
                         </div>
                     </div>
 
-                    <div class="card rounded-4 shadow mt-5">
-                        <div class="card-header">
-                            <h3 class="fw-bold text-center">PATIENT'S MEDICAL RECORD</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-floating">
-                                <input id="medical-record-weight" type="text" placeholder="Weight" class="form-control mt-3">
-                                <label>Weight</label>
-                            </div>
-                            
-                            <div class="form-floating">
-                                <input id="medical-record-temp" type="text" placeholder="Temp" class="form-control mt-3">
-                                <label>Temp</label>
-                            </div>
-                            <div class="form-floating">
-                                <input id="medical-record-hr" type="text" placeholder="HR" class="form-control mt-3">
-                                <label>HR</label>
-                            </div>
-                            <div class="form-floating">
-                                <input id="medical-record-rr" type="text" placeholder="RR" class="form-control mt-3">
-                                <label>RR</label>
-                            </div>
-                            
-                            <div class="form-floating">
-                                <textarea id="medical-record-tests" class="form-control mt-3" placeholder="Tests"></textarea>
-                                <label>Tests</label>
-                            </div>
-                            <div class="form-floating">
-                                <textarea id="medical-record-procedures" class="form-control mt-3" placeholder="Procedures"></textarea>
-                                <label>Procedures</label>
-                            </div>
-                            <div class="form-floating">
-                                <textarea id="medical-record-medication" class="form-control mt-3" placeholder="Medication/RX"></textarea>
-                                <label>Medication/RX</label>
-                            </div>
-                            <!-- <button class="rounded-button w-100 mt-3">Print Medication/RX</button> -->
-                            
-                            
-        
-                            <label class="mt-3">Case Closed</label>
-                            <select id="medical-record-case-closed" class="form-select mt-3">
-                                <option value="Yes">Yes</option>
-                                <option value="Yes">No</option>
-                            </select>
-                            <label class="mt-3">Next Appointment:</label>
-                            <input id="medical-record-next-appointment" type="date" class="form-control">
-        
-                            <label class="mt-3">Attending Vet Nurse:</label>
-                            <select class="form-select" id="choose-vet-assistant">
-                                
-                            </select>
-                            
-
-                            <div class="form-floating">
-                                <textarea class="form-control mt-3" type="text" id="medical-record-service" placeholder="Service"></textarea>
-                                <label>Service</label>
-                            </div>
-
-                            <div class="form-floating">
-                                <textarea class="form-control mt-3" id="medical-record-remarks" placeholder="Remarks"></textarea>
-                                <label>Remarks</label>
-                            </div>
-                            
-                           
-                            <button id="medical-record-confirm" class="rounded-button mt-3">Confirm</button>
-                        </div>
-                    </div>
                     
                 </div>
             </div>

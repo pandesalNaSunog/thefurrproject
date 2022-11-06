@@ -74,6 +74,9 @@
     background-color: darkblue;
 }
 
+#medical-record-table th{
+    padding-right: 50px;
+}
 
 .normal-outline-button{
     color:darkblue;
@@ -90,6 +93,10 @@
 
 .normal-outline-button:disabled{
     opacity: 50%;
+}
+.normal-outline-button:hover{
+    color: white;
+    background-color: darkblue;
 }
 
 #search{
