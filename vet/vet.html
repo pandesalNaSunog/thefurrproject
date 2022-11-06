@@ -586,6 +586,14 @@
                                 serviceAttendingLabTech.val($(this).val());
                             })
                         })
+                        serviceAttendingLabTechList.append(`<li><button value="" class="service-lab-tech dropdown-item">Clear</button></li>`);
+                        var serviceLabTech = serviceAttendingLabTechList.children().eq(serviceAttendingLabTechList.children().length - 1).find('.service-lab-tech');
+
+                        serviceLabTech.on('click', function(){
+
+                            serviceAttendingLabTech.text('Choose Attending Lab Tech');
+                            serviceAttendingLabTech.val($(this).val());
+                        })
                     }
                 })
             })
@@ -607,6 +615,17 @@
                                 customServiceAttendingLabTech.val($(this).val());
                             })
                         })
+
+                        customServiceAttendingLabTechList.append(`<li><button value="" class="custom-service-lab-tech dropdown-item">Clear</button></li>`);
+                            var customServiceLabTech = customServiceAttendingLabTechList.children().eq(customServiceAttendingLabTechList.children().length - 1).find('.custom-service-lab-tech');
+
+                            customServiceLabTech.on('click', function(){
+
+                                customServiceAttendingLabTech.text('Choose Attending Lab Tech');
+                                customServiceAttendingLabTech.val($(this).val());
+                            })
+
+                        
                     }
                 })
             })
@@ -871,6 +890,16 @@
                             $(data).each(function(index, value){
                                 addToChooseVetTechList(index, value.id, value.name)
                             })
+                            vetTechList.append(`<li>
+                                        <button class="vet-tech dropdown-item" value=0>Clear</button>
+                                    </li>`)
+                            var vetTech = vetTechList.children().eq(vetTechList.children().length - 1).find('.vet-tech');
+
+                            vetTech.on('click', function(){
+                                globalVetTechId = $(this).val()
+                                chooseVetTech.text('Choose Vet Tech')
+                            })
+
                         }
                     })
                 }
