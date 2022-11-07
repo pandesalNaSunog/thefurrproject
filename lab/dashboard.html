@@ -161,20 +161,24 @@
 
                     deleteButton.on('click', function(){
                         let thisDelete = $(this);
-
-                        thisDelete.prop('disabled', true);
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/deleteLabResult.php',
-                            data:{
-                                id: thisDelete.val()
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    thisDelete.parent().parent().remove();
+                        if(confirm('Delete this Record?') == true){
+                        
+                            thisDelete.prop('disabled', true);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/deleteLabResult.php',
+                                data:{
+                                    id: thisDelete.val()
+                                },
+                                success: function(response){
+                                    thisDelete.prop('disabled', false)
+                                    if(response == 'ok'){
+                                        thisDelete.parent().parent().remove();
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
+                        
                     })
                 }else{
                     labResultsList.append(`<div class="card shadow rounded-2">
@@ -187,20 +191,25 @@
 
                     deleteButton.on('click', function(){
                         let thisDelete = $(this);
-
-                        thisDelete.prop('disabled', true);
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/deleteLabResult.php',
-                            data:{
-                                id: thisDelete.val()
-                            },
-                            success: function(response){
-                                if(response == 'ok'){
-                                    thisDelete.parent().parent().remove();
+                        if(confirm('Delete this Record?') == true){
+                            thisDelete.prop('disabled', true);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/deleteLabResult.php',
+                                data:{
+                                    id: thisDelete.val()
+                                },
+                                success: function(response){
+                                    thisDelete.prop('disabled', false)
+                                    if(response == 'ok'){
+                                        thisDelete.parent().parent().remove();
+                                    }
                                 }
-                            }
-                        })
+                            })
+                        }
+                        
+
+                        
                     })
                 }
             }
