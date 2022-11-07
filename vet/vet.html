@@ -3245,6 +3245,9 @@
                                                             </div>
                                                         </td>
                                                         <td>${requestedAt}</td>
+                                                        <td>
+                                                            <button value=${id} class="delete btn btn-primary">Delete</button>
+                                                        </td>
                                                     </tr>`)
                 }else{
                     vetLabRequestTable.append(`<tr>
@@ -3261,6 +3264,9 @@
                                                             </div>
                                                         </td>
                                                         <td>${requestedAt}</td>
+                                                        <td>
+                                                            <button value=${id} class="delete btn btn-primary">Delete</button>
+                                                        </td>
                                                     </tr>`)
 
                     var viewResults = vetLabRequestTable.children().eq(index).find('.view-results');
@@ -3290,6 +3296,26 @@
                 var result = vetLabRequestTable.children().eq(index).find('.result');
                 var upload = vetLabRequestTable.children().eq(index).find('.upload')
                 var uploadSpinner = vetLabRequestTable.children().eq(index).find('.upload-spinner');
+                var deleteButton = vetLabRequestTable.children().eq(index).find('.delete');
+
+                    deleteButton.on('click', function(){
+                        let thisDelete = $(this);
+                        if(confirm('Delete this Record?') == true){
+                            thisDelete.prop('disabled', true);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/deleteLabRequest.php',
+                                data:{
+                                    id: thisDelete.val()
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        thisDelete.parent().parent().remove();
+                                    }
+                                }
+                            })
+                        }
+                    })
 
                 uploadSpinner.hide();
                 upload.on('click', function(){
@@ -3912,12 +3938,12 @@
                     </div>
 
                     <label class="mt-3">Case Closed:</label>
-                    <select id="edit-medical-record-case-closed">
+                    <select class="form-select" id="edit-medical-record-case-closed">
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
 
-                    <button class="rounded-button" id="confirm-edit-medical-record">Confirm</button>
+                    <button class="rounded-button mt-3" id="confirm-edit-medical-record">Confirm</button>
                 </div>
             </div>
         </div>
