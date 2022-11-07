@@ -2466,7 +2466,7 @@
                                 labResultLabRequest.text(data.request);
                                 
                                 $(data.results).each(function(index, value){
-                                    addToLabResultsList(index, value.id, value.result)
+                                    addToLabResultsList(index, value.id, value.result, value.extension)
                                 })
                             }
                         })
@@ -2475,13 +2475,20 @@
                 
             }
 
-            function addToLabResultsList(index, id, result){
-                labResultsList.append(`<div class="card shadow rounded-2">
+            function addToLabResultsList(index, id, result, extension){
+
+                if(extension == 'png' || extension == 'jpg' || extension == 'jpeg'){
+                    labResultsList.append(`<div class="card shadow rounded-2">
                                             <div class="card-body">
                                                 <img style="width: 100%; height: auto;" class="img-fluid" src="../lab/php/${result}">
                                                 <button value=${id} class="delete btn btn-primary rounded-pill w-100 mt-3">Delete</button>
                                             </div>
                                         </div>`)
+                }else{
+                    labResultsList.append(`<iframe width="100%" height="500px" src="../lab/php/${result}" class="mt-4"></iframe>
+                    <button value=${id} class="delete btn btn-primary rounded-pill w-100 mt-3">Delete</button>`)
+                }
+                
                 let deleteButton = labResultsList.children().eq(index).find('.delete');
                 deleteButton.on('click', function(){
                     let thisDelete = $(this);
@@ -2502,7 +2509,7 @@
                     }
                 })
             }
-            function addToDoctorLabResultsList(index, id, result){
+            function addToDoctorLabResultsList(index, id, result, extension){
                 doctorLabResultsList.append(`<div class="card shadow rounded-2">
                                             <div class="card-body">
                                                 <img style="width: 100%; height: auto;" class="img-fluid" src="../lab/php/${result}">
@@ -3286,7 +3293,7 @@
                                 doctorLabResultAttendingVet.text(thisViewResults.parent().parent().children().eq(2).text())
                                 var data = JSON.parse(response);
                                 $(data.results).each(function(index, value){
-                                    addToDoctorLabResultsList(index, value.id, value.result);
+                                    addToDoctorLabResultsList(index, value.id, value.result, value.extension);
                                 })
                             }
                         })

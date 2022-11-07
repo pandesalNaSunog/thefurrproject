@@ -10,7 +10,12 @@
             $labResultQuery = $con->query($query) or die($con->error);
             $labResults = array();
             while($labResultRow = $labResultQuery->fetch_assoc()){
-                $labResults[] = $labResultRow; 
+                $extension = explode('.', $labResultRow['result'])[1];
+                $labResults[] = array(
+                    'id' => $labResultRow['id'],
+                    'result' => $labResultRow['result'],
+                    'extension' => $extension
+                );
             }
 
             $query = "SELECT * FROM lab_requests WHERE id = '$labRequestId'";
