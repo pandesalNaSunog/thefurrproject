@@ -21,15 +21,18 @@
                 $pet = $con->query($query) or die($con->error);
                 $petRow = $pet->fetch_assoc();
                 $petName = $petRow['name'];
-                if($labRequestRow['has_result'] == 'No'){
-                    $result = "pending";
-                }else{
-                    $labRequestId = $labRequestRow['id'];
-                    $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
-                    $resultQuery = $con->query($query) or die($con->error);
-                    $resultRow = $resultQuery->fetch_assoc();
+            
+                $labRequestId = $labRequestRow['id'];
+                $query = "SELECT * FROM lab_results WHERE lab_request_id = '$labRequestId'";
+                $resultQuery = $con->query($query) or die($con->error);
+
+                if($resultRow = $resultQuery->fetch_assoc()){
                     $result = $resultRow['result'];
+                }else{
+                    $result = "pending";
                 }
+                
+                
 
                 $timeLimit = calculateTimeLeft($today, $labRequestRow['created_at'], $labRequestRow['time_limit'], $con, $labRequestRow['id']);
                 $response[] = array(
