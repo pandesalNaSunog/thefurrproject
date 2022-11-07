@@ -9,7 +9,7 @@
             $petWeight = htmlspecialchars($_POST['pet_weight']);
             $remarks = htmlspecialchars($_POST['remarks']);
             $nextAppointment = htmlspecialchars($_POST['next_appointment']);
-
+            $nextService = htmlspecialchars($_POST['next_service']);
             if($nextAppointment == ""){
                 $query = "SELECT next_appointment FROM wellness_records WHERE id = '$id'";
                 $nextAppointmentQuery = $con->query($query) or die($con->error);
@@ -17,7 +17,7 @@
                 $nextAppointment = $nextAppointmentRow['next_appointment'];
             }
 
-            $query = "UPDATE wellness_records SET service = '$service', pet_weight = '$petWeight', remarks = '$remarks', next_appointment = '$nextAppointment' WHERE id = '$id'";
+            $query = "UPDATE wellness_records SET next_service = '$nextService', service = '$service', pet_weight = '$petWeight', remarks = '$remarks', next_appointment = '$nextAppointment' WHERE id = '$id'";
             $con->query($query) or die($con->error);
             echo 'ok';
         }

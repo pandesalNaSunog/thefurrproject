@@ -245,6 +245,9 @@
             var editMedicalRecordModal = $('#edit-medical-record-modal');
             var viewMedicalRecordsModal = $('#view-medical-records-modal');
             var editMedicalRecordCaseClosed = $('#edit-medical-record-case-closed');
+            var wellnessList = $('#wellness-list');
+            var confinementList = $('#confinement-list');
+            var editNextService = $('#edit-next-service');
 
             confirmEditMedicalRecord.on('click', function(){
                 if(confirm("Please confirm.") == true){
@@ -288,6 +291,7 @@
                         pet_weight: editPetWeight.val(),
                         remarks: editRemarks.val(),
                         next_appointment: editNextAppointment.val(),
+                        next_service: editNextService.val(),
                     },
                     success: function(response){
                         confirmEditWellnessRecord.prop('disabled', false);
@@ -2991,6 +2995,7 @@
                     editService.val(service);
                     editPetWeight.val(petWeight);
                     editRemarks.val(remarks);
+                    editNextService.val(nextService);
                 })
 
                 deleteRecord.on('click', function(){
@@ -3422,6 +3427,27 @@
 
                     getSoaDetails(soaNumber);
                 }
+                else if(category == "wellness"){
+                    wellnessList.append(`<tr>
+                                                <td>${date}</td>
+                                                <td>${service}</td>
+                                                <td>${labTech}</td>
+                                                <td><button class="btn btn-link soa-number" data-bs-target="#soa-details-modal" data-bs-toggle="modal">${soaNo}</button></td>
+                                            </tr>`)
+                    var soaNumber = wellnessList.children().eq(wellnessList.children().length - 1).find('.soa-number');
+
+                    getSoaDetails(soaNumber);
+                }else if(category == "confinement"){
+                    confinementList.append(`<tr>
+                                                <td>${date}</td>
+                                                <td>${service}</td>
+                                                <td>${labTech}</td>
+                                                <td><button class="btn btn-link soa-number" data-bs-target="#soa-details-modal" data-bs-toggle="modal">${soaNo}</button></td>
+                                            </tr>`)
+                    var soaNumber = confinementList.children().eq(confinementList.children().length - 1).find('.soa-number');
+
+                    getSoaDetails(soaNumber);
+                }
             }
 
             function getSoaDetails(soaNumber){
@@ -3751,6 +3777,50 @@
                                 <th scope="col">SOA #</th>
                             </thead>
                             <tbody id="surgery-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow rounded-4 col-lg-7 mx-auto mt-5">
+                <div class="card-header rounded-4">
+                    <h3 class="fw-bold">
+                        Wellness Services
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Date</th>
+                                <th scope="col">Services</th>
+                                <th scope="col">Attending Vet Tech</th>
+                                <th scope="col">SOA #</th>
+                            </thead>
+                            <tbody id="wellness-list">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow rounded-4 col-lg-7 mx-auto mt-5">
+                <div class="card-header rounded-4">
+                    <h3 class="fw-bold">
+                        Confinement Services
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <th scope="col">Date</th>
+                                <th scope="col">Services</th>
+                                <th scope="col">Attending Vet Tech</th>
+                                <th scope="col">SOA #</th>
+                            </thead>
+                            <tbody id="confinement-list">
 
                             </tbody>
                         </table>
@@ -4451,6 +4521,7 @@
                                 <option value="laboratory">Laboratory</option>
                                 <option value="emergency">Emergency</option>
                                 <option value="surgery">Surgery</option>
+                                <option value="wellness">Wellness</option>
                             </select>
 
                             <div>
@@ -4960,7 +5031,10 @@
                     </div>
                     <label class="mt-3" for="edit-next-appointment">Next Appointment</label>
                     <input type="date" class="form-control" id="edit-next-appointment">
-                    
+                    <div class="form-floating mt-3">
+                        <input type="text" placeholder="Remarks" class="form-control" id="edit-remarks">
+                        <label for="edit-next-service">Next Service</label>
+                    </div>
 
                     <button class="rounded-button mt-3" id="confirm-edit-wellness-record">Confirm</button>
                 </div>
