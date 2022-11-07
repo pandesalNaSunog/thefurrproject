@@ -1046,8 +1046,12 @@
                     success: function(response){
                         loadingScreen.hide();
                         var data = JSON.parse(response);
-                        $(data).each(function(index, value){
+                        if(data.length > 0){
                             noAppointments.hide();
+                        }else{
+                            noAppointments.show();
+                        }
+                        $(data).each(function(index, value){
                             addToAppointmentsList(index, value.day, value.appointment_id, value.client_name, value.date, value.time, value.pets,value.concern,value.is_done);
                         })
                     }
@@ -2192,12 +2196,14 @@
                                             <div class="card-footer">
                                                 <button value="${id}" class="mark-as-done btn btn-outline-primary">Mark As Done</button>
                                                 <button value="${id}" class="mark-as-undone btn btn-outline-primary">Mark As Undone</button>
+                                                <button value="${id}" class="delete btn btn-outline-primary">Delete</button>
                                             </div>
                                         </div>`)
                     var petsList = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.pets-list');
                     var markAsDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-done');
                     var markAsUnDone = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.mark-as-undone');
                     var appointmentCard = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.appointment-card');
+                    var deleteButton = appointmentsList.children().eq(appointmentsList.children().length - 1).find('.delete');
                     if(isDone == "yes"){
                         appointmentCard.attr("style", "background-color: #d2ffd2");
                         markAsUnDone.show()
@@ -2207,6 +2213,25 @@
                         markAsUnDone.hide()
                     }
 
+                    deleteButton.on('click', function(){
+                        let thisDelete = $(this);
+                        if(confirm('Delete this Appointment?') == true){
+                            deleteButton.prop('disabled', true);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/deleteAppointment.php',
+                                data:{
+                                    id: thisDelete.val()
+                                },
+                                success: function(response){
+                                    if(response == 'ok'){
+                                        thisDelete.parent().parent().remove();
+                                    }
+                                }
+                            })
+                        }
+                        
+                    })
 
                     markAsUnDone.on('click', function(){
                         var appointmentId = $(this).val();
