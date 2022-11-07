@@ -244,6 +244,7 @@
             var confirmEditMedicalRecord = $('#confirm-edit-medical-record');
             var editMedicalRecordModal = $('#edit-medical-record-modal');
             var viewMedicalRecordsModal = $('#view-medical-records-modal');
+            var editMedicalRecordCaseClosed = $('#edit-medical-record-case-closed');
 
             confirmEditMedicalRecord.on('click', function(){
                 if(confirm("Please confirm.") == true){
@@ -262,7 +263,8 @@
                             procedures: editMedicalRecordProcedures.val(),
                             tdx: editMedicalRecordTdx.val(),
                             medication: editMedicalRecordMedication.val(),
-                            id: globalMedicalRecordId
+                            id: globalMedicalRecordId,
+                            case_closed: editMedicalRecordCaseClosed.val()
                         },
                         success: function(response){
                             confirmEditMedicalRecord.prop('disabled', false);
@@ -969,6 +971,8 @@
                                 globalVetTechId = 0;
                                 timeLimit.val('');
                                 var data = JSON.parse(response);
+
+
                                 labRequestTable.append(`<tr>
                                                             <td>${data.date}</td>
                                                             <td>${data.time_limit}</td>
@@ -976,8 +980,30 @@
                                                             <td>${data.lab_tech}</td>
                                                             <td>${data.doctor}</td>
                                                             <td>Pending</td>
-                                        
+                                                            <td>
+                                                                <button value=${data.id} class="delete btn btn-primary">Delete</button>
+                                                            </td>
                                                         </tr>`)
+                                let deleteButton = labRequestTable.children().eq(labRequestTable.children().length -1).find('.delete');
+
+                                deleteButton.on('click', function(){
+                                    let thisDelete = $(this);
+                                    if(confirm('Delete this Record?') == true){
+                                        deleteButton.prop('disabled', true);
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: 'php/deleteLabRequest.php',
+                                            data:{
+                                                id: thisDelete.val()
+                                            },
+                                            success: function(response){
+                                                if(response == 'ok'){
+                                                    thisDelete.parent().parent().remove()
+                                                }
+                                            }
+                                        })
+                                    }
+                                })
                             }else{
                                 alert('Session Expired. Please Log in to continue.');
                             }
@@ -2396,6 +2422,8 @@
                     }
                 })
             }
+
+
 
             function addToLabRequestTable(index,id, request,timeLimit, lab_tech, doctor, result, date){
                 if(result == "Pending"){
@@ -3883,6 +3911,12 @@
                         <label>Medication/RX</label>
                     </div>
 
+                    <label class="mt-3">Case Closed:</label>
+                    <select id="edit-medical-record-case-closed">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+
                     <button class="rounded-button" id="confirm-edit-medical-record">Confirm</button>
                 </div>
             </div>
@@ -4239,7 +4273,7 @@
                                     <label>Case Closed</label>
                                     <select id="medical-record-case-closed" class="form-select mt-3">
                                         <option value="Yes">Yes</option>
-                                        <option value="Yes">No</option>
+                                        <option value="No">No</option>
                                     </select>
                                     <label class="mt-3">Next Appointment:</label>
                                     <input id="medical-record-next-appointment" type="date" class="form-control">

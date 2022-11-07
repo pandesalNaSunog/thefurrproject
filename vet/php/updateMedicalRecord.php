@@ -16,8 +16,8 @@
             $procedures = htmlspecialchars($_POST['procedures']);
             $tdx = htmlspecialchars($_POST['tdx']);
             $medication = htmlspecialchars($_POST['medication']);
-
-            $query = "UPDATE medical_records SET pet_weight = '$weight', temp = '$temp', hr = '$hr', rr = '$rr', medical_history = '$history', chief_complain = '$chiefComplain', tests = '$tests', `procedure` = '$procedures', tdx_ddx_case = '$tdx', medication = '$medication' WHERE id = '$id'";
+            $caseClosed = htmlspecialchars($_POST['case_closed']);
+            $query = "UPDATE medical_records SET case_closed = '$caseClosed', pet_weight = '$weight', temp = '$temp', hr = '$hr', rr = '$rr', medical_history = '$history', chief_complain = '$chiefComplain', tests = '$tests', `procedure` = '$procedures', tdx_ddx_case = '$tdx', medication = '$medication' WHERE id = '$id'";
             $con->query($query) or die($con->error);
             echo 'ok';
         }

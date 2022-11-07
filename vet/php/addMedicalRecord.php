@@ -25,7 +25,6 @@
             $tdxddxcase = htmlspecialchars($_POST['tdx_ddx_case']);
             $nextService = htmlspecialchars($_POST['next_service']);
 
-
             if($nexAppointment == ""){
                 $nexAppointment = $date;
             }else{
