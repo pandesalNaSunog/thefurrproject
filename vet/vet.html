@@ -687,19 +687,22 @@
                 }else if(customQuantity.val() == ""){
                     customQuantity.addClass('is-invalid');
                 }else{
-                    var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
-                    var index = soaTable.children().length;
-                    if(customServiceAttendingLabTech.val() == ""){
+                    if(confirm('Please Confirm')){
+                        var total = parseFloat(customBasePrice.val()) * parseFloat(customQuantity.val());
+                        var index = soaTable.children().length;
+                        if(customServiceAttendingLabTech.val() == ""){
+                            customServiceAttendingLabTech.val(0);
+                        }
+                        addToSoaTable(index, customServiceAttendingLabTech.val(), customService.val(), customBasePrice.val(), customQuantity.val(), total);
+                        alert('Successfully added.');
+                        serviceCategories.push(customServiceCategory.val());
+                        customServiceAttendingLabTech.text('Choose Attending Vet Tech')
                         customServiceAttendingLabTech.val(0);
+                        customBasePrice.val('');
+                        customQuantity.val('')
+                        customService.val('');
                     }
-                    addToSoaTable(index, customServiceAttendingLabTech.val(), customService.val(), customBasePrice.val(), customQuantity.val(), total);
-                    alert('Successfully added.');
-                    serviceCategories.push(customServiceCategory.val());
-                    customServiceAttendingLabTech.text('Choose Attending Vet Tech')
-                    customServiceAttendingLabTech.val(0);
-                    customBasePrice.val('');
-                    customQuantity.val('')
-                    customService.val('');
+                    
                 }
             })
 
@@ -711,20 +714,23 @@
                 }else if(quantity.val() == ""){
                     quantity.addClass('is-invalid');
                 }else{
-                    var total = parseFloat(basePrice.val()) * parseFloat(quantity.val());
-                    var index = soaTable.children().length;
+                    if(confirm('Please Confirm')){
+                        var total = parseFloat(basePrice.val()) * parseFloat(quantity.val());
+                        var index = soaTable.children().length;
 
-                    if(serviceAttendingLabTech.val() == ""){
+                        if(serviceAttendingLabTech.val() == ""){
+                            serviceAttendingLabTech.val(0);
+                        }
+                        addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
+                        alert('Successfully added.');
+                        serviceCategories.push(chooseService.val());
+                        basePrice.val('');
+                        quantity.val('')
                         serviceAttendingLabTech.val(0);
+                        serviceAttendingLabTech.text('Choose Attending Vet Tech')
+                        chooseService.text('Choose Service')
                     }
-                    addToSoaTable(index, serviceAttendingLabTech.val(), chooseService.text(), basePrice.val(), quantity.val(), total);
-                    alert('Successfully added.');
-                    serviceCategories.push(chooseService.val());
-                    basePrice.val('');
-                    quantity.val('')
-                    serviceAttendingLabTech.val(0);
-                    serviceAttendingLabTech.text('Choose Attending Vet Tech')
-                    chooseService.text('Choose Service')
+                    
                 }
             })
 
