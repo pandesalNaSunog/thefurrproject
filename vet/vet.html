@@ -16,6 +16,7 @@
     
     <script>
         $(document).ready(function(){
+            let endorsementDoctorList = $('#endorsement-doctor-list');
             var globalWellnessRecordId = 0;
             var globalConfinementId = 0;
             var addConfinementStatusError = $('#add-confinement-status-error');
@@ -248,6 +249,36 @@
             var wellnessList = $('#wellness-list');
             var confinementList = $('#confinement-list');
             var editNextService = $('#edit-next-service');
+            var confirmConfinementEndorsement = $("#confirm-confinement-endorsement");
+            let confinementEndorsementModal = $('#confinement-endorsement-modal');
+
+            confirmConfinementEndorsement.on('click', function(){
+                $(endorsementDoctorList.children()).each(function(index, value){
+                    let radio = endorsementDoctorList.children().eq(index).children().eq(0).children().eq(0).children().eq(0);
+
+                    if(radio.prop('checked') == true){
+                        let doctorId = radio.val();
+                        confirmConfinementEndorsement.prop('disabled', true);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/endorseConfinement.php',
+                            data:{
+                                doctor_id: doctorId,
+                                confinement_id: globalConfinementId
+                            },
+                            success: function(response){
+                                confirmConfinementEndorsement.prop('disabled', false);
+                                if(response == 'ok'){
+                                    getConfinedPets();
+                                }else{
+                                    alert('Session Expired. Please log in to continue.');
+                                    window.location.replace('index.html');
+                                }
+                            }
+                        })
+                    }
+                })
+            })
 
             confirmEditMedicalRecord.on('click', function(){
                 if(confirm("Please confirm.") == true){
@@ -3094,25 +3125,69 @@
                     type: 'GET',
                     url: 'php/confinedPets.php',
                     success: function(response){
-                        loadingScreen.hide();
-                        var data = JSON.parse(response);
+                        if(response != 'invalid'){
+                            loadingScreen.hide();
+                            var data = JSON.parse(response);
+
+                            $(data).each(function(index, value){
+                                addToConfinementTable(index, value.name, value.id);
+                            })
+                        }else{
+                            alert('Session Expired. Please log in to continue.');
+                            window.location.replace('index.html');
+                        }
+                        
+                    }
+                })
+            }
+
+            function getOtherDoctors(){
+                endorsementDoctorList.children().remove();
+                $.ajax({
+                    type: 'GET',
+                    url: 'php/otherDoctors.php',
+                    success: function(response){
+                        let data = JSON.parse(response);
 
                         $(data).each(function(index, value){
-                            addToConfinementTable(index, value.name, value.id);
+                            addToOtherDoctorsList(index, value.id, value.name)
                         })
                     }
                 })
             }
 
+            function addToOtherDoctorsList(index, id, name){
+                endorsementDoctorList.append(`<div class="card shadow mt-3">
+                                                <div class="card-body">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" value="${id}" type="radio" class="endorsement-doctor" name="otherDoctors">
+                                                        <label class="form-check-label">${name}</label>
+                                                    </div>
+                                                </div>
+                                            </div>`)
+            }
+
             function addToConfinementTable(index, name, id){
                 confinedPetsTable.append(`<tr>
                                             <td>${name}</td>
-                                            <td>
+                                            <td class="d-flex justify-content-betwwen">
                                                 <button value="${id}" class="view-confinement-details normal-outline-button">View Details</button>
+                                            
+                                            
+                                                <button value="${id}" class="ms-3 endorse normal-outline-button" data-bs-toggle="modal" data-bs-target="#confinement-endorsement-modal">Endorse</button>
+                                                
+                                                
                                             </td>
+                                        
                                         </tr>`)
                 var viewConfinementDetails = confinedPetsTable.children().eq(index).find('.view-confinement-details');
+                let endorse = confinedPetsTable.children().eq(index).find('.endorse')
+                
 
+                endorse.on('click', function(){
+                    globalConfinementId = $(this).val()
+                    getOtherDoctors()
+                })
                 viewConfinementDetails.on('click', function(){
                     icusTable.children().remove()
                     confinementRecordTable.children().remove()
@@ -5037,6 +5112,26 @@
                     </div>
 
                     <button class="rounded-button mt-3" id="confirm-edit-wellness-record">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="confinement-endorsement-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="endorsement-doctor-list">
+
+                    </div>
+                    <button class="rounded-button mt-3" id="confirm-confinement-endorsement">Confirm</button>
                 </div>
             </div>
         </div>
