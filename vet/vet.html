@@ -253,31 +253,36 @@
             let confinementEndorsementModal = $('#confinement-endorsement-modal');
 
             confirmConfinementEndorsement.on('click', function(){
-                $(endorsementDoctorList.children()).each(function(index, value){
-                    let radio = endorsementDoctorList.children().eq(index).children().eq(0).children().eq(0).children().eq(0);
+                if(confirm('Please Confirm') == true){
+                    $(endorsementDoctorList.children()).each(function(index, value){
+                        let radio = endorsementDoctorList.children().eq(index).children().eq(0).children().eq(0).children().eq(0);
 
-                    if(radio.prop('checked') == true){
-                        let doctorId = radio.val();
-                        confirmConfinementEndorsement.prop('disabled', true);
-                        $.ajax({
-                            type: 'POST',
-                            url: 'php/endorseConfinement.php',
-                            data:{
-                                doctor_id: doctorId,
-                                confinement_id: globalConfinementId
-                            },
-                            success: function(response){
-                                confirmConfinementEndorsement.prop('disabled', false);
-                                if(response == 'ok'){
-                                    getConfinedPets();
-                                }else{
-                                    alert('Session Expired. Please log in to continue.');
-                                    window.location.replace('index.html');
+                        if(radio.prop('checked') == true){
+                            let doctorId = radio.val();
+                            confirmConfinementEndorsement.prop('disabled', true);
+                            $.ajax({
+                                type: 'POST',
+                                url: 'php/endorseConfinement.php',
+                                data:{
+                                    doctor_id: doctorId,
+                                    confinement_id: globalConfinementId
+                                },
+                                success: function(response){
+                                    confirmConfinementEndorsement.prop('disabled', false);
+                                    if(response == 'ok'){
+                                        
+                                        confinementEndorsementModal.modal('hide')
+                                        getConfinedPets();
+                                    }else{
+                                        alert('Session Expired. Please log in to continue.');
+                                        window.location.replace('index.html');
+                                    }
                                 }
-                            }
-                        })
-                    }
-                })
+                            })
+                        }
+                    })
+                }
+                
             })
 
             confirmEditMedicalRecord.on('click', function(){
@@ -3157,7 +3162,17 @@
             }
 
             function addToOtherDoctorsList(index, id, name){
-                endorsementDoctorList.append(`<div class="card shadow mt-3">
+                if(index == 0){
+                    endorsementDoctorList.append(`<div class="card shadow mt-3">
+                                                <div class="card-body">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" value="${id}" type="radio" checked class="endorsement-doctor" name="otherDoctors">
+                                                        <label class="form-check-label">${name}</label>
+                                                    </div>
+                                                </div>
+                                            </div>`)
+                }else{
+                    endorsementDoctorList.append(`<div class="card shadow mt-3">
                                                 <div class="card-body">
                                                     <div class="form-check">
                                                         <input class="form-check-input" value="${id}" type="radio" class="endorsement-doctor" name="otherDoctors">
@@ -3165,6 +3180,8 @@
                                                     </div>
                                                 </div>
                                             </div>`)
+                }
+                
             }
 
             function addToConfinementTable(index, name, id){
