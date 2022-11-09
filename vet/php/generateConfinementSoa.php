@@ -20,6 +20,31 @@
             $query = "UPDATE confinement_soas SET soa_number = '$soaNumber' WHERE id = '$confinementSoaId'";
             $con->query($query) or die($con->error);
             echo 'ok';
+
+            // $confinementTables = array(
+            //     'food','icus','infusion_pumps','i_v_canullas','i_v_fluids','i_v_lines','laser_therapies','nebulizations', 'other_medicines','oxygens','special_medicines','syringe_pumps','underpads','vitamins'
+            // );
+
+            // foreach($confinementTables as $confinementTable){
+            //     $query = "SELECT count(*) as columns FROM INFORMATION_SCHEMA.columns WHERE table_name = '$confinementTable'";
+            //     $columnsQuery = $con->query($query) or die($con->error);
+            //     $columnsRow = $columnsQuery->fetch_assoc();
+            //     $columns = $columnsRow['columns'];
+
+
+            //     $query = "SELECT * FROM " . $confinementTable . " WHERE confinement_id = '$confinementId'";
+            //     $queryHolder = $con->query($query) or die($con->error);
+                
+            //     while($queryHolderRow = $queryHolder->fetch_assoc()){
+
+                    
+
+            //         if($columns == 6){
+            //             $query = "INSERT INTO renderred_services(`service`,`soa_number`,`lab_tech_id`,`doctor_id`,`created_at`,`updated_at`,`category`)VALUES('$confinementTable')";
+            //         }
+                    
+            //     }
+            // }
         }
         
     }else{
@@ -29,13 +54,13 @@
     function generateSoaNumber($doctorId){
         $initial = "";
         if($doctorId == 1){
-            $initial = "Z-00";
+            $initial = "ZCC-00";
         }else if($doctorId == 2){
-            $initial = "H-00";
+            $initial = "HCC-00";
         }else if($doctorId == 3){
-            $initial = "ZX-00";
+            $initial = "ZXCC-00";
         }else if($doctorId == 4){
-            $initial = "ZH-00";
+            $initial = "ZHCC-00";
         }
         return $initial;
     }
