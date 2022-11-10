@@ -355,12 +355,13 @@
                 }
             })
 
-            function addToTreatmentPlanTable(index, id, drug, route, frequency, time){
+            function addToTreatmentPlanTable(index, id, drug, route, frequency, time, date){
                 treatmentPlanTable.append(`<tr>
                                                 <td>${drug}</td>
                                                 <td>${route}</td>
                                                 <td>${frequency}</td>
                                                 <td>${time}</td>
+                                                <td>${date}</td>
                                                 <td class="d-flex justify-content-between">
                                                     <button value=${id} class="edit normal-outline-button">Edit</button>
                                                     <button value=${id} class="ms-3 delete normal-outline-button">Delete</button>
@@ -3432,7 +3433,7 @@
                             })
 
                             $(data.treatment_plan).each(function(index, value){
-                                addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time);
+                                addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time,value.date);
                             })
                             $(data.icus).each(function(index, value){
                                 addToICUSTable(index,value.date,value.price,value.id);
@@ -4992,6 +4993,7 @@
                                         <th scope="col">Route</th>
                                         <th scope="col">Frequency</th>
                                         <th scope="col">Time</th>
+                                        <th scope="col">Date</th>
                                         <th scope="col">Actions</th>
                                     </thead>
                                     <tbody id="treatment-plan-table">

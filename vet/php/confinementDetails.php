@@ -258,10 +258,16 @@
 
         $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId'";
         $treatmentPlan = array();
-
         $treatment = $con->query($query) or die($con->error);
         while($treatmentRow = $treatment->fetch_assoc()){
-            $treatmentPlan[] = $treatmentRow;
+            $treatmentPlan[] = array(
+                'id' => $treatmentRow['id'],
+                'drug' => $treatmentRow['drug'],
+                'route' => $treatmentRow['route'],
+                'frequency' => $treatmentRow['frequency'],
+                'time' => $treatmentRow['time'],
+                'date' => humanReadableDate($treatmentRow['created_at'])
+            );
         }
 
         $query = "SELECT * FROM prognoses WHERE confinement_id = '$confinementId'";

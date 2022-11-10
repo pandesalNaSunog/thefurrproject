@@ -17,7 +17,16 @@
             $query = "SELECT * FROM treatment_plans WHERE id = LAST_INSERT_ID()";
             $treatment = $con->query($query) or die($con->error);
             $treatmentRow = $treatment->fetch_assoc();
-            echo json_encode($treatmentRow);
+            $response = array(
+                'id' => $treatmentRow['id'],
+                'drug' => $treatmentRow['drug'],
+                'route' => $treatmentRow['route'],
+                'frequency' => $treatmentRow['frequency'],
+                'time' => $treatmentRow['time'],
+                'date' => humanReadableDate($treatmentRow['created_at'])
+            );
+
+            echo json_encode($response);
         }else{
             echo 'invalid';
         }

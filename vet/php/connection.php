@@ -11,6 +11,10 @@
             $today = date('Y-m-d H:i:s');
             return $today;
         }
+
+        function humanReadableDate($date){
+            return date_format(date_create($date), "M d, Y h:i A");
+        }
     }else{
         echo header('HTTP/1.1 403 Forbidden');
     }
