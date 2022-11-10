@@ -16,6 +16,10 @@
     
     <script>
         $(document).ready(function(){
+            let prognosisInput = $('#prognosis-input');
+            let prognosisInputError = $('#prognosis-input-error');
+            let addPrognosis = $('#add-prognosis');
+
             let endorsementDoctorList = $('#endorsement-doctor-list');
             var globalWellnessRecordId = 0;
             var globalConfinementId = 0;
@@ -262,6 +266,46 @@
             let dripRate = $('#drip-rate');
             let diagnosis = $('#diagnosis');
             let updateConfinementDetails = $('#update-confinement-details');
+            let prognosisTable = $('#prognosis-table');
+
+
+
+
+            removeInputError(prognosisInput);
+
+            addPrognosis.on('click', function(){
+                if(prognosisInput.val() == ""){
+                    prognosisInput.addClass('is-invalid');
+                    prognosisInputError.text('Please fill out this field');
+                }else{
+                    addPrognosis.prop('disabled', true);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addPrognosis.php',
+                        data:{
+                            prognosis: prognosisInput.val(),
+                            confinement_id: globalConfinementId,
+                        },
+                        success: function(response){
+                            addPrognosis.prop('disabled', false);
+                            let data = JSON.parse(response);
+                            prognosisInput.val('');
+                            addToPrognosisTable(prognosisTable.children().length, data.id, data.prognosis, data.date);
+                        }
+                    })
+                }
+            })
+
+            function addToPrognosisTable(index, id, prognosis, date){
+                prognosisTable.append(`<tr>
+                                            <td>${prognosis}</td>
+                                            <td>${date}</td>
+                                            <td class="d-flex justify-content-between">
+                                                <button class="normal-outline-button edit">Edit</button>
+                                                <button class="ms-3 delete normal-outline-button">Delete</button>
+                                            </td>
+                                        </tr>`)
+            }
 
 
             updateConfinementDetails.on('click', function(){
@@ -277,6 +321,7 @@
                             diagnosis: diagnosis.val()
                         },
                         success: function(response){
+                            updateConfinementDetails.prop('disabled', false)
                             if(response == 'ok'){
                                 alert('Successfully Updated.');
                             }
@@ -300,6 +345,10 @@
                         success: function(response){
                             addTreatmentPlan.prop('disabled', false);
                             let data = JSON.parse(response);
+                            addDrug.val('');
+                            addRoute.val('');
+                            addFrequency.val('');
+                            addTime.val('');
                             addToTreatmentPlanTable(treatmentPlanTable.children().length, data.id, data.drug, data.route, data.frequency,data.time)
                         }
                     })
@@ -314,7 +363,7 @@
                                                 <td>${time}</td>
                                                 <td class="d-flex justify-content-between">
                                                     <button value=${id} class="edit normal-outline-button">Edit</button>
-                                                    <button value=${id} class="delete normal-outline-button">Delete</button>
+                                                    <button value=${id} class="ms-3 delete normal-outline-button">Delete</button>
                                                 </td>
                                             </tr>`)
             }
@@ -3363,6 +3412,7 @@
                     laserTable.children().remove()
                     oxygenTable.children().remove()
                     treatmentPlanTable.children().remove()
+                    prognosisTable.children().remove()
                     let confinementId = $(this).val();
                     globalConfinementId = confinementId;
                     confinementChargesModal.modal('show');
@@ -3376,6 +3426,10 @@
                         success: function(response){
                             loadingScreen.hide()
                             var data = JSON.parse(response);
+
+                            $(data.prognoses).each(function(index, value){
+                                addToPrognosisTable(index, value.id, value.prognosis, value.date);
+                            })
 
                             $(data.treatment_plan).each(function(index, value){
                                 addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time);
@@ -4891,6 +4945,35 @@
                             </div>
 
                             <button class="rounded-button mt-3" id="update-confinement-details">Update</button>
+
+                            <div class="card shadow rounded-3 mt-3">
+                                <div class="card-header">
+                                    <h3 class="fw-bold">Prognoses</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <th scope="col">Prognosis</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Actions</th>
+                                            </thead>
+                                            <tbody id="prognosis-table">
+
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" placeholder="a" id="prognosis-input">
+                                        <div class="invalid-feedback" id="prognosis-input-error"></div>
+                                        <label for="prognosis-input" class="form-label">Prognosis</label>
+                                    </div>
+                                    <button class="rounded-button mt-3" id="add-prognosis">
+                                        Add Prognosis
+                                    </button>
+                                </div>
+                            </div>
                         
                         </div>
                         

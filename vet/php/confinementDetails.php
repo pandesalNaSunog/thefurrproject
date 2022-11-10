@@ -264,6 +264,18 @@
             $treatmentPlan[] = $treatmentRow;
         }
 
+        $query = "SELECT * FROM prognoses WHERE confinement_id = '$confinementId'";
+        $prognoses = array();
+
+        $prognosis = $con->query($query) or die($con->error);
+        while($prognosisRow = $prognosis->fetch_assoc()){
+            $prognoses[] = array(
+                'id' => $prognosisRow['id'],
+                'prognosis' => $prognosisRow['prognosis'],
+                'date' => date_format(date_create($prognosisRow['created_at']), "M d, Y h:i A")
+            );
+        }
+
 
 
 
@@ -296,6 +308,7 @@
             'laser_therapies' => $lasers,
             'oxygens' => $oxygens,
             'treatment_plan' => $treatmentPlan,
+            'prognoses' => $prognoses,
             'date' => $date
         );
 
