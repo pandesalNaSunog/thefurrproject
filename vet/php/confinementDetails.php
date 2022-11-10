@@ -7,7 +7,9 @@
         $query = "SELECT * FROM confinements WHERE id = '$confinementId'";
         $confinement = $con->query($query) or die($con->error);
         $confinementRow = $confinement->fetch_assoc();
-
+        $typeOfFluid = $confinementRow['type_of_fluid'];
+        $diagnosis = $confinementRow['diagnosis'];
+        $dripRate = $confinementRow['drip_rate'];
         //patient details
         $petId = $confinementRow['pet_id'];
         $doctorId = $confinementRow['doctor_id'];
@@ -254,6 +256,14 @@
             );
         }
 
+        $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId'";
+        $treatmentPlan = array();
+
+        $treatment = $con->query($query) or die($con->error);
+        while($treatmentRow = $treatment->fetch_assoc()){
+            $treatmentPlan[] = $treatmentRow;
+        }
+
 
 
 
@@ -266,6 +276,9 @@
             'client_name' => $clientName,
             'attending_vet' => $doctorName,
             'icus' => $icus,
+            'type_of_fluid' => $typeOfFluid,
+            'diagnosis' => $diagnosis,
+            'drip_rate' => $dripRate,
             'confinement_records' => $confinementRecords,
             'infusion_pumps' => $infusionPumps,
             'syringe_pumps' => $syringePumps,
@@ -282,6 +295,7 @@
             'nebulizations' => $nebulizations,
             'laser_therapies' => $lasers,
             'oxygens' => $oxygens,
+            'treatment_plan' => $treatmentPlan,
             'date' => $date
         );
 
