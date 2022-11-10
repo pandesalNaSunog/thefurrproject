@@ -251,7 +251,7 @@
             var editNextService = $('#edit-next-service');
             var confirmConfinementEndorsement = $("#confirm-confinement-endorsement");
             let confinementEndorsementModal = $('#confinement-endorsement-modal');
-
+            let confinementEndorsementTable = $('#confinement-endorsement-table');
             confirmConfinementEndorsement.on('click', function(){
                 if(confirm('Please Confirm') == true){
                     $(endorsementDoctorList.children()).each(function(index, value){
@@ -270,7 +270,7 @@
                                 success: function(response){
                                     confirmConfinementEndorsement.prop('disabled', false);
                                     if(response == 'ok'){
-                                        
+                                        alert('Endorsement request has been submitted.');
                                         confinementEndorsementModal.modal('hide')
                                         getConfinedPets();
                                     }else{
@@ -407,6 +407,7 @@
             retypeNewPassword.on('keydown', function(){
                 retypeNewPassword.removeClass('is-invalid');
             })
+
 
 
             generateConfinementSoa.on('click', function(){
@@ -3125,6 +3126,7 @@
 
             function getConfinedPets(){
                 confinedPetsTable.children().remove();
+                confinementEndorsementTable.children().remove();
                 loadingScreen.show();
                 $.ajax({
                     type: 'GET',
@@ -3134,8 +3136,12 @@
                             loadingScreen.hide();
                             var data = JSON.parse(response);
 
-                            $(data).each(function(index, value){
-                                addToConfinementTable(index, value.name, value.id);
+                            $(data.confined_pets).each(function(index, value){
+                                addToConfinementTable(index, value.name, value.id, value.endorsed_to);
+                            })
+
+                            $(data.endorsements).each(function(index, value){
+                                addToEndorsementsTable(index, value.id, value.name, value.endorsed_by);
                             })
                         }else{
                             alert('Session Expired. Please log in to continue.');
@@ -3144,6 +3150,70 @@
                         
                     }
                 })
+            }
+
+            function addToEndorsementsTable(index, id, name, endorsedBy){
+                confinementEndorsementTable.append(`<tr>
+                                                        <td>${name}</td>
+                                                        <td>${endorsedBy}</td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button data-bs-toggle="dropdown" class="dropdown-toggle normal-outline-button">Accept</button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <button value=${id} class="accept dropdown-item">Accept</button>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button value=${id} class="decline dropdown-item">Decline</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>`)
+                let acceptButton = confinementEndorsementTable.children().eq(index).find('.accept');
+                let declineButton = confinementEndorsementTable.children().eq(index).find('.decline');
+
+                declineButton.on('click', function(){
+                    let endorsementId = $(this).val();
+                    let thisDecline = $(this);
+                    if(confirm('Please confirm') == true){
+                        declineButton.prop('disabled', true);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/declineEndorsement.php',
+                            data:{
+                                id: endorsementId
+                            },
+                            success: function(response){
+                                declineButton.prop('disabled', false);
+                                if(response == 'ok'){
+                                    thisDecline.parent().parent().parent().parent().parent().remove();
+                                }
+                            }
+                        })
+                    }
+                })
+                acceptButton.on('click', function(){
+                    let endorsementId = $(this).val();
+                    let thisAccept = $(this);
+                    if(confirm('Please confirm') == true){
+                        acceptButton.prop('disabled', true);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/acceptEndorsement.php',
+                            data:{
+                                id: endorsementId
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    alert('Endorsement has been accepted.');
+                                    getConfinedPets();
+                                }
+                            }
+                        })
+                    }
+                })
+            
             }
 
             function getOtherDoctors(){
@@ -3184,9 +3254,10 @@
                 
             }
 
-            function addToConfinementTable(index, name, id){
+            function addToConfinementTable(index, name, id, endorsedTo){
                 confinedPetsTable.append(`<tr>
                                             <td>${name}</td>
+                                            <td>${endorsedTo}</td>
                                             <td class="d-flex justify-content-betwwen">
                                                 <button value="${id}" class="view-confinement-details normal-outline-button">View Details</button>
                                             
@@ -4644,24 +4715,58 @@
 
     <section id="confinement-section">
         <div class="container">
-            <div class="card shadow col-lg-6 mx-auto mt-5 rounded-3">
-                <div class="card-header">
-                    <h3 class="fw-bold">
-                        Confinement
-                    </h3>
+            <div class="row row-cols-lg-2 row-cols-1">
+                <div class="col-lg-4">
+                    <div class="card shadow mx-auto mt-5 rounded-3">
+                        <div class="card-header">
+                            <h3 class="fw-bold">
+                                Endorsements
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Endorsed By</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    <tbody id="confinement-endorsement-table">
+            
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th scope="col">Name</th>
-                            <th scope="col">Action</th>
-                        </thead>
-                        <tbody id="confined-pets-table">
-
-                        </tbody>
-                    </table>
+                <div class="col-lg-8">
+                    <div class="card shadow mx-auto mt-5 rounded-3">
+                        <div class="card-header">
+                            <h3 class="fw-bold">
+                                Confinement
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Endorsed To</th>
+                                        <th scope="col">Action</th>
+                                    </thead>
+                                    <tbody id="confined-pets-table">
+            
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
+                
             </div>
+            
         </div>
     </section>
 

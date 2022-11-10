@@ -14,12 +14,61 @@
                 $query = "SELECT name,id FROM pets WHERE id = '$petId'";
                 $pet = $con->query($query) or die($con->error);
                 $petRow = $pet->fetch_assoc();
+                $confinementId = $confinedRow['id'];
+                $query = "SELECT * FROM confinement_endorsements WHERE confinement_id = '$confinementId'";
+                $endorsement = $con->query($query) or die($con->error);
+                if($endorsementRow = $endorsement->fetch_assoc()){
+                    $endorsementDoctorId = $endorsementRow['doctor_id'];
+                    $query = "SELECT * FROM users WHERE id = '$endorsementDoctorId' AND user_type = 'doctor'";
+                    $doctorQuery = $con->query($query) or die($con->error);
+                    $doctorRow = $doctorQuery->fetch_assoc();
+                    $endorsedTo = $doctorRow['name'];
+                }else{
+                    $endorsedTo = "None";
+                }
+
+
                 $confinedPets[] = array(
                     'name' => $petRow['name'],
-                    'id' => $confinedRow['id']
+                    'id' => $confinedRow['id'],
+                    'endorsed_to' => $endorsedTo
                 );
             }
-            echo json_encode($confinedPets);
+
+
+            $query = "SELECT * FROM confinement_endorsements WHERE doctor_id = '$doctorId'";
+            $endorsementQuery = $con->query($query) or die($con->error);
+            $endorsements = array();
+            while($endorsementRowTwo = $endorsementQuery->fetch_assoc()){
+                $confinementId = $endorsementRowTwo['confinement_id'];
+                $query = "SELECT * FROM confinements WHERE id = '$confinementId'";
+                $confinementQuery = $con->query($query) or die($con->error);
+                $confinementRow = $confinementQuery->fetch_assoc();
+
+                $petId = $confinementRow['pet_id'];
+                $query = "SELECT * FROM pets WHERE id = '$petId'";
+                $petQuery = $con->query($query) or die($con->error);
+                $petRow = $petQuery->fetch_assoc();
+                $petName = $petRow['name'];
+
+                $doctorId = $endorsementRowTwo['endorser_id'];
+                $query = "SELECT name FROM users WHERE id = '$doctorId'";
+                $doctorQuery = $con->query($query) or die($con->error);
+                $doctorRow = $doctorQuery->fetch_assoc();
+                $doctorName = $doctorRow['name'];
+                $endorsements[] = array(
+                    'name' => $petName,
+                    'endorsed_by' => $doctorName,
+                    'id' => $endorsementRowTwo['id']
+                );
+            }
+
+
+            $response = array(
+                'confined_pets' => $confinedPets,
+                'endorsements' => $endorsements
+            );
+            echo json_encode($response);
         }else{
             echo 'invalid';
         }

@@ -22,6 +22,7 @@ return array(
     'App\\Models\\Antibiotic' => $baseDir . '/app/Models/Antibiotic.php',
     'App\\Models\\Appointment' => $baseDir . '/app/Models/Appointment.php',
     'App\\Models\\Confinement' => $baseDir . '/app/Models/Confinement.php',
+    'App\\Models\\ConfinementEndorsement' => $baseDir . '/app/Models/ConfinementEndorsement.php',
     'App\\Models\\ConfinementLabRequest' => $baseDir . '/app/Models/ConfinementLabRequest.php',
     'App\\Models\\ConfinementPayment' => $baseDir . '/app/Models/ConfinementPayment.php',
     'App\\Models\\ConfinementRecord' => $baseDir . '/app/Models/ConfinementRecord.php',
