@@ -53,6 +53,8 @@ $(document).ready(function(){
     let addLaser= $('#add-laser');
     let oxygenTable = $('#oxygen-table');
     let addOxygen = $('#add-oxygen');
+    let treatmentPlanTable = $('#treatment-plan-table');
+    let prognosisTable = $('#prognosis-table');
     getConfinements()
     
 
@@ -891,12 +893,24 @@ $(document).ready(function(){
         })
     }
 
-    function displayPatientDetails(petName, petWeight, clientName, attendingVet, date){
+    function displayPatientDetails(petName, petWeight, clientName, attendingVet, date, dripRateData, diagnosisData, typeOfFluidData ){
         patientDetails.append(`<p>Pet Name: <span class="fw-bold">${petName}</span><br>
                                 Pet Weight: <span class="fw-bold">${petWeight}</span><br>
                                 Client Name: <span class="fw-bold">${clientName}</span><br>
                                 Attending Vet: <span class="fw-bold">${attendingVet}</span><br>
-                                Date: <span class="fw-bold">${date}</span><br></p>`)
+                                Date: <span class="fw-bold">${date}</span></p>
+                                <hr>
+                                <div class="row row-cols-3">
+                                    <div class="col">
+                                        <p>Type of Fluid: <span class="fw-bold">${typeOfFluidData}</span></p>
+                                    </div>
+                                    <div class="col">
+                                        <p>Diagnosis: <span class="fw-bold">${diagnosisData}</span></p>
+                                    </div>
+                                    <div class="col">
+                                        <p>Drip Rate: <span class="fw-bold">${dripRateData}</span></p>
+                                    </div>
+                                </div>`)
     }
 
     function addToConfinementsTable(index, id, petName, petWeight, clientName, attendingVet, date){
@@ -932,6 +946,8 @@ $(document).ready(function(){
             nebulizationTable.children().remove()
             laserTable.children().remove()
             oxygenTable.children().remove()
+            treatmentPlanTable.children().remove()
+            prognosisTable.children().remove()
             let confinementId = $(this).val();
             globalConfinementId = confinementId;
             confinementChargesModal.modal('show');
@@ -945,6 +961,14 @@ $(document).ready(function(){
                 success: function(response){
                     loadingScreen.hide()
                     var data = JSON.parse(response);
+
+                    $(data.prognosis).each(function(index, value){
+                        addToPrognosisTable(index, value.prognosis, value.date)
+                    })
+
+                    $(data.treatment_plan).each(function(index, value){
+                        addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time)
+                    })
                     $(data.icus).each(function(index, value){
                         addToICUSTable(index,value.date,value.id);
                     })
@@ -1007,10 +1031,26 @@ $(document).ready(function(){
                         addToOxygenTable(index, value.id, value.date, value.hours);
                     })
 
-                    displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date)
+                    displayPatientDetails(data.pet_name, data.pet_weight, data.client_name, data.attending_vet, data.date, data.drip_rate, data.diagnosis, data.type_of_fluid)
                 }
             })
         })
+    }
+
+    function addToPrognosisTable(index, prognosis, date){
+        prognosisTable.append(`<tr>
+                                    <td>${prognosis}</td>
+                                    <td>${date}</td>
+                                </tr>`)
+    }
+
+    function addToTreatmentPlanTable(index, id, drug, route, frequency, time){
+        treatmentPlanTable.append(`<tr>
+                                        <td>${drug}</td>
+                                        <td>${route}</td>
+                                        <td>${frequency}</td>
+                                        <td>${time}</td>
+                                </tr>`)
     }
 
     function addToInfusionPumpsTable(index, date, id){

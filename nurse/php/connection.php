@@ -11,6 +11,10 @@
             date_default_timezone_set('Asia/Manila');
             return date('Y-m-d H:i:s');
         }
+
+        function humanReadableDate($date){
+            return date_format(date_create($date), "M d, Y h:i A");
+        }
     }else{
         error();
     }

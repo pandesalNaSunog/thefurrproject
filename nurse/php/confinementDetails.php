@@ -11,7 +11,9 @@
         //patient details
         $petId = $confinementRow['pet_id'];
         $doctorId = $confinementRow['doctor_id'];
-
+        $typeOfFluid = $confinementRow['type_of_fluid'];
+        $dripRate = $confinementRow['drip_rate'];
+        $diagnosis = $confinementRow['diagnosis'];
 
         $query = "SELECT * FROM pets WHERE id = '$petId'";
         $pet = $con->query($query) or die($con->error);
@@ -237,6 +239,22 @@
             );
         }
 
+        $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId' ORDER BY id DESC";
+        $treatmentPlanQuery = $con->query($query) or die($con->error);
+        $treatmentPlan = array();
+        if($treatementPlanRow = $treatmentPlanQuery->fetch_assoc()){
+            $treatmentPlan = $treatementPlanRow;
+        }
+
+        $query = "SELECT * FROM prognoses WHERE confinement_id = '$confinementId'";
+        $prognosisQuery = $con->query($query) or die($con->error);
+        $prognosis = array();
+        while($prognosisRow = $prognosisQuery->fetch_assoc()){
+            $prognosis[] = array(
+                'prognosis' => $prognosisRow['prognosis'],
+                'date' => humanReadableDate($prognosisRow['created_at'])
+            );
+        }
 
 
 
@@ -265,7 +283,12 @@
             'nebulizations' => $nebulizations,
             'laser_therapies' => $lasers,
             'oxygens' => $oxygens,
-            'date' => $date
+            'date' => $date,
+            'type_of_fluid' => $typeOfFluid,
+            'drip_rate' => $dripRate,
+            'diagnosis' => $diagnosis,
+            'treatment_plan' => $treatmentPlan,
+            'prognosis' => $prognosis,
         );
 
         echo json_encode($response);
