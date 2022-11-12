@@ -242,8 +242,8 @@
         $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId' ORDER BY id DESC";
         $treatmentPlanQuery = $con->query($query) or die($con->error);
         $treatmentPlan = array();
-        if($treatementPlanRow = $treatmentPlanQuery->fetch_assoc()){
-            $treatmentPlan = $treatementPlanRow;
+        while($treatementPlanRow = $treatmentPlanQuery->fetch_assoc()){
+            $treatmentPlan[] = $treatementPlanRow;
         }
 
         $query = "SELECT * FROM prognoses WHERE confinement_id = '$confinementId'";
