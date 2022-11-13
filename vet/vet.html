@@ -349,7 +349,7 @@
                             addRoute.val('');
                             addFrequency.val('');
                             addTime.val('');
-                            addToTreatmentPlanTable(treatmentPlanTable.children().length, data.id, data.drug, data.route, data.frequency,data.time)
+                            addToTreatmentPlanTable(treatmentPlanTable.children().length, data.id, data.drug, data.route, data.frequency,data.time,data.date)
                         }
                     })
                 }
@@ -367,6 +367,34 @@
                                                     <button value=${id} class="ms-3 delete normal-outline-button">Delete</button>
                                                 </td>
                                             </tr>`)
+
+                let deleteButton = treatmentPlanTable.children().eq(index).find('.delete');
+
+                deleteButton.on('click', function(){
+                    if(confirm("Delete this treatment plan record?")){
+                        disableButton(deleteButton);
+                        $.ajax({
+                            type: 'POST',
+                            url: 'php/deleteTreatmentPlan.php',
+                            data:{
+                                id: deleteButton.val()
+                            },
+                            success: function(response){
+                                if(response == 'ok'){
+                                    deleteButton.parent().parent().remove()
+                                }
+                            }
+                        })
+                    }
+                    
+                })
+            }
+
+            function disableButton(button){
+                button.prop('disabled', true);
+            }
+            function enableButton(button){
+                button.prop('disabled', false);
             }
 
             confirmConfinementEndorsement.on('click', function(){
