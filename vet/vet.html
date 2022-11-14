@@ -16,6 +16,7 @@
     
     <script>
         $(document).ready(function(){
+            let globalTreatmentPlanId = 0;
             let prognosisInput = $('#prognosis-input');
             let prognosisInputError = $('#prognosis-input-error');
             let addPrognosis = $('#add-prognosis');
@@ -267,8 +268,38 @@
             let diagnosis = $('#diagnosis');
             let updateConfinementDetails = $('#update-confinement-details');
             let prognosisTable = $('#prognosis-table');
-
-
+            let editDrug = $('#edit-drug');
+            let editFrequency = $('#edit-frequency');
+            let editRoute = $('#edit-route');
+            let editTime = $('#edit-time');
+            let confirmEditTreatmentPlan = $('#confirm-edit-treatment-plan');
+            let editTreatmentPlanModal = $('#edit-treatment-plan-modal');
+            
+            confirmEditTreatmentPlan.on('click', function(){
+                disableButton(confirmEditTreatmentPlan);
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/updateTreatmentPlan.php',
+                    data:{
+                        id: globalTreatmentPlanId,
+                        drug: editDrug.val(),
+                        route: editRoute.val(),
+                        frequency: editFrequency.val(),
+                        time: editTime.val()
+                    },
+                    success: function(response){
+                        enableButton(confirmEditTreatmentPlan);
+                        editTreatmentPlanModal.modal('hide');
+                        let data = JSON.parse(response);
+                        
+                        confinementChargesModal.modal('show');
+                        treatmentPlanTable.children().remove();
+                        $(data).each(function(index, value){
+                            addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time, value.date)
+                        })
+                    }
+                })
+            })
 
 
             removeInputError(prognosisInput);
@@ -363,12 +394,21 @@
                                                 <td>${time}</td>
                                                 <td>${date}</td>
                                                 <td class="d-flex justify-content-between">
-                                                    <button value=${id} class="edit normal-outline-button">Edit</button>
+                                                    <button value=${id} data-bs-toggle="modal" data-bs-target="#edit-treatment-plan-modal" class="edit normal-outline-button">Edit</button>
                                                     <button value=${id} class="ms-3 delete normal-outline-button">Delete</button>
                                                 </td>
                                             </tr>`)
 
                 let deleteButton = treatmentPlanTable.children().eq(index).find('.delete');
+                let edit = treatmentPlanTable.children().eq(index).find('.edit');
+
+                edit.on('click', function(){
+                    globalTreatmentPlanId = $(this).val();
+                    editDrug.val(drug);
+                    editRoute.val(route);
+                    editFrequency.val(frequency);
+                    editTime.val(time);
+                })
 
                 deleteButton.on('click', function(){
                     if(confirm("Delete this treatment plan record?")){
@@ -4346,6 +4386,40 @@
                     </select>
 
                     <button class="rounded-button mt-3" id="confirm-edit-medical-record">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="edit-treatment-plan-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" class="img-fluid" alt="">
+                    </div>
+                    <button class="btn-close" data-bs-toggle="modal" data-bs-target="#confinement-charges-modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" id="edit-drug" class="form-control" placeholder="a">
+                        <label for="edit-drug">Drug</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" id="edit-frequency" class="form-control mt-3" placeholder="a">
+                        <label for="edit-frequency">Frequency</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" id="edit-route" class="form-control mt-3" placeholder="a">
+                        <label for="edit-route">Route</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" id="edit-time" class="form-control mt-3" placeholder="a">
+                        <label for="edit-time">Time</label>
+                    </div>
+
+                    <button class="rounded-button mt-3" id="confirm-edit-treatment-plan">Confirm</button>
                 </div>
             </div>
         </div>
