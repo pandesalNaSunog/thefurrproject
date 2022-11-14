@@ -967,7 +967,7 @@ $(document).ready(function(){
                     })
 
                     $(data.treatment_plan).each(function(index, value){
-                        addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time)
+                        addToTreatmentPlanTable(index, value.dose, value.id, value.drug, value.route, value.frequency, value.time)
                     })
                     $(data.icus).each(function(index, value){
                         addToICUSTable(index,value.date,value.id);
@@ -1044,9 +1044,10 @@ $(document).ready(function(){
                                 </tr>`)
     }
 
-    function addToTreatmentPlanTable(index, id, drug, route, frequency, time){
+    function addToTreatmentPlanTable(index, dose, id, drug, route, frequency, time){
         treatmentPlanTable.append(`<tr>
                                         <td>${drug}</td>
+                                        <td>${dose}</td>
                                         <td>${route}</td>
                                         <td>${frequency}</td>
                                         <td>${time}</td>

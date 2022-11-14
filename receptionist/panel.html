@@ -53,6 +53,38 @@
             var confinementChargesLink = $('#confinement-charges-link');
             var confinementChargesSection = $('#confinement-charges-section');
             var confinementChargesTable = $('#confinement-charges-table')
+            let addClientName = $('#add-client-name');
+            let addClientEmail = $('#add-client-email');
+            let addCLientCode = $('#add-client-code');
+            let addContact = $('#add-client-contact');
+            let confirmAddClient = $('#confirm-add-client');
+            let addClientModal = $('#add-client-modal')
+
+            confirmAddClient.on('click', function(){
+                if(confirm("Please Confirm.") == true){
+                    disableButton(confirmAddClient);
+                    $.ajax({
+                        type: 'POST',
+                        url: 'php/addClient.php',
+                        data:{
+                            name: addClientName.val(),
+                            email: addClientEmail.val(),
+                            contact: addContact.val(),
+                            code: addCLientCode.val(),
+                        },
+                        success: function(response){
+                            enableButton(confirmAddClient);
+                            let data = JSON.parse(response);
+                            addClientName.val('');
+                            addClientEmail.val('');
+                            addCLientCode.val('')
+                            addContact.val('');
+                            addClientModal.modal('hide');
+                            addToClientsTable(clientsTable.children().length, data.id, data.name, data.client_code)
+                        }
+                    })
+                }
+            })
             confinementChargesSection.hide();
             logout.on('click', function(){
                 if(confirm('Are your sure you want to Log Out?')){
@@ -74,6 +106,13 @@
             concern.on('keydown', function(){
                 concern.removeClass('is-invalid');
             })
+
+            function disableButton(button){
+                button.prop('disabled', true);
+            }
+            function enableButton(button){
+                button.prop('disabled', false);
+            }
 
             bookGrooming.on('click', function(){
                 var petIds = [];
@@ -493,7 +532,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navmenu">
                 <ul class="navbar-nav ms-auto fw-bold">
-
+                    <li class="nav-item">
+                        <button data-bs-target="#add-client-modal" data-bs-toggle="modal" class="px-5 w-100 mt-3 mt-lg-0 w-lg-0 btn btn-light rounded-pill fw-bold" style="color: darkblue">Add Client</button>
+                    </li>
                     
                     <li class="nav-item">
                         <a href="#" id="appointments-link" class="navigation nav-link active">
@@ -526,6 +567,39 @@
             </div>
         </div>
     </nav>
+
+    <div class="modal fade" id="add-client-modal" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">
+                        <img src="../images/thefurrproject.PNG" alt="" class="img-fluid">
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="add-client-name" placeholder="a">
+                        <label for="add-client-name">Client Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control mt-3" id="add-client-email" placeholder="a">
+                        <label for="add-client-name">Client Email</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control mt-3" id="add-client-code" placeholder="a">
+                        <label for="add-client-name">Client Code</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="number" class="form-control mt-3" id="add-client-contact" placeholder="a">
+                        <label for="add-client-name">Contact Number</label>
+                    </div>
+
+                    <button id="confirm-add-client" class="btn btn-primary rounded-pill w-100 mt-3">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section id="soa-section">
         <div class="container">
