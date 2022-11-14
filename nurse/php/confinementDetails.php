@@ -239,7 +239,7 @@
             );
         }
 
-        $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId' ORDER BY id DESC";
+        $query = "SELECT * FROM treatment_plans WHERE confinement_id = '$confinementId'";
         $treatmentPlanQuery = $con->query($query) or die($con->error);
         $treatmentPlan = array();
         while($treatementPlanRow = $treatmentPlanQuery->fetch_assoc()){
