@@ -9,7 +9,8 @@
             $frequency = htmlspecialchars($_POST['frequency']);
             $time = htmlspecialchars($_POST['time']);
             $id = htmlspecialchars($_POST['id']);
-            $query = "UPDATE treatment_plans SET drug = '$drug', route = '$route', frequency = '$frequency', time = '$time' WHERE id = '$id'";
+            $dose = htmlspecialchars($_POST['dose']);
+            $query = "UPDATE treatment_plans SET dose = '$dose', drug = '$drug', route = '$route', frequency = '$frequency', time = '$time' WHERE id = '$id'";
             $con->query($query) or die($con->error);
 
             $query = "SELECT confinement_id FROM treatment_plans WHERE id = '$id'";
@@ -27,6 +28,7 @@
                     'route' => $treatmentRow['route'],
                     'frequency' => $treatmentRow['frequency'],
                     'time' => $treatmentRow['time'],
+                    'dose' => $treatmentRow['dose'],
                     'date' => humanReadableDate($treatmentRow['created_at'])
                 );
             }

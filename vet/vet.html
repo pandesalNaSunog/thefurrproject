@@ -274,7 +274,10 @@
             let editTime = $('#edit-time');
             let confirmEditTreatmentPlan = $('#confirm-edit-treatment-plan');
             let editTreatmentPlanModal = $('#edit-treatment-plan-modal');
-            
+            let previewConfinementSoa = $('#preview-confinement-soa');
+            let addDose = $('#add-dose');
+            let editDose = $('#edit-dose');
+
             confirmEditTreatmentPlan.on('click', function(){
                 disableButton(confirmEditTreatmentPlan);
                 $.ajax({
@@ -285,7 +288,8 @@
                         drug: editDrug.val(),
                         route: editRoute.val(),
                         frequency: editFrequency.val(),
-                        time: editTime.val()
+                        time: editTime.val(),
+                        dose: editDose.val()
                     },
                     success: function(response){
                         enableButton(confirmEditTreatmentPlan);
@@ -295,7 +299,7 @@
                         confinementChargesModal.modal('show');
                         treatmentPlanTable.children().remove();
                         $(data).each(function(index, value){
-                            addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time, value.date)
+                            addToTreatmentPlanTable(index, value.dose, value.id, value.drug, value.route, value.frequency, value.time, value.date)
                         })
                     }
                 })
@@ -371,6 +375,7 @@
                             route: addRoute.val(),
                             frequency: addFrequency.val(),
                             time: addTime.val(),
+                            dose: addDose.val(),
                             confinement_id: globalConfinementId
                         },
                         success: function(response){
@@ -380,15 +385,17 @@
                             addRoute.val('');
                             addFrequency.val('');
                             addTime.val('');
-                            addToTreatmentPlanTable(treatmentPlanTable.children().length, data.id, data.drug, data.route, data.frequency,data.time,data.date)
+                            addDose.val('');
+                            addToTreatmentPlanTable(treatmentPlanTable.children().length, data.dose, data.id, data.drug, data.route, data.frequency,data.time,data.date)
                         }
                     })
                 }
             })
 
-            function addToTreatmentPlanTable(index, id, drug, route, frequency, time, date){
+            function addToTreatmentPlanTable(index, dose, id, drug, route, frequency, time, date){
                 treatmentPlanTable.append(`<tr>
                                                 <td>${drug}</td>
+                                                <td>${dose}</td>
                                                 <td>${route}</td>
                                                 <td>${frequency}</td>
                                                 <td>${time}</td>
@@ -408,6 +415,7 @@
                     editRoute.val(route);
                     editFrequency.val(frequency);
                     editTime.val(time);
+                    editDose.val(dose);
                 })
 
                 deleteButton.on('click', function(){
@@ -3501,7 +3509,7 @@
                             })
 
                             $(data.treatment_plan).each(function(index, value){
-                                addToTreatmentPlanTable(index, value.id, value.drug, value.route, value.frequency, value.time,value.date);
+                                addToTreatmentPlanTable(index,value.dose, value.id, value.drug, value.route, value.frequency, value.time,value.date);
                             })
                             $(data.icus).each(function(index, value){
                                 addToICUSTable(index,value.date,value.price,value.id);
@@ -4407,6 +4415,10 @@
                         <label for="edit-drug">Drug</label>
                     </div>
                     <div class="form-floating">
+                        <input type="text" id="edit-dose" class="form-control mt-3" placeholder="a">
+                        <label for="edit-dose">Dose</label>
+                    </div>
+                    <div class="form-floating">
                         <input type="text" id="edit-frequency" class="form-control mt-3" placeholder="a">
                         <label for="edit-frequency">Frequency</label>
                     </div>
@@ -5092,6 +5104,7 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <th scope="col">Drug</th>
+                                        <th scope="col">Dose</th>
                                         <th scope="col">Route</th>
                                         <th scope="col">Frequency</th>
                                         <th scope="col">Time</th>
@@ -5106,6 +5119,10 @@
                             <div class="form-floating">
                                 <input type="text" class="form-control" placeholder="a" id="add-drug">
                                 <label for="add-drug" class="form-label">Drug</label>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-control mt-3" placeholder="a" id="add-dose">
+                                <label for="add-dose" class="form-label">Dose</label>
                             </div>
                             <div class="form-floating mt-3">
                                 <input type="text" class="form-control" placeholder="a" id="add-route">
@@ -5457,7 +5474,7 @@
                         </div>
                     </div>
 
-                    <button class="mt-3 rounded-button" id="generate-confinement-soa">Generate SOA</button>
+                    <button class="mt-3 rounded-button" id="preview-confinement-soa">Preview SOA</button>
                 </div>
             </div>
         </div>

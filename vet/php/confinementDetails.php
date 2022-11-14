@@ -266,6 +266,7 @@
                 'route' => $treatmentRow['route'],
                 'frequency' => $treatmentRow['frequency'],
                 'time' => $treatmentRow['time'],
+                'dose' => $treatmentRow['dose'],
                 'date' => humanReadableDate($treatmentRow['created_at'])
             );
         }

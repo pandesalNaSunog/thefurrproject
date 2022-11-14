@@ -10,8 +10,9 @@
             $frequency = htmlspecialchars($_POST['frequency']);
             $time = htmlspecialchars($_POST['time']);
             $confinementId = htmlspecialchars($_POST['confinement_id']);
+            $dose = htmlspecialchars($_POST['dose']);
 
-            $query = "INSERT INTO treatment_plans(`drug`,`route`,`frequency`,`time`,`confinement_id`,`created_at`,`updated_at`)VALUES('$drug','$route','$frequency','$time','$confinementId','$today','$today')";
+            $query = "INSERT INTO treatment_plans(`dose`,`drug`,`route`,`frequency`,`time`,`confinement_id`,`created_at`,`updated_at`)VALUES('$dose','$drug','$route','$frequency','$time','$confinementId','$today','$today')";
             $con->query($query) or die($con->error);
 
             $query = "SELECT * FROM treatment_plans WHERE id = LAST_INSERT_ID()";
@@ -23,6 +24,7 @@
                 'route' => $treatmentRow['route'],
                 'frequency' => $treatmentRow['frequency'],
                 'time' => $treatmentRow['time'],
+                'dose' => $treatmentRow['dose'],
                 'date' => humanReadableDate($treatmentRow['created_at'])
             );
 
